@@ -34,18 +34,18 @@
                 <h4>TẤT CẢ</h4><i class="fa fa-chevron-right"></i>
             </div>
         </div>
-        <div class="mm_container_box_song">
+        <div class="mm_container_box_song" data-bind="foreach: itemSongNew">
 
             <div class="sc_container_box_song">
                 <div class="sc_c_img">
-                    <img src="../../assets/images/am-nhac.jpg" alt="" />
+                    <img data-bind="attr: { src: image }" alt="" />
                     <div class="sc_c_img_bg hidden">
                         <img src="../../assets/images/play.png" class="play_icon" />
                     </div>
                 </div>
                 <div class="sc_c_des">
                     <div class="sc_c_des_name">
-                        <h5>this is name</h5>
+                        <h5 data-bind="text: name"></h5>
                     </div>
                     <div class="sc_c_des_singer mginbt5">
                         <a class="sc_text_link">
@@ -56,239 +56,7 @@
                         </a>
                     </div>
                     <div class="sc_c_des_date">
-                        <h5>date create</h5>
-                    </div>
-                </div>
-                <div class="sc_c_more_action">
-                    <div class="sc_c_more_icon">
-                        <i class="fa fa-ellipsis-h"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sc_container_box_song">
-                <div class="sc_c_img">
-                    <img src="../../assets/images/am-nhac.jpg" alt="" />
-                    <div class="sc_c_img_bg hidden">
-                        <img src="../../assets/images/play.png" class="play_icon" />
-                    </div>
-                </div>
-                <div class="sc_c_des">
-                    <div class="sc_c_des_name">
-                        <h5>this is name</h5>
-                    </div>
-                    <div class="sc_c_des_singer mginbt5">
-                        <a class="sc_text_link">
-                            this is name
-                            <span class="nohover_singer hidden">
-                                x
-                            </span>
-                        </a>
-                    </div>
-                    <div class="sc_c_des_date">
-                        <h5>date create</h5>
-                    </div>
-                </div>
-                <div class="sc_c_more_action">
-                    <div class="sc_c_more_icon">
-                        <i class="fa fa-ellipsis-h"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sc_container_box_song">
-                <div class="sc_c_img">
-                    <img src="../../assets/images/am-nhac.jpg" alt="" />
-                    <div class="sc_c_img_bg hidden">
-                        <img src="../../assets/images/play.png" class="play_icon" />
-                    </div>
-                </div>
-                <div class="sc_c_des">
-                    <div class="sc_c_des_name">
-                        <h5>this is name</h5>
-                    </div>
-                    <div class="sc_c_des_singer mginbt5">
-                        <a class="sc_text_link">
-                            this is name
-                            <span class="nohover_singer hidden">
-                                x
-                            </span>
-                        </a>
-                    </div>
-                    <div class="sc_c_des_date">
-                        <h5>date create</h5>
-                    </div>
-                </div>
-                <div class="sc_c_more_action">
-                    <div class="sc_c_more_icon">
-                        <i class="fa fa-ellipsis-h"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sc_container_box_song">
-                <div class="sc_c_img">
-                    <img src="../../assets/images/am-nhac.jpg" alt="" />
-                    <div class="sc_c_img_bg hidden">
-                        <img src="../../assets/images/play.png" class="play_icon" />
-                    </div>
-                </div>
-                <div class="sc_c_des">
-                    <div class="sc_c_des_name">
-                        <h5>this is name</h5>
-                    </div>
-                    <div class="sc_c_des_singer mginbt5">
-                        <a class="sc_text_link">
-                            this is name
-                            <span class="nohover_singer hidden">
-                                x
-                            </span>
-                        </a>
-                    </div>
-                    <div class="sc_c_des_date">
-                        <h5>date create</h5>
-                    </div>
-                </div>
-                <div class="sc_c_more_action">
-                    <div class="sc_c_more_icon">
-                        <i class="fa fa-ellipsis-h"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sc_container_box_song">
-                <div class="sc_c_img">
-                    <img src="../../assets/images/am-nhac.jpg" alt="" />
-                    <div class="sc_c_img_bg hidden">
-                        <img src="../../assets/images/play.png" class="play_icon" />
-                    </div>
-                </div>
-                <div class="sc_c_des">
-                    <div class="sc_c_des_name">
-                        <h5>this is name</h5>
-                    </div>
-                    <div class="sc_c_des_singer mginbt5">
-                        <a class="sc_text_link">
-                            this is name
-                            <span class="nohover_singer hidden">
-                                x
-                            </span>
-                        </a>
-                    </div>
-                    <div class="sc_c_des_date">
-                        <h5>date create</h5>
-                    </div>
-                </div>
-                <div class="sc_c_more_action">
-                    <div class="sc_c_more_icon">
-                        <i class="fa fa-ellipsis-h"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sc_container_box_song">
-                <div class="sc_c_img">
-                    <img src="../../assets/images/am-nhac.jpg" alt="" />
-                    <div class="sc_c_img_bg hidden">
-                        <img src="../../assets/images/play.png" class="play_icon" />
-                    </div>
-                </div>
-                <div class="sc_c_des">
-                    <div class="sc_c_des_name">
-                        <h5>this is name</h5>
-                    </div>
-                    <div class="sc_c_des_singer mginbt5">
-                        <a class="sc_text_link">
-                            this is name
-                            <span class="nohover_singer hidden">
-                                x
-                            </span>
-                        </a>
-                    </div>
-                    <div class="sc_c_des_date">
-                        <h5>date create</h5>
-                    </div>
-                </div>
-                <div class="sc_c_more_action">
-                    <div class="sc_c_more_icon">
-                        <i class="fa fa-ellipsis-h"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sc_container_box_song">
-                <div class="sc_c_img">
-                    <img src="../../assets/images/am-nhac.jpg" alt="" />
-                    <div class="sc_c_img_bg hidden">
-                        <img src="../../assets/images/play.png" class="play_icon" />
-                    </div>
-                </div>
-                <div class="sc_c_des">
-                    <div class="sc_c_des_name">
-                        <h5>this is name</h5>
-                    </div>
-                    <div class="sc_c_des_singer mginbt5">
-                        <a class="sc_text_link">
-                            this is name
-                            <span class="nohover_singer hidden">
-                                x
-                            </span>
-                        </a>
-                    </div>
-                    <div class="sc_c_des_date">
-                        <h5>date create</h5>
-                    </div>
-                </div>
-                <div class="sc_c_more_action">
-                    <div class="sc_c_more_icon">
-                        <i class="fa fa-ellipsis-h"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sc_container_box_song">
-                <div class="sc_c_img">
-                    <img src="../../assets/images/am-nhac.jpg" alt="" />
-                    <div class="sc_c_img_bg hidden">
-                        <img src="../../assets/images/play.png" class="play_icon" />
-                    </div>
-                </div>
-                <div class="sc_c_des">
-                    <div class="sc_c_des_name">
-                        <h5>this is name</h5>
-                    </div>
-                    <div class="sc_c_des_singer mginbt5">
-                        <a class="sc_text_link">
-                            this is name
-                            <span class="nohover_singer hidden">
-                                x
-                            </span>
-                        </a>
-                    </div>
-                    <div class="sc_c_des_date">
-                        <h5>date create</h5>
-                    </div>
-                </div>
-                <div class="sc_c_more_action">
-                    <div class="sc_c_more_icon">
-                        <i class="fa fa-ellipsis-h"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sc_container_box_song">
-                <div class="sc_c_img">
-                    <img src="../../assets/images/am-nhac.jpg" alt="" />
-                    <div class="sc_c_img_bg hidden">
-                        <img src="../../assets/images/play.png" class="play_icon" />
-                    </div>
-                </div>
-                <div class="sc_c_des">
-                    <div class="sc_c_des_name">
-                        <h5>this is name</h5>
-                    </div>
-                    <div class="sc_c_des_singer mginbt5">
-                        <a class="sc_text_link">
-                            this is name
-                            <span class="nohover_singer hidden">
-                                x
-                            </span>
-                        </a>
-                    </div>
-                    <div class="sc_c_des_date">
-                        <h5>date create</h5>
+                        <h5 data-bind="text: date_create"></h5>
                     </div>
                 </div>
                 <div class="sc_c_more_action">

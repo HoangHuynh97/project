@@ -70,16 +70,22 @@ export = class home {
         }
     }
 
-    result = fetch('http://localhost:8080/music/get_DataSong', {
+    itemSongNew = ko.observableArray();
+    
+    getData = fetch('http://localhost/music/get_DataSong', {
         method: 'POST',
         headers: {
             'Accept': 'application/json, text/plain, */*',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ a: 7, str: 'Some string: &=&' })
-    }).then(function (res) {
-        res.json();
-        console.log(res);
+        body: JSON.stringify({ id_user: 0 })
+    }).then((response) => {
+        return response.json();
+    }).then((data) => {
+        var objX = [];
+        data.dataSongNew.map(function (value) {
+            objX.push({ id: value.id, name: value.name, id_gg: value.id_gg, image: '../../assets/images'+value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
+        });
+        this.itemSongNew(objX);
     });
-
 }
