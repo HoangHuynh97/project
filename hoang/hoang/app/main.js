@@ -6,7 +6,8 @@
         'transitions' : '../lib/durandal/js/transitions',
         'knockout': '../lib/knockout/knockout-3.1.0',
         'bootstrap': '../lib/bootstrap/js/bootstrap',
-        'jquery': '../lib/jquery/jquery-1.9.1'
+        'jquery': '../lib/jquery/jquery-1.9.1',
+        'sweetalert2': '../lib/sweetalert2/dist/sweetalert2.all.min'
     },
     shim: {
         'bootstrap': {
@@ -16,13 +17,14 @@
     }
 });
 
-define(['durandal/system', 'durandal/app', 'durandal/viewLocator', 'knockout', 'jquery', 'plugins/http'], function (system, app, viewLocator, ko, $, http) {
+define(['durandal/system', 'durandal/app', 'durandal/viewLocator', 'knockout', 'jquery', 'plugins/http', 'sweetalert2'], function (system, app, viewLocator, ko, $, http, sweetalert2) {
     //>>excludeStart("build", true);
     system.debug(true);
     window['app'] = app;
     window['ko'] = ko;
     window['$'] = $;
     window['http'] = http;
+    window['sweetalert2'] = sweetalert2;
    //>>excludeEnd("build");
 
     app.title = 'Durandal Starter Kit';

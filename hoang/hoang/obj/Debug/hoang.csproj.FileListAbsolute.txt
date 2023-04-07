@@ -221,3 +221,4 @@ C:\DEV\Git\project\hoang\hoang\obj\Debug\hoang.csproj.CoreCompileInputs.cache
 C:\DEV\Git\project\hoang\hoang\obj\Debug\hoang.csproj.CopyComplete
 C:\DEV\Git\project\hoang\hoang\obj\Debug\hoang.dll
 C:\DEV\Git\project\hoang\hoang\obj\Debug\hoang.pdb
+E:\github\project\hoang\hoang\obj\Debug\hoang.csproj.AssemblyReference.cache

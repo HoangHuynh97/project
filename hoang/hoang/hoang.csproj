@@ -126,6 +126,7 @@
     <Content Include="app\views\detail.html" />
     <Content Include="app\views\flickr.html" />
     <Content Include="app\views\home.html" />
+    <Content Include="app\views\login.html" />
     <Content Include="app\views\shell.html" />
     <Content Include="app\views\test.html" />
     <Content Include="app\views\welcome.html" />
@@ -167,6 +168,7 @@
     <Content Include="lib\font-awesome\css\font-awesome.min.css" />
     <Content Include="lib\font-awesome\fonts\fontawesome-webfont.svg" />
     <None Include="lib\jquery\jquery-1.9.1.intellisense.js" />
+    <Content Include="lib\helper\valueKnockout.js" />
     <Content Include="lib\jquery\jquery-1.9.1.js" />
     <Content Include="lib\jquery\jquery-1.9.1.min.js" />
     <Content Include="lib\knockout\knockout-3.1.0.debug.js" />
@@ -203,11 +205,13 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app\viewmodels\home.ts" />
+    <TypeScriptCompile Include="app\viewmodels\login.ts" />
     <TypeScriptCompile Include="app\viewmodels\shell.ts" />
     <TypeScriptCompile Include="app\viewmodels\test.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\knockout\knockout.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\knockout\tests\jasmine.extensions.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\sweetalert\sweetalert.d.ts" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

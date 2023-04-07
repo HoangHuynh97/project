@@ -3,11 +3,11 @@ import $ = require('jquery');
 
 export = class home {
     bannerSlide = ko.observableArray([
-        { src: "../../assets/images/am-nhac.jpg", id: 1 },
-        { src: "../../assets/images/am-nhac.jpg", id: 2 },
-        { src: "../../assets/images/am-nhac.jpg", id: 3 },
-        { src: "../../assets/images/am-nhac.jpg", id: 4 },
-        { src: "../../assets/images/am-nhac.jpg", id: 5 }
+        { src: "../../assets/images/banner-template.jpg", id: 1 },
+        { src: "../../assets/images/banner-template2.jpg", id: 2 },
+        { src: "../../assets/images/banner-template3.jpg", id: 3 },
+        { src: "../../assets/images/banner-template4.jpg", id: 4 },
+        { src: "../../assets/images/banner-template5.jpg", id: 5 }
     ]);
 
     setTime = 5;
@@ -36,21 +36,7 @@ export = class home {
         }
     }
 
-
-    bannerSinger = ko.observableArray([
-        { src: "../../assets/images/am-nhac.jpg", id: 1 },
-        { src: "../../assets/images/am-nhac.jpg", id: 2 },
-        { src: "../../assets/images/am-nhac.jpg", id: 3 },
-        { src: "../../assets/images/am-nhac.jpg", id: 4 },
-        { src: "../../assets/images/am-nhac.jpg", id: 5 },
-        { src: "../../assets/images/am-nhac.jpg", id: 6 },
-        { src: "../../assets/images/am-nhac.jpg", id: 7 },
-        { src: "../../assets/images/am-nhac.jpg", id: 8 },
-        { src: "../../assets/images/am-nhac.jpg", id: 9 },
-        { src: "../../assets/images/am-nhac.jpg", id: 10 }
-    ]);
-
-
+    bannerSinger = ko.observableArray();
     nextSinger() {
         this.bannerSinger.push(this.bannerSinger.shift());
         this.setTimeSinger = 5;
@@ -71,8 +57,9 @@ export = class home {
     }
 
     itemSongNew = ko.observableArray();
-    
-    getData = fetch('http://localhost/music/get_DataSong', {
+    itemPlaylist = ko.observableArray();
+    itemSongHot = ko.observableArray();
+    getData = fetch('http://localhost:8080/music/get_DataSong', {
         method: 'POST',
         headers: {
             'Accept': 'application/json, text/plain, */*',
@@ -82,10 +69,45 @@ export = class home {
     }).then((response) => {
         return response.json();
     }).then((data) => {
-        var objX = [];
+        var objItemNew = [];
         data.dataSongNew.map(function (value) {
-            objX.push({ id: value.id, name: value.name, id_gg: value.id_gg, image: '../../assets/images'+value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
+            objItemNew.push({ id: value.id, name: value.name, id_gg: value.id_gg, image: '../../assets/images'+value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
         });
-        this.itemSongNew(objX);
+        this.itemSongNew(objItemNew);
+
+        var objPlaylist = [];
+        data.dataPlaylist.map(function (value) {
+            objPlaylist.push({ id: value.id, name: value.name, img: value.img, create_by: 'Được tạo bởi '+value.create_by });
+        });
+        this.itemPlaylist(objPlaylist);
+
+        var objPlaySinger = [];
+        data.dataSinger_hot.map(function (value) {
+            objPlaySinger.push({ name: value.name, img: '../../assets/images' + value.img, id: value.id });
+        });
+        this.bannerSinger(objPlaySinger);
+
+        var objSongHot = [];
+        data.dataSongHot.map(function (value) {
+            objSongHot.push({ id: value.id, is_like: value.is_like, name: value.name, id_gg: value.id_gg, image: '../../assets/images' + value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
+        });
+        this.itemSongHot(objSongHot);
     });
+
+
+
+    changeLink(id_gg, singer, nameSong, imgSong) {
+        if (sessionStorage.getItem("url_song") != '') {
+            sessionStorage.removeItem("url_song");
+            sessionStorage.removeItem("name_singer");
+            sessionStorage.removeItem("name_song");
+            sessionStorage.removeItem("img_song");
+        }
+        sessionStorage.setItem("url_song", 'https://docs.google.com/uc?export=download&id=' + id_gg);
+        sessionStorage.setItem("name_singer", singer);
+        sessionStorage.setItem("name_song", nameSong);
+        sessionStorage.setItem("img_song", imgSong);
+
+        window.dispatchEvent(new Event("storage"));
+    }
 }

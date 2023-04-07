@@ -127,9 +127,9 @@
             <div class="sc_box_icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Cài đặt">
                 <i class="fa fa-wrench"></i>
             </div>
-            <div class="sc_box_icon b_light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Người dùng">
+            <a href="#login" class="sc_box_icon b_light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Người dùng">
                 <i class="fa fa-user"></i>
-            </div>
+            </a>
         </div>
     </section>
     <section class="menu">
@@ -220,19 +220,15 @@
         </div>
         <div class="mm_container_bot active_mobile-none">
             <div class="sc_container_left">
-                <div class="c_img_song active-none">
-                    <img id="img_song" src="../../assets/images/am-nhac.jpg" alt="" />
+                <div class="c_img_song" data-bind="class: checkPlay() ? 'active' : ''">
+                    <img id="img_song" data-bind="attr: { src: imgSong }"alt="" />
                 </div>
                 <div class="c_content_song">
                     <div class="c_title_song">
-                        <span id="name_song">
-                            this is name
-                        </span>
+                        <span id="name_song" data-bind="text: nameSong"></span>
                     </div>
                     <div class="c_title_singer">
-                        <span id="name_singer">
-                            this is singer
-                        </span>
+                        <span id="name_singer" data-bind="text: singer"></span>
                     </div>
                 </div>
             </div>
@@ -245,22 +241,26 @@
                         <i class="fa fa-backward"></i>
                     </div>
                     <div class="c_i_action_m play">
-                        <i class="fa fa-play"></i>
+                        <i class="fa fa-play" data-bind="visible: isPlay, click: playSong()"></i>
+                        <i class="fa fa-pause" data-bind="visible: isPause, click: pauseSong()"></i>
+                        <i class="fa fa-spinner" data-bind="visible: isSpinner"></i>
                     </div>
                     <div class="c_i_action_m">
                         <i class="fa fa-forward"></i>
                     </div>
-                    <div class="c_i_action_m active_retweet-none">
+                    <div class="c_i_action_m" data-bind="click: isLoop, class: sttLoop() ? 'active_retweet' : ''">
                         <i class="fa fa-retweet"></i>
                     </div>
                 </div>
                 <div class="sc_time_m">
                     <div class="sc_curent_time" id="set_time">
-                        <span>00:00</span>
+                        <span data-bind="text: strLine()"></span>
                     </div>
-                    <input id="point_timeline" class="sc_time_line" type="range" min="0" max="100" value="0"/>
+                    <input id="point_timeline" data-bind="attr: { max: duration, value: currentTime }" class="sc_time_line" type="range" min="0"/>
                     <div class="sc_end_time">
-                        <span>04:00</span>
+                        <span data-bind="text: hours() == 0 ? '' : hours() < 10 ? '0'+hours()+':' : hours()+':' "></span>
+                        <span data-bind="text: minutes() == 0 ? '00:' : minutes() < 10 ? '0'+minutes()+':' : minutes()+':' "></span>
+                        <span data-bind="text: seconds() == 0 ? '00' : seconds() < 10 ? '0'+seconds() : seconds() "></span>
                     </div>
                 </div>
             </div>
@@ -605,6 +605,10 @@
                 </div>
             </div>
         </div>
+
+        <audio id="audioElement">
+            <source data-bind="attr: { src: url_song }, event: { play: playSong() }"/>
+        </audio>
     </section>
     <div class="page-host" data-bind="router: { transition:'entrance' }"></div>
 </div>
