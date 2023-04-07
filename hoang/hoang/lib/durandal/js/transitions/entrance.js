@@ -78,7 +78,7 @@ define(['durandal/system', 'durandal/composition', 'jquery'], function(system, c
             if (!context.child) {
                 $(context.activeView).fadeOut(fadeOutDuration, endTransition);
             } else {
-                var duration = context.duration || 500;
+                var duration = context.duration || 0;
                 var $child = $(context.child);
                 var fadeOnly = !!context.fadeOnly;
                 var startValues = {

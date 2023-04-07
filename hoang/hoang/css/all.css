@@ -1,7 +1,9 @@
 ﻿a {
     text-decoration: none !important;
 }
-
+    a:hover {
+        color: #ffffff !important;
+    }
 ::-webkit-scrollbar {
     width: 5px;
 }

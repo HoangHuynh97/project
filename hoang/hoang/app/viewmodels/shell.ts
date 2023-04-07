@@ -19,6 +19,7 @@ export = class {
     isPause = ko.observable(false);
     isSpinner = ko.observable(true);
     checkPlay = ko.observable(false);
+    isLogin = ko.observable(sessionStorage.getItem("name_user") ? true : false);
 
     duration = ko.observable(0);
     hours = ko.observable(0);
@@ -42,23 +43,26 @@ export = class {
     nameSong = ko.observable('Là 1 Thằng Con Trai');
     imgSong = ko.observable('../../assets/images/mqdefault_2.jpg');
 
+    isUser = ko.observable(sessionStorage.getItem("name_user") ? sessionStorage.getItem("name_user").charAt(0) : '');
 
     url_song = ko.observable('');
     aud = new Audio();
     playSession = window.addEventListener('storage', () => {
-        this.url_song(sessionStorage.getItem("url_song"));
-        this.aud.src = this.url_song();
+        if (this.url_song() != sessionStorage.getItem("url_song")) {
+            this.url_song(sessionStorage.getItem("url_song"));
+            this.aud.src = this.url_song();
 
-        this.singer(sessionStorage.getItem("name_singer"));
-        this.nameSong(sessionStorage.getItem("name_song"));
-        this.imgSong(sessionStorage.getItem("img_song"));
+            this.singer(sessionStorage.getItem("name_singer"));
+            this.nameSong(sessionStorage.getItem("name_song"));
+            this.imgSong(sessionStorage.getItem("img_song"));
 
-        this.isPlay(false);
-        this.isPause(false);
-        this.isSpinner(true);
-        this.checkPlay(false);
+            this.isPlay(false);
+            this.isPause(false);
+            this.isSpinner(true);
+            this.checkPlay(false);
 
-        this.aud.load();
+            this.aud.load();
+        }
     });
 
     checkPlayNew = this.aud.addEventListener("canplay", () => {
@@ -144,5 +148,12 @@ export = class {
                 this.checkPlay(false);
             }
         }
+    }
+
+    isLogout() {
+        sessionStorage.removeItem("id_user");
+        sessionStorage.removeItem("name_user");
+        this.isLogin(false);
+        this.isUser('');
     }
 }

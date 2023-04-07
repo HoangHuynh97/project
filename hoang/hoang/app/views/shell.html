@@ -127,8 +127,19 @@
             <div class="sc_box_icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Cài đặt">
                 <i class="fa fa-wrench"></i>
             </div>
-            <a href="#login" class="sc_box_icon b_light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Người dùng">
+            <a href="#login"
+               data-bind="class: isLogin() ? 'hidden' : ''"
+               class="sc_box_icon b_light"
+               data-bs-toggle="tooltip"
+               data-bs-placement="bottom"
+               title="Người dùng">
                 <i class="fa fa-user"></i>
+            </a>
+            <a data-bind="text: isUser(), class: isLogin() ? '' : 'hidden', click: isLogout"
+               class="sc_box_icon b_light"
+               data-bs-toggle="tooltip"
+               data-bs-placement="bottom"
+               title="Người dùng">
             </a>
         </div>
     </section>
