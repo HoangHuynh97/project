@@ -8,14 +8,15 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
                 m_router.map([
                     { route: '', title: 'Home', moduleId: 'viewmodels/home', nav: true },
                     { route: 'login', moduleId: 'viewmodels/login', nav: true },
-                    { route: 'test', moduleId: 'viewmodels/test', nav: true }
+                    { route: 'test', moduleId: 'viewmodels/test', nav: true },
+                    { route: 'new', moduleId: 'viewmodels/new', nav: true }
                 ]).buildNavigationModel();
                 return m_router.activate();
             };
             this.setIsSelected = ko.observable(false);
-            this.isPlay = ko.observable(false);
+            this.isPlay = ko.observable(true);
             this.isPause = ko.observable(false);
-            this.isSpinner = ko.observable(true);
+            this.isSpinner = ko.observable(false);
             this.checkPlay = ko.observable(false);
             this.isLogin = ko.observable(sessionStorage.getItem("name_user") ? true : false);
             this.duration = ko.observable(0);
@@ -31,15 +32,16 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
             this.strH = ko.observable('');
             this.strM = ko.observable('00:');
             this.strS = ko.observable('00');
-            this.strLine = ko.observable('');
+            this.strLine = ko.observable('00:00');
             this.sttLoop = ko.observable(false);
-            this.id_gg = ko.observable('17ZUjG5iqEB-vMWaLEnmxNE4SMzzusxeX');
-            this.singer = ko.observable('Jack');
-            this.nameSong = ko.observable('Là 1 Thằng Con Trai');
-            this.imgSong = ko.observable('../../assets/images/mqdefault_2.jpg');
+            this.isURL = ko.observable('#');
+            this.id_gg = ko.observable(sessionStorage.getItem("url_song") ? sessionStorage.getItem("url_song") : '17ZUjG5iqEB-vMWaLEnmxNE4SMzzusxeX');
+            this.singer = ko.observable(sessionStorage.getItem("name_singer") ? sessionStorage.getItem("name_singer") : 'Jack');
+            this.nameSong = ko.observable(sessionStorage.getItem("name_song") ? sessionStorage.getItem("name_song") : 'Là 1 Thằng Con Trai');
+            this.imgSong = ko.observable(sessionStorage.getItem("img_song") ? sessionStorage.getItem("img_song") : '../../assets/images/mqdefault_2.jpg');
             this.isUser = ko.observable(sessionStorage.getItem("name_user") ? sessionStorage.getItem("name_user").charAt(0) : '');
-            this.url_song = ko.observable('');
-            this.aud = new Audio();
+            this.url_song = ko.observable('https://docs.google.com/uc?export=download&id=17ZUjG5iqEB-vMWaLEnmxNE4SMzzusxeX');
+            this.aud = new Audio(this.url_song());
             this.playSession = window.addEventListener('storage', function () {
                 if (_this.url_song() != sessionStorage.getItem("url_song")) {
                     _this.url_song(sessionStorage.getItem("url_song"));
@@ -136,6 +138,10 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
             sessionStorage.removeItem("name_user");
             this.isLogin(false);
             this.isUser('');
+        };
+        class_1.prototype.getURL = function (url) {
+            this.isURL(url);
+            window.location.href = this.isURL();
         };
         return class_1;
     }());

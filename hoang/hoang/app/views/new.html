@@ -1,0 +1,58 @@
+﻿<div class="mm_container">
+    <div class="mm_title_menu">
+        <span>Nhạc mới</span>
+        <div class="mm_icon_title_menu">
+            <i class="fa fa-play-circle"></i>
+        </div>
+    </div>
+    <div class="mm_list_random">
+        <div class="mm_container_tab">
+            <table class="mm_table">
+                <tbody data-bind="foreach: itemSong">
+                    <tr>
+                        <td>
+                            <div data-bind="class: $index() == 0 ? 'number_song' : $index() == 1 ? 'number_song number_tow' : $index() == 2 ? 'number_song number_three' : 'number_song number_out'">
+                                <span data-bind="text: $index()+1"></span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="c_td_box_image">
+                                <div class="sc_container_box_song">
+                                    <div class="sc_c_img">
+                                        <img data-bind="attr: { src: image }" alt="" />
+                                        <div class="sc_c_img_bg hidden">
+                                            <img src="../../assets/images/play.png" class="play_icon"/>
+                                        </div>
+                                    </div>
+                                    <div class="sc_c_des">
+                                        <div class="sc_c_des_name">
+                                            <h5 data-bind="text: name"></h5>
+                                        </div>
+                                        <div class="sc_c_des_singer mginbt5" data-bind="foreach: id_singer">
+                                            <a class="sc_text_link" data-bind="text: name"></a>
+                                            <span class="nohover_singer">x</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="sc_option_table">
+                                <div class="sc_icon_table heart_active-none">
+                                    <i class="fa fa-heart"></i>
+                                </div>
+                                <div class="sc_icon_table">
+                                    <i class="fa fa-download"></i>
+                                </div>
+                                <div class="sc_icon_table">
+                                    <i class="fa fa-play"></i>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="load-more" data-bind="click: loadMore, visible: sttLoadmore">Xem thêm</div>
+        </div>
+    </div>
+</div>

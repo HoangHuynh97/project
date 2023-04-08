@@ -8,16 +8,17 @@ export = class {
         m_router.map([
             { route: '', title: 'Home', moduleId: 'viewmodels/home', nav: true },
             { route: 'login', moduleId: 'viewmodels/login', nav: true },
-            { route: 'test', moduleId: 'viewmodels/test', nav: true }
+            { route: 'test', moduleId: 'viewmodels/test', nav: true },
+            { route: 'new', moduleId: 'viewmodels/new', nav: true }
         ]).buildNavigationModel();
 
         return m_router.activate();
     };
 
     setIsSelected = ko.observable(false);
-    isPlay = ko.observable(false);
+    isPlay = ko.observable(true);
     isPause = ko.observable(false);
-    isSpinner = ko.observable(true);
+    isSpinner = ko.observable(false);
     checkPlay = ko.observable(false);
     isLogin = ko.observable(sessionStorage.getItem("name_user") ? true : false);
 
@@ -34,19 +35,21 @@ export = class {
     strH = ko.observable('');
     strM = ko.observable('00:');
     strS = ko.observable('00');
-    strLine = ko.observable('');
+    strLine = ko.observable('00:00');
     sttLoop = ko.observable(false);
+    isURL = ko.observable('#');
 
 
-    id_gg = ko.observable('17ZUjG5iqEB-vMWaLEnmxNE4SMzzusxeX');
-    singer = ko.observable('Jack');
-    nameSong = ko.observable('Là 1 Thằng Con Trai');
-    imgSong = ko.observable('../../assets/images/mqdefault_2.jpg');
+    id_gg = ko.observable(sessionStorage.getItem("url_song") ? sessionStorage.getItem("url_song") : '17ZUjG5iqEB-vMWaLEnmxNE4SMzzusxeX');
+    singer = ko.observable(sessionStorage.getItem("name_singer") ? sessionStorage.getItem("name_singer") : 'Jack');
+    nameSong = ko.observable(sessionStorage.getItem("name_song") ? sessionStorage.getItem("name_song") : 'Là 1 Thằng Con Trai');
+    imgSong = ko.observable(sessionStorage.getItem("img_song") ? sessionStorage.getItem("img_song") : '../../assets/images/mqdefault_2.jpg');
 
     isUser = ko.observable(sessionStorage.getItem("name_user") ? sessionStorage.getItem("name_user").charAt(0) : '');
 
-    url_song = ko.observable('');
-    aud = new Audio();
+    url_song = ko.observable('https://docs.google.com/uc?export=download&id=17ZUjG5iqEB-vMWaLEnmxNE4SMzzusxeX');
+    aud = new Audio(this.url_song());
+
     playSession = window.addEventListener('storage', () => {
         if (this.url_song() != sessionStorage.getItem("url_song")) {
             this.url_song(sessionStorage.getItem("url_song"));
@@ -155,5 +158,10 @@ export = class {
         sessionStorage.removeItem("name_user");
         this.isLogin(false);
         this.isUser('');
+    }
+
+    getURL(url) {
+        this.isURL(url);
+        window.location.href = this.isURL();
     }
 }

@@ -149,68 +149,68 @@
         </div>
         <div class="mm_container_menu active-none">
             <div class="sc_menu">
-                <div class="sc_menu_logo">
+                <a class="sc_menu_logo" href="#">
                     <img src="../../assets/images/logo.png" alt="" />
-                </div>
+                </a>
                 <div class="sc_menu_content">
-                    <div class="sc_box_menu">
+                    <a class="sc_box_menu" href="#" data-bind="click: getURL.bind($data, '#'), class: isURL() == '#' ? 'active' : ''">
                         <div class="c_icon_menu">
                             <i class="fa fa-star"></i>
                         </div>
                         <div class="c_title_menu">
                             <span>Khám phá</span>
                         </div>
-                    </div>
-                    <div class="sc_box_menu">
+                    </a>
+                    <a class="sc_box_menu" href="#profile" data-bind="click: getURL.bind($data, '#profile'), class: isURL() == '#profile' ? 'active' : ''">
                         <div class="c_icon_menu">
                             <i class="fa fa-headphones"></i>
                         </div>
                         <div class="c_title_menu">
                             <span>Cá nhân</span>
                         </div>
-                    </div>
-                    <div class="sc_box_menu">
+                    </a>
+                    <a class="sc_box_menu" href="#new" data-bind="click: getURL.bind($data, '#new'), class: isURL() == '#new' ? 'active' : ''">
                         <div class="c_icon_menu">
                             <i class="fa fa-music"></i>
                         </div>
                         <div class="c_title_menu">
                             <span>Nhạc mới</span>
                         </div>
-                    </div>
+                    </a>
                 </div>
                 <div class="sc_menu_sub_content">
-                    <div class="sc_box_menu">
+                    <a class="sc_box_menu" href="#cate" data-bind="click: getURL.bind($data, '#cate'), class: isURL() == '#cate' ? 'active' : ''">
                         <div class="c_icon_menu">
                             <i class="fa fa-star"></i>
                         </div>
                         <div class="c_title_menu">
                             <span>Thể loại</span>
                         </div>
-                    </div>
-                    <div class="sc_box_menu">
+                    </a>
+                    <a class="sc_box_menu" href="#maxchart" data-bind="click: getURL.bind($data, '#maxchart'), class: isURL() == '#maxchart' ? 'active' : ''">
                         <div class="c_icon_menu">
                             <i class="fa fa-bar-chart-o"></i>
                         </div>
                         <div class="c_title_menu">
                             <span>#maxchart</span>
                         </div>
-                    </div>
-                    <div class="sc_box_menu">
+                    </a>
+                    <a class="sc_box_menu" href="#mv" data-bind="click: getURL.bind($data, '#mv'), class: isURL() == '#mv' ? 'active' : ''">
                         <div class="c_icon_menu">
                             <i class="fa fa-play-circle"></i>
                         </div>
                         <div class="c_title_menu">
                             <span>MV</span>
                         </div>
-                    </div>
-                    <div class="sc_box_menu">
+                    </a>
+                    <a class="sc_box_menu" href="#sub" data-bind="click: getURL.bind($data, '#sub'), class: isURL() == '#sub' ? 'active' : ''">
                         <div class="c_icon_menu">
                             <i class="fa fa-heart"></i>
                         </div>
                         <div class="c_title_menu">
                             <span>Theo dõi</span>
                         </div>
-                    </div>
+                    </a>
                 </div>
                 <div class="sc_button_menu">
                     <div class="c_icon_menu">
@@ -252,8 +252,8 @@
                         <i class="fa fa-backward"></i>
                     </div>
                     <div class="c_i_action_m play">
-                        <i class="fa fa-play" data-bind="visible: isPlay, click: playSong()"></i>
-                        <i class="fa fa-pause" data-bind="visible: isPause, click: pauseSong()"></i>
+                        <i class="fa fa-play" data-bind="visible: isPlay, click: playSong"></i>
+                        <i class="fa fa-pause" data-bind="visible: isPause, click: pauseSong"></i>
                         <i class="fa fa-spinner" data-bind="visible: isSpinner"></i>
                     </div>
                     <div class="c_i_action_m">
@@ -618,7 +618,7 @@
         </div>
 
         <audio id="audioElement">
-            <source data-bind="attr: { src: url_song }, event: { play: playSong() }"/>
+            <source data-bind="attr: { src: url_song }, event: { play: playSong }"/>
         </audio>
     </section>
     <div class="page-host" data-bind="router: { transition:'entrance' }"></div>

@@ -2,35 +2,75 @@
     <div class="sc-box-bg"></div>
     <div class="sc-box-bg"></div>
     <div class="sc-box-bg"></div>
-    <div class="sc-container-form">
-        <div class="sc-title-form">
-            <span>Login</span>
+    <div class="sc-container-form" data-bind="class: isShowSignUP() ? 'form-signup' : ''">
+        <div class="sc-container-form-box-login" data-bind="class: isShowLogin() ? '' : 'is-show'">
+            <div class="sc-title-form">
+                <span>Login</span>
+            </div>
+            <div class="sc-text-form">
+                <span>Username</span>
+            </div>
+            <div class="sc-content-input">
+                <i class="fa fa-user"></i>
+                <input id="username" type="text" class="sc-login-input" placeholder="Username" data-bind="textInput: valueUser" />
+            </div>
+            <div class="sc-text-form">
+                <span>Password</span>
+            </div>
+            <div class="sc-content-input">
+                <i class="fa fa-lock"></i>
+                <input id="pass" type="password" class="sc-login-input" placeholder="Password" data-bind="textInput: valuePass" />
+            </div>
+            <div class="sc-forgot-password">
+                <span></span>
+            </div>
+            <div class="sc-btn-login" data-bind="click: checkLogin">
+                <span>Login</span>
+            </div>
+            <div class="sc-login-more">
+                <span>Or Sign Up Using</span>
+            </div>
+            <div class="sc-sign-up" data-bind="click: signUP">
+                <span>SIGN UP >>></span>
+            </div>
         </div>
-        <div class="sc-text-form">
-            <span>Username</span>
-        </div>
-        <div class="sc-content-input">
-            <i class="fa fa-user"></i>
-            <input id="username" type="text" class="sc-login-input" placeholder="Username" data-bind="textInput: valueUser"/>
-        </div>
-        <div class="sc-text-form">
-            <span>Password</span>
-        </div>
-        <div class="sc-content-input">
-            <i class="fa fa-lock"></i>
-            <input id="pass" type="password" class="sc-login-input" placeholder="Password" data-bind="textInput: valuePass"/>
-        </div>
-        <div class="sc-forgot-password">
-            <span>Forgot password?</span>
-        </div>
-        <div class="sc-btn-login" data-bind="click: checkLogin">
-            <span>Login</span>
-        </div>
-        <div class="sc-login-more">
-            <span>Or Sign Up Using</span>
-        </div>
-        <div class="sc-sign-up">
-            <span>SIGN UP >>></span>
+        <div class="sc-container-form-box-signup" data-bind="class: isShowSignUP() ? '' : 'is-show'">
+            <div class="sc-title-form-signup">
+                <span>SIGN UP</span>
+            </div>
+            <div class="sc-text-form-signup">
+                <span>Username</span>
+            </div>
+            <div class="sc-content-input-signup">
+                <i class="fa fa-user"></i>
+                <input type="text" class="sc-login-input" placeholder="Username" data-bind="textInput: valueUserSignUP" />
+            </div>
+            <div class="sc-text-form-signup">
+                <span>Password</span>
+            </div>
+            <div class="sc-content-input-signup">
+                <i class="fa fa-lock"></i>
+                <input type="password" class="sc-login-input" placeholder="Password" data-bind="textInput: valuePassSignUP" />
+            </div>
+            <div class="sc-text-form-signup">
+                <span>Re-Password</span>
+            </div>
+            <div class="sc-content-input-signup">
+                <i class="fa fa-lock"></i>
+                <input type="password" class="sc-login-input" placeholder="Password" data-bind="textInput: valuePassSignUPCheck" />
+            </div>
+            <div class="sc-text-form-signup">
+                <span>Fullname</span>
+            </div>
+            <div class="sc-content-input-signup">
+                <i class="fa fa-user"></i>
+                <input type="text" class="sc-login-input" placeholder="Username" data-bind="textInput: valueUserFullname" />
+            </div>
+            <div class="sc-btn-login-signup" data-bind="click: getSignUP">
+                <span>SIGN UP</span>
+            </div>
+            <div class="sc-sign-up-signup" data-bind="click: logIN">
+                <span><<< LOGIN</span>
+            </div>
         </div>
     </div>
-</div>

@@ -27,7 +27,7 @@ define(['durandal/system', 'durandal/app', 'durandal/viewLocator', 'knockout', '
     window['sweetalert2'] = sweetalert2;
    //>>excludeEnd("build");
 
-    app.title = 'Durandal Starter Kit';
+    app.title = 'Max Music';
 
     app.configurePlugins({
         router:true,
