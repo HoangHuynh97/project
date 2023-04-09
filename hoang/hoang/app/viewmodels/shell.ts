@@ -8,7 +8,7 @@ export = class {
         m_router.map([
             { route: '', title: 'Home', moduleId: 'viewmodels/home', nav: true },
             { route: 'login', moduleId: 'viewmodels/login', nav: true },
-            { route: 'test', moduleId: 'viewmodels/test', nav: true },
+            { route: 'profile', moduleId: 'viewmodels/profile', nav: true },
             { route: 'new', moduleId: 'viewmodels/new', nav: true }
         ]).buildNavigationModel();
 
@@ -38,16 +38,17 @@ export = class {
     strLine = ko.observable('00:00');
     sttLoop = ko.observable(false);
     isURL = ko.observable('#');
+    changeVolume = ko.observable(100);
 
 
-    id_gg = ko.observable(sessionStorage.getItem("url_song") ? sessionStorage.getItem("url_song") : '17ZUjG5iqEB-vMWaLEnmxNE4SMzzusxeX');
+    id_gg = ko.observable(sessionStorage.getItem("id_gg") ? sessionStorage.getItem("id_gg") : '17ZUjG5iqEB-vMWaLEnmxNE4SMzzusxeX');
     singer = ko.observable(sessionStorage.getItem("name_singer") ? sessionStorage.getItem("name_singer") : 'Jack');
     nameSong = ko.observable(sessionStorage.getItem("name_song") ? sessionStorage.getItem("name_song") : 'Là 1 Thằng Con Trai');
     imgSong = ko.observable(sessionStorage.getItem("img_song") ? sessionStorage.getItem("img_song") : '../../assets/images/mqdefault_2.jpg');
 
     isUser = ko.observable(sessionStorage.getItem("name_user") ? sessionStorage.getItem("name_user").charAt(0) : '');
 
-    url_song = ko.observable('https://docs.google.com/uc?export=download&id=17ZUjG5iqEB-vMWaLEnmxNE4SMzzusxeX');
+    url_song = ko.observable(sessionStorage.getItem("url_song") ? sessionStorage.getItem("url_song") : 'https://docs.google.com/uc?export=download&id=17ZUjG5iqEB-vMWaLEnmxNE4SMzzusxeX');
     aud = new Audio(this.url_song());
 
     playSession = window.addEventListener('storage', () => {
@@ -85,12 +86,15 @@ export = class {
     });
 
     checkUpdateTime = this.aud.addEventListener("timeupdate", () => {
+        if (this.aud.currentTime == this.aud.duration && !this.sttLoop()) {
+            this.pauseSong();
+        }
         this.currentTime(this.aud.currentTime);
         this.currentTimeHours(Math.floor(this.currentTime() / 3600));
         this.currentTimeLine(this.currentTime() - this.currentTimeHours() * 3600);
         this.currentTimeMinutes(Math.floor(this.currentTimeLine() / 60));
         this.currentTimeSeconds(Math.round(this.currentTimeLine() - this.currentTimeMinutes() * 60));
-
+        
         if (this.currentTimeHours() != 0) {
             if (this.currentTimeHours() < 10) {
                 this.strH("0" + this.currentTimeHours() + ":");
@@ -105,17 +109,23 @@ export = class {
             } else {
                 this.strM(this.currentTimeMinutes + ":");
             }
+        } else {
+            this.strM('00:');
         }
 
         if (this.currentTimeSeconds() != 0) {
             if (this.currentTimeSeconds() < 10) {
                 this.strS("0" + this.currentTimeSeconds());
             } else {
-                this.strS(''+this.currentTimeSeconds());
+                this.strS('' + this.currentTimeSeconds());
             }
+        } else {
+            this.strS('00');
         }
 
         this.strLine(this.strH() + this.strM() + this.strS());
+
+        this.aud.volume = this.changeVolume() / 100;
     });
 
     isLoop() {

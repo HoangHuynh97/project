@@ -99,11 +99,13 @@ export = class home {
     changeLink(id_gg, singer, nameSong, imgSong) {
         if (sessionStorage.getItem("url_song") != '') {
             sessionStorage.removeItem("url_song");
+            sessionStorage.removeItem("id_gg");
             sessionStorage.removeItem("name_singer");
             sessionStorage.removeItem("name_song");
             sessionStorage.removeItem("img_song");
         }
         sessionStorage.setItem("url_song", 'https://docs.google.com/uc?export=download&id=' + id_gg);
+        sessionStorage.setItem("id_gg", id_gg);
         sessionStorage.setItem("name_singer", singer);
         sessionStorage.setItem("name_song", nameSong);
         sessionStorage.setItem("img_song", imgSong);

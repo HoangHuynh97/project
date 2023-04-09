@@ -128,6 +128,7 @@
     <Content Include="app\views\home.html" />
     <Content Include="app\views\login.html" />
     <Content Include="app\views\new.html" />
+    <Content Include="app\views\profile.html" />
     <Content Include="app\views\shell.html" />
     <Content Include="app\views\test.html" />
     <Content Include="app\views\welcome.html" />
@@ -208,6 +209,7 @@
     <TypeScriptCompile Include="app\viewmodels\home.ts" />
     <TypeScriptCompile Include="app\viewmodels\login.ts" />
     <TypeScriptCompile Include="app\viewmodels\new.ts" />
+    <TypeScriptCompile Include="app\viewmodels\profile.ts" />
     <TypeScriptCompile Include="app\viewmodels\shell.ts" />
     <TypeScriptCompile Include="app\viewmodels\test.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />

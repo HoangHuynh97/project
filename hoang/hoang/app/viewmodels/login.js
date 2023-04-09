@@ -94,7 +94,14 @@ define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert
                     }).then(function (response) {
                         return response.json();
                     }).then(function (data) {
-                        if (data.message == 'fail') {
+                        if (data.message == 'exists') {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Tài khoản đã tồn tại!',
+                                text: 'Vui lòng thử lại sau!'
+                            });
+                        }
+                        else if (data.message == 'fail') {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Hệ thống xảy ra lỗi',

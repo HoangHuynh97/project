@@ -8,7 +8,7 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
                 m_router.map([
                     { route: '', title: 'Home', moduleId: 'viewmodels/home', nav: true },
                     { route: 'login', moduleId: 'viewmodels/login', nav: true },
-                    { route: 'test', moduleId: 'viewmodels/test', nav: true },
+                    { route: 'profile', moduleId: 'viewmodels/profile', nav: true },
                     { route: 'new', moduleId: 'viewmodels/new', nav: true }
                 ]).buildNavigationModel();
                 return m_router.activate();
@@ -35,12 +35,13 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
             this.strLine = ko.observable('00:00');
             this.sttLoop = ko.observable(false);
             this.isURL = ko.observable('#');
-            this.id_gg = ko.observable(sessionStorage.getItem("url_song") ? sessionStorage.getItem("url_song") : '17ZUjG5iqEB-vMWaLEnmxNE4SMzzusxeX');
+            this.changeVolume = ko.observable(100);
+            this.id_gg = ko.observable(sessionStorage.getItem("id_gg") ? sessionStorage.getItem("id_gg") : '17ZUjG5iqEB-vMWaLEnmxNE4SMzzusxeX');
             this.singer = ko.observable(sessionStorage.getItem("name_singer") ? sessionStorage.getItem("name_singer") : 'Jack');
             this.nameSong = ko.observable(sessionStorage.getItem("name_song") ? sessionStorage.getItem("name_song") : 'Là 1 Thằng Con Trai');
             this.imgSong = ko.observable(sessionStorage.getItem("img_song") ? sessionStorage.getItem("img_song") : '../../assets/images/mqdefault_2.jpg');
             this.isUser = ko.observable(sessionStorage.getItem("name_user") ? sessionStorage.getItem("name_user").charAt(0) : '');
-            this.url_song = ko.observable('https://docs.google.com/uc?export=download&id=17ZUjG5iqEB-vMWaLEnmxNE4SMzzusxeX');
+            this.url_song = ko.observable(sessionStorage.getItem("url_song") ? sessionStorage.getItem("url_song") : 'https://docs.google.com/uc?export=download&id=17ZUjG5iqEB-vMWaLEnmxNE4SMzzusxeX');
             this.aud = new Audio(this.url_song());
             this.playSession = window.addEventListener('storage', function () {
                 if (_this.url_song() != sessionStorage.getItem("url_song")) {
@@ -69,6 +70,9 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
                 _this.playSong();
             });
             this.checkUpdateTime = this.aud.addEventListener("timeupdate", function () {
+                if (_this.aud.currentTime == _this.aud.duration && !_this.sttLoop()) {
+                    _this.pauseSong();
+                }
                 _this.currentTime(_this.aud.currentTime);
                 _this.currentTimeHours(Math.floor(_this.currentTime() / 3600));
                 _this.currentTimeLine(_this.currentTime() - _this.currentTimeHours() * 3600);
@@ -90,6 +94,9 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
                         _this.strM(_this.currentTimeMinutes + ":");
                     }
                 }
+                else {
+                    _this.strM('00:');
+                }
                 if (_this.currentTimeSeconds() != 0) {
                     if (_this.currentTimeSeconds() < 10) {
                         _this.strS("0" + _this.currentTimeSeconds());
@@ -98,7 +105,11 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
                         _this.strS('' + _this.currentTimeSeconds());
                     }
                 }
+                else {
+                    _this.strS('00');
+                }
                 _this.strLine(_this.strH() + _this.strM() + _this.strS());
+                _this.aud.volume = _this.changeVolume() / 100;
             });
         }
         class_1.prototype.isLoop = function () {
