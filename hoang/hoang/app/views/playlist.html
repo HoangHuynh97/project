@@ -1,0 +1,78 @@
+﻿<div class="mm_container">
+    <div class="c_container_playlist">
+        <div class="c_container_playlist_banner">
+            <div class="c_img_list" data-bind="foreach: ArrIMG">
+
+                <img data-bind="attr: { src: '../../assets/images' + img }" class="c_img_list_list" alt="" />
+
+            </div>
+            <div class="text-title-15 color-fff nowrap text-center" data-bind="text: NamePlaylist()">
+            </div>
+            <div>
+                <span class="text-title-1 color-797">Được tạo bởi </span>
+                <span class="text-title-1 color-fff" data-bind="text: NameCreateBy()"></span>
+            </div>
+            <div class="btn-icon-play">
+                <i class="fa fa-play"></i><span> PHÁT NGẪU NHIÊN</span>
+            </div>
+        </div>
+        <div class="c_container_playlist_song">
+            <table class="mm_table">
+                <thead>
+                    <tr>
+                        <th>BÀI HÁT</th>
+                        <th style="text-align: right !important;">THUỘC TÍNH</th>
+                    </tr>
+                    <tr data-bind="class: itemSong().length > 0 ? 'hidden' : ''">
+                        <td colSpan="2">
+                            <div class="c_content_tab_mv">
+                                <img src="../../assets/images/empty.png" alt="" />
+                                <div class="c_text_empty">
+                                    Chưa có bài hát nào trong thư viện
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: itemSong">
+                    <tr>
+                        <td>
+                            <div class="c_td_box_image">
+                                <div class="sc_container_box_song">
+                                    <div class="sc_c_img">
+                                        <img data-bind="attr: { src: '../../assets/images' + image }" alt="" />
+                                        <div class="sc_c_img_bg hidden">
+                                            <img src="../../assets/images/play.png" class="play_icon" />
+                                        </div>
+                                    </div>
+                                    <div class="sc_c_des">
+                                        <div class="sc_c_des_name">
+                                            <h5 data-bind="text: name"></h5>
+                                        </div>
+                                        <div class="sc_c_des_singer mginbt5" data-bind="foreach: id_singer">
+                                            <a class="sc_text_link" data-bind="text: name, attr: { href: '#singer/' + id }"></a>
+                                            <span class="nohover_singer">x</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="sc_option_table">
+                                <div class="sc_icon_table">
+                                    <i class="fa fa-heart"></i>
+                                </div>
+                                <div class="sc_icon_table">
+                                    <i class="fa fa-download"></i>
+                                </div>
+                                <div class="sc_icon_table">
+                                    <i class="fa fa-play"></i>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

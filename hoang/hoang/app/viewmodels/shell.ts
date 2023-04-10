@@ -1,6 +1,8 @@
 ﻿import m_router = require('../../lib/durandal/js/plugins/router');
 import m_system = require('../../lib/durandal/js/system');
 import ko = require('knockout');
+import $ = require('jquery');
+import Swal = require('../../lib/sweetalert2/dist/sweetalert2.all.min');
 
 export = class {
     router = m_router;
@@ -9,7 +11,9 @@ export = class {
             { route: '', title: 'Home', moduleId: 'viewmodels/home', nav: true },
             { route: 'login', moduleId: 'viewmodels/login', nav: true },
             { route: 'profile', moduleId: 'viewmodels/profile', nav: true },
-            { route: 'new', moduleId: 'viewmodels/new', nav: true }
+            { route: 'new', moduleId: 'viewmodels/new', nav: true },
+            { route: 'singer/:id', moduleId: 'viewmodels/singer', nav: true },
+            { route: 'playlist/:id', moduleId: 'viewmodels/playlist', nav: true }
         ]).buildNavigationModel();
 
         return m_router.activate();
@@ -37,19 +41,42 @@ export = class {
     strS = ko.observable('00');
     strLine = ko.observable('00:00');
     sttLoop = ko.observable(false);
-    isURL = ko.observable('#');
+    sttRandom = ko.observable(false);
+    isURL = ko.observable(sessionStorage.getItem("isURL") ? sessionStorage.getItem("isURL") : '#');
     changeVolume = ko.observable(100);
-
+    checkShowModalBottom = ko.observable(false);
+    itemSong = ko.observableArray();
 
     id_gg = ko.observable(sessionStorage.getItem("id_gg") ? sessionStorage.getItem("id_gg") : '17ZUjG5iqEB-vMWaLEnmxNE4SMzzusxeX');
     singer = ko.observable(sessionStorage.getItem("name_singer") ? sessionStorage.getItem("name_singer") : 'Jack');
     nameSong = ko.observable(sessionStorage.getItem("name_song") ? sessionStorage.getItem("name_song") : 'Là 1 Thằng Con Trai');
     imgSong = ko.observable(sessionStorage.getItem("img_song") ? sessionStorage.getItem("img_song") : '../../assets/images/mqdefault_2.jpg');
 
+    itemSongHistory = ko.observableArray(sessionStorage.getItem("arrHistory") ? JSON.parse(sessionStorage.getItem("arrHistory")) : []);
+
     isUser = ko.observable(sessionStorage.getItem("name_user") ? sessionStorage.getItem("name_user").charAt(0) : '');
 
     url_song = ko.observable(sessionStorage.getItem("url_song") ? sessionStorage.getItem("url_song") : 'https://docs.google.com/uc?export=download&id=17ZUjG5iqEB-vMWaLEnmxNE4SMzzusxeX');
     aud = new Audio(this.url_song());
+
+
+    changeLinkModal(id_gg, singer, nameSong, imgSong) {
+        if (sessionStorage.getItem("url_song") != '') {
+            sessionStorage.removeItem("url_song");
+            sessionStorage.removeItem("id_gg");
+            sessionStorage.removeItem("name_singer");
+            sessionStorage.removeItem("name_song");
+            sessionStorage.removeItem("img_song");
+        }
+        sessionStorage.setItem("url_song", 'https://docs.google.com/uc?export=download&id=' + id_gg);
+        sessionStorage.setItem("id_gg", id_gg);
+        sessionStorage.setItem("name_singer", singer);
+        sessionStorage.setItem("name_song", nameSong);
+        sessionStorage.setItem("img_song", imgSong);
+
+        window.dispatchEvent(new Event("storage"));
+    }
+
 
     playSession = window.addEventListener('storage', () => {
         if (this.url_song() != sessionStorage.getItem("url_song")) {
@@ -138,9 +165,62 @@ export = class {
         }
     }
 
+    isRandom() {
+        if (this.sttRandom()) {
+            this.sttRandom(false);
+            
+        } else {
+            this.sttRandom(true);
+            
+        }
+    }
+
     playSong() {
         if (this.aud.src != '') {
             this.aud.play();
+            var checkExistsHistory = false;
+            if (sessionStorage.getItem("arrHistory")) {
+                JSON.parse(sessionStorage.getItem("arrHistory")).map(function (value) {
+                    if (value.id_gg == sessionStorage.getItem("id_gg")) {
+                        checkExistsHistory = true;
+                    }
+                });
+            }
+            if (!checkExistsHistory) {
+                var arr = [];
+                fetch('http://localhost:8080/music/check_like', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json, text/plain, */*',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ url: sessionStorage.getItem('id_gg'), id_user: sessionStorage.getItem('id_user') })
+                }).then((response) => {
+                    return response.json();
+                }).then((dataRes) => {
+                    if (dataRes.message == 'success') {
+                        arr.push({
+                            id_gg: sessionStorage.getItem("id_gg"),
+                            is_like: true,
+                            singer: sessionStorage.getItem("name_singer"),
+                            nameSong: sessionStorage.getItem("name_song"),
+                            imgSong: sessionStorage.getItem("img_song")
+                        });
+                    } else {
+                        arr.push({
+                            id_gg: sessionStorage.getItem("id_gg"),
+                            is_like: false,
+                            singer: sessionStorage.getItem("name_singer"),
+                            nameSong: sessionStorage.getItem("name_song"),
+                            imgSong: sessionStorage.getItem("img_song")
+                        });
+                    }
+                    this.itemSongHistory(this.itemSongHistory().concat(arr));
+                    sessionStorage.setItem("arrHistory", JSON.stringify(this.itemSongHistory()));
+
+                    this.itemSongHistory(JSON.parse(sessionStorage.getItem("arrHistory")));
+                });
+            }
             
             if (!this.aud.paused || this.aud.currentTime > 0) {
                 this.isPlay(false);
@@ -172,6 +252,65 @@ export = class {
 
     getURL(url) {
         this.isURL(url);
+        sessionStorage.setItem("isURL", url);
         window.location.href = this.isURL();
+    }
+
+    showModalBottom() {
+        if (this.checkShowModalBottom()) {
+            this.checkShowModalBottom(false);
+        } else {
+            this.checkShowModalBottom(true);
+        }
+    }
+
+    showModalUpload() {
+        $('#uploadModal').modal('show');
+    }
+
+    getData = fetch('http://localhost:8080/music/get_ramdom_song', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id_user: sessionStorage.getItem("id_user") ? sessionStorage.getItem("id_user") : 0 })
+    }).then((response) => {
+        return response.json();
+    }).then((data) => {
+        var objItemNew = [];
+        data.dataSongNew.map(function (value) {
+            objItemNew.push({ id: value.id, is_like: value.is_like, name: value.name, id_gg: value.id_gg, image: value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
+        });
+        this.itemSong(objItemNew);
+    });
+
+    addHeartModal(data, id_song, event) {
+        if (!sessionStorage.getItem('id_user')) {
+            Swal.fire({
+                title: '<strong>Vui lòng đăng nhập để thực hiện chức năng này!</strong>',
+                icon: 'warning',
+                showCloseButton: true,
+                focusConfirm: false,
+                confirmButtonText: 'Ok!'
+            });
+        } else {
+            fetch('http://localhost:8080/music/add_like_byURL', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ url: data, id_user: sessionStorage.getItem('id_user') })
+            }).then((response) => {
+                return response.json();
+            }).then((dataRes) => {
+                if (dataRes.message == 'success') {
+                    event.currentTarget.className += " heart_active";
+                } else if (dataRes.message == 'delete') {
+                    event.currentTarget.className = "icon_action_song";
+                }
+            });
+        }
     }
 }

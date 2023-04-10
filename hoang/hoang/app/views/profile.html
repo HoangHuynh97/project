@@ -8,7 +8,7 @@
     <div class="mm_list_random">
         <div class="sc_container_box_list inblock w100">
             <div class="mm_title_list left">
-                <h4>Playlist</h4>
+                <h4>Playlist đã tạo</h4>
             </div>
             <div class="mm_see_all">
                 <h4>TẤT CẢ</h4><i class="fa fa-chevron-right"></i>
@@ -47,15 +47,18 @@
     </div>
     <div class="mm_list_random">
         <div class="mm_tab">
-            <div class="c_tab_title active_tab">
+            <div class="c_tab_title" data-bind="class: isTab() == 1 ? 'active_tab' : '', click: changeViewTab.bind($data, 1)">
                 <span>BÀI HÁT</span>
             </div>
-            <div class="c_tab_title">
+            <div class="c_tab_title" data-bind="class: isTab() == 2 ? 'active_tab' : '', click: changeViewTab.bind($data, 2)">
+                <span>Playlist</span>
+            </div>
+            <div class="c_tab_title" data-bind="class: isTab() == 3 ? 'active_tab' : '', click: changeViewTab.bind($data, 3)">
                 <span>MV</span>
             </div>
         </div>
         <div class="mm_container_tab">
-            <div class="c_content_tab">
+            <div class="c_content_tab" data-bind="class: isTab() == 1 ? '' : 'hidden'">
                 <div class="btn_hight">
                     YÊU THÍCH
                 </div>
@@ -114,7 +117,45 @@
                     </tbody>
                 </table>
             </div>
-            <div class="c_content_tab_mv hidden">
+            <div class="c_content_tab_playlist" data-bind="class: isTab() == 2 ? '' : 'hidden'">
+                <div class="empty-playlist hidden">
+                    <img src="../../assets/images/empty.png" alt="" />
+                    <div class="c_text_empty">
+                        Chưa có playlist nào trong thư viện
+                    </div>
+                </div>
+                <div class="sc_container_box_list_song" data-bind="foreach: itemSongLikePlaylist">
+                    <div class="sc_box_list">
+                        <div class="sc_container_img_list">
+                            <div class="c_img_list" data-bind="foreach: img">
+
+                                <img data-bind="attr: { src: '../../assets/images' + img }" class="c_img_list_list" alt="" />
+
+                            </div>
+                            <div class="c_container_img">
+                                <div class="c_content_img">
+                                    <div class="c_box_icon" data-bind="class: is_like != 0 ? 'heart_active' : ''">
+                                        <i class="fa fa-heart"></i>
+                                    </div>
+                                    <div class="c_icon_play">
+                                        <i class="fa fa-play-circle"></i>
+                                    </div>
+                                    <div class="c_box_icon">
+                                        <i class="fa fa-download"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sc_c_des_name">
+                            <h5 data-bind="text: name"></h5>
+                        </div>
+                        <div class="sc_c_des_singer">
+                            <h5 data-bind="text: 'Tạo bởi '+ create_by"></h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="c_content_tab_mv" data-bind="class: isTab() == 3 ? '' : 'hidden'">
                 <img src="../../assets/images/empty.png" alt="" />
                 <div class="c_text_empty">
                     Chưa có MV nào trong thư viện
