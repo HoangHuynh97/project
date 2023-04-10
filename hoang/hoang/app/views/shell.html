@@ -360,23 +360,34 @@
             </div>
         </div>
 
-        <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="uploadModalLabel">Modal title</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        ...
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+        <div class="is-modal" id="uploadModal" data-bind="class: checkShowModalUpload() ? '' : 'hidden'">
+            <div class="modal-header">
+                <span>CẬP NHẬT CA KHÚC MỚI</span>
+            </div>
+            <div class="modal-body">
+                <div class="box-input">
+                    <label>Tên bài hát</label>
+                    <input type="text" data-bind="textInput: valueNameSong" />
+                </div>
+                <div class="box-input">
+                    <label>Ca sĩ thể hiện</label>
+                    <input type="text" data-bind="textInput: valueSinger"/>
+                </div>
+                <div class="box-input">
+                    <label>ID Google Driver</label>
+                    <input type="text" data-bind="textInput: valueIDGG"/>
+                </div>
+                <div class="box-input">
+                    <label>Hình ảnh</label>
+                    <div class="custom-file">
+                        <span>Choose Your File</span>
+                        <input type="file" accept="image/*" data-bind="event: { change: function() {uploadImage($element.files[0])} }">
                     </div>
                 </div>
+            </div>
+            <div class="modal-footer">
+                <div class="btn-submit" data-bind="click: saveUploadSong">Lưu lại</div>
+                <div class="btn-close" data-bind="click: hiddenModalUpload">Đóng</div>
             </div>
         </div>
 

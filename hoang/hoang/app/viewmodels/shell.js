@@ -1,4 +1,4 @@
-define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout", "jquery", "../../lib/sweetalert2/dist/sweetalert2.all.min"], function (require, exports, m_router, ko, $, Swal) {
+define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout", "../../lib/sweetalert2/dist/sweetalert2.all.min"], function (require, exports, m_router, ko, Swal) {
     "use strict";
     return /** @class */ (function () {
         function class_1() {
@@ -20,6 +20,7 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
             this.isPause = ko.observable(false);
             this.isSpinner = ko.observable(false);
             this.checkPlay = ko.observable(false);
+            this.checkShowModalUpload = ko.observable(false);
             this.isLogin = ko.observable(sessionStorage.getItem("name_user") ? true : false);
             this.duration = ko.observable(0);
             this.hours = ko.observable(0);
@@ -117,6 +118,11 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
                 _this.strLine(_this.strH() + _this.strM() + _this.strS());
                 _this.aud.volume = _this.changeVolume() / 100;
             });
+            this.fileImage = ko.observable();
+            this.data = new FormData();
+            this.valueNameSong = ko.observable('');
+            this.valueSinger = ko.observable('');
+            this.valueIDGG = ko.observable('');
             this.getData = fetch('http://localhost:8080/music/get_ramdom_song', {
                 method: 'POST',
                 headers: {
@@ -187,26 +193,29 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
                             'Accept': 'application/json, text/plain, */*',
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({ url: sessionStorage.getItem('id_gg'), id_user: sessionStorage.getItem('id_user') })
+                        body: JSON.stringify({
+                            url: sessionStorage.getItem('id_gg') ? sessionStorage.getItem('id_gg') : '17ZUjG5iqEB-vMWaLEnmxNE4SMzzusxeX',
+                            id_user: sessionStorage.getItem('id_user') ? sessionStorage.getItem('id_user') : 0
+                        })
                     }).then(function (response) {
                         return response.json();
                     }).then(function (dataRes) {
                         if (dataRes.message == 'success') {
                             arr.push({
-                                id_gg: sessionStorage.getItem("id_gg"),
+                                id_gg: sessionStorage.getItem("id_gg") ? sessionStorage.getItem("id_gg") : '17ZUjG5iqEB-vMWaLEnmxNE4SMzzusxeX',
                                 is_like: true,
-                                singer: sessionStorage.getItem("name_singer"),
-                                nameSong: sessionStorage.getItem("name_song"),
-                                imgSong: sessionStorage.getItem("img_song")
+                                singer: sessionStorage.getItem("name_singer") ? sessionStorage.getItem("name_singer") : 'Jack',
+                                nameSong: sessionStorage.getItem("name_song") ? sessionStorage.getItem("name_song") : 'Là 1 Thằng Con Trai',
+                                imgSong: sessionStorage.getItem("img_song") ? sessionStorage.getItem("img_song") : '../../assets/images/mqdefault_2.jpg'
                             });
                         }
                         else {
                             arr.push({
-                                id_gg: sessionStorage.getItem("id_gg"),
+                                id_gg: sessionStorage.getItem("id_gg") ? sessionStorage.getItem("id_gg") : '17ZUjG5iqEB-vMWaLEnmxNE4SMzzusxeX',
                                 is_like: false,
-                                singer: sessionStorage.getItem("name_singer"),
-                                nameSong: sessionStorage.getItem("name_song"),
-                                imgSong: sessionStorage.getItem("img_song")
+                                singer: sessionStorage.getItem("name_singer") ? sessionStorage.getItem("name_singer") : 'Jack',
+                                nameSong: sessionStorage.getItem("name_song") ? sessionStorage.getItem("name_song") : 'Là 1 Thằng Con Trai',
+                                imgSong: sessionStorage.getItem("img_song") ? sessionStorage.getItem("img_song") : '../../assets/images/mqdefault_2.jpg'
                             });
                         }
                         _this.itemSongHistory(_this.itemSongHistory().concat(arr));
@@ -253,7 +262,37 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
             }
         };
         class_1.prototype.showModalUpload = function () {
-            $('#uploadModal').modal('show');
+            this.checkShowModalUpload(true);
+        };
+        class_1.prototype.hiddenModalUpload = function () {
+            this.checkShowModalUpload(false);
+        };
+        class_1.prototype.uploadImage = function (file) {
+            this.data.append('image', file);
+            this.fileImage(file);
+        };
+        class_1.prototype.saveUploadSong = function () {
+            if (this.valueNameSong() == '' || this.valueSinger() == '' || this.valueIDGG() == '' || !this.fileImage()) {
+                Swal.fire({
+                    title: '<strong>Vui lòng nhập đầy đủ thông tin!</strong>',
+                    icon: 'warning',
+                    showCloseButton: true,
+                    focusConfirm: false,
+                    confirmButtonText: 'Ok!'
+                });
+            }
+            else {
+                this.data.append('song', this.valueNameSong());
+                this.data.append('singer', this.valueSinger());
+                this.data.append('gg', this.valueIDGG());
+                fetch('http://localhost:8080/music/upload_song', {
+                    method: 'POST',
+                    body: this.data
+                }).then(function (response) {
+                    return response.json();
+                }).then(function (dataRes) {
+                });
+            }
         };
         class_1.prototype.addHeartModal = function (data, id_song, event) {
             if (!sessionStorage.getItem('id_user')) {

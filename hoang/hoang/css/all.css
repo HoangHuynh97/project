@@ -193,7 +193,7 @@
     -ms-flex-pack: end;
     justify-content: end;
     border-top: 1px solid #fff;
-    padding: 10px 0px;
+    padding: 10px 20px;
 }
 
 .btn-submit {
@@ -2049,4 +2049,61 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+.is-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 50%;
+    right: auto;
+    bottom: auto;
+    margin-right: -50%;
+    border-radius: 5px;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(45deg, #c859ff 0%, #ffab8c 100%);
+    overflow: auto;
+    max-height: 100vh;
+    z-index: 1000;
+}
+
+.custom-file {
+    background-color: #EEE;
+    border-radius: 5px;
+    height: 30px;
+    border: 1px solid #CCC;
+    position: relative;
+    z-index: 1;
+}
+
+.custom-file > span {
+    font-family: Tahoma, Arial;
+    font-size: 15px;
+    display: block;
+    padding: 5px 0 0 5px;
+}
+
+.custom-file input[type="file"] {
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+
+.custom-file:after {
+    content: 'Upload';
+    width: 100px;
+    height: 30px;
+    color: #fff;
+    background-color: #f00;
+    position: absolute;
+    top: 0;
+    right: 0;
+    line-height: 30px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+    font-family: Tahmoa, Arial;
 }

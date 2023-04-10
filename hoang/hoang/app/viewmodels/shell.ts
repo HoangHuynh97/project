@@ -24,6 +24,7 @@ export = class {
     isPause = ko.observable(false);
     isSpinner = ko.observable(false);
     checkPlay = ko.observable(false);
+    checkShowModalUpload = ko.observable(false);
     isLogin = ko.observable(sessionStorage.getItem("name_user") ? true : false);
 
     duration = ko.observable(0);
@@ -194,25 +195,28 @@ export = class {
                         'Accept': 'application/json, text/plain, */*',
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ url: sessionStorage.getItem('id_gg'), id_user: sessionStorage.getItem('id_user') })
+                    body: JSON.stringify({
+                        url: sessionStorage.getItem('id_gg') ? sessionStorage.getItem('id_gg') : '17ZUjG5iqEB-vMWaLEnmxNE4SMzzusxeX',
+                        id_user: sessionStorage.getItem('id_user') ? sessionStorage.getItem('id_user') : 0
+                    })
                 }).then((response) => {
                     return response.json();
                 }).then((dataRes) => {
                     if (dataRes.message == 'success') {
                         arr.push({
-                            id_gg: sessionStorage.getItem("id_gg"),
+                            id_gg: sessionStorage.getItem("id_gg") ? sessionStorage.getItem("id_gg") : '17ZUjG5iqEB-vMWaLEnmxNE4SMzzusxeX',
                             is_like: true,
-                            singer: sessionStorage.getItem("name_singer"),
-                            nameSong: sessionStorage.getItem("name_song"),
-                            imgSong: sessionStorage.getItem("img_song")
+                            singer: sessionStorage.getItem("name_singer") ? sessionStorage.getItem("name_singer") : 'Jack',
+                            nameSong: sessionStorage.getItem("name_song") ? sessionStorage.getItem("name_song") : 'Là 1 Thằng Con Trai',
+                            imgSong: sessionStorage.getItem("img_song") ? sessionStorage.getItem("img_song") : '../../assets/images/mqdefault_2.jpg'
                         });
                     } else {
                         arr.push({
-                            id_gg: sessionStorage.getItem("id_gg"),
+                            id_gg: sessionStorage.getItem("id_gg") ? sessionStorage.getItem("id_gg") : '17ZUjG5iqEB-vMWaLEnmxNE4SMzzusxeX',
                             is_like: false,
-                            singer: sessionStorage.getItem("name_singer"),
-                            nameSong: sessionStorage.getItem("name_song"),
-                            imgSong: sessionStorage.getItem("img_song")
+                            singer: sessionStorage.getItem("name_singer") ? sessionStorage.getItem("name_singer") : 'Jack',
+                            nameSong: sessionStorage.getItem("name_song") ? sessionStorage.getItem("name_song") : 'Là 1 Thằng Con Trai',
+                            imgSong: sessionStorage.getItem("img_song") ? sessionStorage.getItem("img_song") : '../../assets/images/mqdefault_2.jpg'
                         });
                     }
                     this.itemSongHistory(this.itemSongHistory().concat(arr));
@@ -265,7 +269,61 @@ export = class {
     }
 
     showModalUpload() {
-        $('#uploadModal').modal('show');
+        this.checkShowModalUpload(true);
+    }
+    hiddenModalUpload() {
+        this.checkShowModalUpload(false);
+    }
+
+    fileImage = ko.observable();
+    data = new FormData();
+    uploadImage(file) {
+        this.data.append('image', file);
+        this.fileImage(file);
+    }
+
+    valueNameSong = ko.observable('');
+    valueSinger = ko.observable('');
+    valueIDGG = ko.observable('');
+    saveUploadSong() {
+        if (this.valueNameSong() == '' || this.valueSinger() == '' || this.valueIDGG() == '' || !this.fileImage()) {
+            Swal.fire({
+                title: '<strong>Vui lòng nhập đầy đủ thông tin!</strong>',
+                icon: 'warning',
+                showCloseButton: true,
+                focusConfirm: false,
+                confirmButtonText: 'Ok!'
+            });
+        } else {
+            this.data.append('song', this.valueNameSong());
+            this.data.append('singer', this.valueSinger());
+            this.data.append('gg', this.valueIDGG());
+            fetch('http://localhost:8080/music/upload_song', {
+                method: 'POST',
+                body: this.data
+            }).then((response) => {
+                return response.json();
+            }).then((dataRes) => {
+                if (dataRes.message == 'fail') {
+                    Swal.fire({
+                        title: '<strong>Hệ thống xảy ra lỗi, vui lòng thử lại sau!</strong>',
+                        icon: 'error',
+                        showCloseButton: true,
+                        focusConfirm: false,
+                        confirmButtonText: 'Ok!'
+                    });
+                } else {
+                    Swal.fire({
+                        title: '<strong>Thêm bài hát mới thành công!</strong>',
+                        icon: 'success',
+                        showCloseButton: true,
+                        focusConfirm: false,
+                        confirmButtonText: 'Ok!'
+                    });
+                    this.checkShowModalUpload(false);
+                }
+            });
+        }
     }
 
     getData = fetch('http://localhost:8080/music/get_ramdom_song', {
