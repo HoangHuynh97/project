@@ -212,7 +212,7 @@
                         </div>
                     </a>
                 </div>
-                <div class="sc_button_menu">
+                <div class="sc_button_menu" data-bind="click: showModalAddPlaylist">
                     <div class="c_icon_menu">
                         <i class="fa fa-plus"></i>
                     </div>
@@ -371,11 +371,11 @@
                 </div>
                 <div class="box-input">
                     <label>Ca sĩ thể hiện</label>
-                    <input type="text" data-bind="textInput: valueSinger"/>
+                    <input type="text" data-bind="textInput: valueSinger" />
                 </div>
                 <div class="box-input">
                     <label>ID Google Driver</label>
-                    <input type="text" data-bind="textInput: valueIDGG"/>
+                    <input type="text" data-bind="textInput: valueIDGG" />
                 </div>
                 <div class="box-input">
                     <label>Hình ảnh</label>
@@ -388,6 +388,29 @@
             <div class="modal-footer">
                 <div class="btn-submit" data-bind="click: saveUploadSong">Lưu lại</div>
                 <div class="btn-close" data-bind="click: hiddenModalUpload">Đóng</div>
+            </div>
+        </div>
+
+        <div class="is-modal" id="uploadModal" data-bind="class: checkShowModalAddPlaylist() ? '' : 'hidden'">
+            <div class="modal-header">
+                <span>TẠO PLAYLIST MỚI</span>
+            </div>
+            <div class="modal-body">
+                <div class="box-input">
+                    <label>Tên danh sách phát</label>
+                    <input type="text" data-bind="textInput: valueNamePlaylist" />
+                </div>
+                <div class="box-input" style="position: relative;">
+                    <label>Danh sách bài hát</label>
+                    <input data-bind="value: saved_value, event: { change: value_changed }, valueUpdate: 'keyup'" />
+                    <div class="select-input" data-bind="foreach: itemSongSearchInput, class: sttInputSearch() ? '' : 'hidden'">
+                        <div class="option-input" data-bind="text: name, click: $parent.addValueInput.bind($parent, name), clickBubble: false"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="btn-submit" data-bind="click: saveAddPlaylist">Lưu lại</div>
+                <div class="btn-close" data-bind="click: hiddenModalAddPlaylist">Đóng</div>
             </div>
         </div>
 

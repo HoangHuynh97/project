@@ -2061,7 +2061,6 @@
     border-radius: 5px;
     transform: translate(-50%, -50%);
     background: linear-gradient(45deg, #c859ff 0%, #ffab8c 100%);
-    overflow: auto;
     max-height: 100vh;
     z-index: 1000;
 }
@@ -2106,4 +2105,112 @@
     font-weight: bold;
     font-size: 16px;
     font-family: Tahmoa, Arial;
+}
+
+.select-input {
+    position: absolute;
+    top: calc(100% - 15px);
+    width: 100%;
+    background: #f3f3f3;
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+
+.option-input {
+    cursor: pointer;
+    user-select: none;
+    margin: 10px 0;
+}
+
+.container-load {
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    overflow: hidden;
+    z-index: 91;
+    top: 0;
+    background: #272031;
+}
+
+.is-load {
+    position: absolute;
+    left: -100px;
+    height: 100%;
+    width: 100px;
+    opacity: 0.1;
+    background: -webkit-gradient(linear, left top, right top, from(rgba(185,43,39,0)), color-stop(73%, rgb(255 255 255 / 10%)), color-stop(99%, rgba(21,101,192,0)));
+    background: -o-linear-gradient(left, rgba(185,43,39,0) 0%, rgb(255 255 255 / 10%) 73%, rgba(21,101,192,0) 99%);
+    background: linear-gradient(to right, rgba(185,43,39,0) 0%, rgb(255 255 255 / 10%) 73%, rgba(21,101,192,0) 99%);
+    -webkit-animation: loader 3s ease-in infinite;
+    animation: loader 3s ease-in infinite;
+}
+
+    .is-load:nth-child(1) {
+        -webkit-animation-delay: 0s;
+        animation-delay: 0s;
+    }
+
+    .is-load:nth-child(2) {
+        -webkit-animation-delay: 100ms;
+        animation-delay: 100ms;
+    }
+
+    .is-load:nth-child(3) {
+        -webkit-animation-delay: 300ms;
+        animation-delay: 300ms;
+    }
+
+    .is-load:nth-child(4) {
+        -webkit-animation-delay: 400ms;
+        animation-delay: 400ms;
+    }
+
+    .is-load:nth-child(5) {
+        -webkit-animation-delay: 800ms;
+        animation-delay: 800ms;
+    }
+
+    .is-load:nth-child(6) {
+        -webkit-animation-delay: 900s;
+        animation-delay: 900s;
+    }
+
+    .is-load:nth-child(7) {
+        -webkit-animation-delay: 1000ms;
+        animation-delay: 1000ms;
+    }
+
+    .is-load:nth-child(8) {
+        -webkit-animation-delay: 1050ms;
+        animation-delay: 1050ms;
+    }
+
+    .is-load:nth-child(9) {
+        -webkit-animation-delay: 1300ms;
+        animation-delay: 1300ms;
+    }
+
+    .is-load:nth-child(10) {
+        -webkit-animation-delay: 1400ms;
+        animation-delay: 1400ms;
+    }
+
+@-webkit-keyframes loader {
+    0% {
+        left: -100px;
+    }
+
+    100% {
+        left: 100%;
+    }
+}
+
+@keyframes loader {
+    0% {
+        left: -100px;
+    }
+
+    100% {
+        left: 100%;
+    }
 }

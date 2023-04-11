@@ -21,6 +21,7 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
             this.isSpinner = ko.observable(false);
             this.checkPlay = ko.observable(false);
             this.checkShowModalUpload = ko.observable(false);
+            this.checkShowModalAddPlaylist = ko.observable(false);
             this.isLogin = ko.observable(sessionStorage.getItem("name_user") ? true : false);
             this.duration = ko.observable(0);
             this.hours = ko.observable(0);
@@ -123,6 +124,10 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
             this.valueNameSong = ko.observable('');
             this.valueSinger = ko.observable('');
             this.valueIDGG = ko.observable('');
+            this.sttInputSearch = ko.observable(false);
+            this.valueNamePlaylist = ko.observable('');
+            this.saved_value = ko.observable('');
+            this.itemSongSearchInput = ko.observableArray();
             this.getData = fetch('http://localhost:8080/music/get_ramdom_song', {
                 method: 'POST',
                 headers: {
@@ -267,11 +272,29 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
         class_1.prototype.hiddenModalUpload = function () {
             this.checkShowModalUpload(false);
         };
+        class_1.prototype.showModalAddPlaylist = function () {
+            if (!sessionStorage.getItem('id_user')) {
+                Swal.fire({
+                    title: '<strong>Vui lòng đăng nhập để thực hiện chức năng này!</strong>',
+                    icon: 'warning',
+                    showCloseButton: true,
+                    focusConfirm: false,
+                    confirmButtonText: 'Ok!'
+                });
+            }
+            else {
+                this.checkShowModalAddPlaylist(true);
+            }
+        };
+        class_1.prototype.hiddenModalAddPlaylist = function () {
+            this.checkShowModalAddPlaylist(false);
+        };
         class_1.prototype.uploadImage = function (file) {
             this.data.append('image', file);
             this.fileImage(file);
         };
         class_1.prototype.saveUploadSong = function () {
+            var _this = this;
             if (this.valueNameSong() == '' || this.valueSinger() == '' || this.valueIDGG() == '' || !this.fileImage()) {
                 Swal.fire({
                     title: '<strong>Vui lòng nhập đầy đủ thông tin!</strong>',
@@ -291,6 +314,107 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
                 }).then(function (response) {
                     return response.json();
                 }).then(function (dataRes) {
+                    if (dataRes.message == 'fail') {
+                        Swal.fire({
+                            title: '<strong>Hệ thống xảy ra lỗi, vui lòng thử lại sau!</strong>',
+                            icon: 'error',
+                            showCloseButton: true,
+                            focusConfirm: false,
+                            confirmButtonText: 'Ok!'
+                        });
+                    }
+                    else {
+                        Swal.fire({
+                            title: '<strong>Thêm bài hát mới thành công!</strong>',
+                            icon: 'success',
+                            showCloseButton: true,
+                            focusConfirm: false,
+                            confirmButtonText: 'Ok!'
+                        });
+                        _this.checkShowModalUpload(false);
+                    }
+                });
+            }
+        };
+        class_1.prototype.value_changed = function () {
+            var _this = this;
+            if (this.saved_value() != '') {
+                fetch('http://localhost:8080/music/search_song_byName', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json, text/plain, */*',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ key_search: this.saved_value() })
+                }).then(function (response) {
+                    return response.json();
+                }).then(function (data) {
+                    if (data.dataSongSearch) {
+                        var objItemSearchInput = [];
+                        data.dataSongSearch.map(function (value) {
+                            objItemSearchInput.push({ id: value.id, name: value.name });
+                        });
+                        _this.itemSongSearchInput(objItemSearchInput);
+                    }
+                    else {
+                        _this.itemSongSearchInput([{ id: 0, name: 'Không có dữ liệu!' }]);
+                    }
+                    _this.sttInputSearch(true);
+                });
+            }
+            else {
+                this.sttInputSearch(false);
+            }
+        };
+        class_1.prototype.addValueInput = function (name, data, e) {
+            if (this.saved_value().indexOf('|') == -1) {
+                this.saved_value(name + ' | ');
+            }
+            else {
+                this.saved_value(this.saved_value().replace(this.saved_value().slice(this.saved_value().lastIndexOf(' | ')), ' | '));
+                this.saved_value(this.saved_value() + name + ' | ');
+            }
+            this.sttInputSearch(false);
+        };
+        class_1.prototype.saveAddPlaylist = function () {
+            if (!sessionStorage.getItem('id_user')) {
+                Swal.fire({
+                    title: '<strong>Vui lòng đăng nhập để thực hiện chức năng này!</strong>',
+                    icon: 'warning',
+                    showCloseButton: true,
+                    focusConfirm: false,
+                    confirmButtonText: 'Ok!'
+                });
+            }
+            else {
+                fetch('http://localhost:8080/music/add_playlist', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json, text/plain, */*',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name: this.valueNamePlaylist(), id_user_create: sessionStorage.getItem('id_user'), value_song: this.saved_value() })
+                }).then(function (response) {
+                    return response.json();
+                }).then(function (data) {
+                    if (data.message == 'success') {
+                        Swal.fire({
+                            title: '<strong>Thêm danh sách phát thành công!</strong>',
+                            icon: 'success',
+                            showCloseButton: true,
+                            focusConfirm: false,
+                            confirmButtonText: 'Ok!'
+                        });
+                    }
+                    else {
+                        Swal.fire({
+                            title: '<strong>Hệ thống lỗi, xin thử lại sau!</strong>',
+                            icon: 'error',
+                            showCloseButton: true,
+                            focusConfirm: false,
+                            confirmButtonText: 'Ok!'
+                        });
+                    }
                 });
             }
         };

@@ -16,6 +16,10 @@ define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert
                 _this.checkTime(_this.setTime);
                 _this.checkTimeSinger(_this.setTimeSinger);
             }, 1000);
+            this.hiddenLoading = ko.observable(true);
+            this.timeout = setTimeout(function () {
+                _this.hiddenLoading(false);
+            }, 1500);
             this.bannerSinger = ko.observableArray();
             this.itemSongNew = ko.observableArray();
             this.itemPlaylist = ko.observableArray();

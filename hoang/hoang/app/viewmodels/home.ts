@@ -28,6 +28,11 @@ export = class home {
         this.checkTimeSinger(this.setTimeSinger);
     }, 1000);
 
+    hiddenLoading = ko.observable(false);
+    timeout: ReturnType<typeof setTimeout> = setTimeout(() => {
+        this.hiddenLoading(true);
+    }, 1500);
+
     checkTime(time) {
         if (time == 0) {
             this.nextSlide();

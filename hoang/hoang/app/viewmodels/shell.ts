@@ -25,6 +25,7 @@ export = class {
     isSpinner = ko.observable(false);
     checkPlay = ko.observable(false);
     checkShowModalUpload = ko.observable(false);
+    checkShowModalAddPlaylist = ko.observable(false);
     isLogin = ko.observable(sessionStorage.getItem("name_user") ? true : false);
 
     duration = ko.observable(0);
@@ -275,6 +276,23 @@ export = class {
         this.checkShowModalUpload(false);
     }
 
+    showModalAddPlaylist() {
+        if (!sessionStorage.getItem('id_user')) {
+            Swal.fire({
+                title: '<strong>Vui lòng đăng nhập để thực hiện chức năng này!</strong>',
+                icon: 'warning',
+                showCloseButton: true,
+                focusConfirm: false,
+                confirmButtonText: 'Ok!'
+            });
+        } else {
+            this.checkShowModalAddPlaylist(true);
+        }
+    }
+    hiddenModalAddPlaylist() {
+        this.checkShowModalAddPlaylist(false);
+    }
+
     fileImage = ko.observable();
     data = new FormData();
     uploadImage(file) {
@@ -321,6 +339,87 @@ export = class {
                         confirmButtonText: 'Ok!'
                     });
                     this.checkShowModalUpload(false);
+                }
+            });
+        }
+    }
+
+    sttInputSearch = ko.observable(false);
+    valueNamePlaylist = ko.observable('');
+    saved_value = ko.observable('');
+    itemSongSearchInput = ko.observableArray();
+    value_changed() {
+        if (this.saved_value() != '') {
+            fetch('http://localhost:8080/music/search_song_byName', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ key_search: this.saved_value() })
+            }).then((response) => {
+                return response.json();
+            }).then((data) => {
+                if (data.dataSongSearch) {
+                    var objItemSearchInput = [];
+                    data.dataSongSearch.map(function (value) {
+                        objItemSearchInput.push({ id: value.id, name: value.name });
+                    });
+                    this.itemSongSearchInput(objItemSearchInput);
+                } else {
+                    this.itemSongSearchInput([{ id: 0, name: 'Không có dữ liệu!' }]);
+                }
+                this.sttInputSearch(true);
+            });
+        } else {
+            this.sttInputSearch(false);
+        }
+    }
+    addValueInput(name, data, e) {
+        if (this.saved_value().indexOf('|') == -1) {
+            this.saved_value(name + ' | ');
+        } else {
+            this.saved_value(this.saved_value().replace(this.saved_value().slice(this.saved_value().lastIndexOf(' | ')), ' | '));
+            this.saved_value(this.saved_value() + name + ' | ');
+        }
+        this.sttInputSearch(false);
+    }
+    saveAddPlaylist() {
+        if (!sessionStorage.getItem('id_user')) {
+            Swal.fire({
+                title: '<strong>Vui lòng đăng nhập để thực hiện chức năng này!</strong>',
+                icon: 'warning',
+                showCloseButton: true,
+                focusConfirm: false,
+                confirmButtonText: 'Ok!'
+            });
+        } else {
+            fetch('http://localhost:8080/music/add_playlist', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name: this.valueNamePlaylist(), id_user_create: sessionStorage.getItem('id_user'), value_song: this.saved_value() })
+            }).then((response) => {
+                return response.json();
+            }).then((data) => {
+                if (data.message == 'success') {
+                    Swal.fire({
+                        title: '<strong>Thêm danh sách phát thành công!</strong>',
+                        icon: 'success',
+                        showCloseButton: true,
+                        focusConfirm: false,
+                        confirmButtonText: 'Ok!'
+                    });
+                } else {
+                    Swal.fire({
+                        title: '<strong>Hệ thống lỗi, xin thử lại sau!</strong>',
+                        icon: 'error',
+                        showCloseButton: true,
+                        focusConfirm: false,
+                        confirmButtonText: 'Ok!'
+                    });
                 }
             });
         }
