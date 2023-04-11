@@ -17,7 +17,7 @@
         </div>
         <div class="mm_container_box_song" data-bind="foreach: itemSong">
             
-            <div class="sc_container_box_song">
+            <div class="sc_container_box_song" data-bind="click: $parent.changeLink.bind($parent, id_gg, text_gr_singer, name, '../../assets/images'+image)">
                 <div class="sc_c_img">
                     <img data-bind="attr: { src: '../../assets/images' + image }" alt="" />
                     <div class="sc_c_img_bg hidden">
@@ -29,7 +29,7 @@
                         <h5 data-bind="text: name"></h5>
                     </div>
                     <div class="sc_c_des_singer mginbt5" data-bind="foreach: id_singer">
-                        <a class="sc_text_link" data-bind="text: name, attr: { href: '#singer/' + id }"></a>
+                        <a class="sc_text_link" data-bind="text: name, click: function() {window.location.href = '#singer/' + id}, clickBubble: false"></a>
                         <span class="nohover_singer">x</span>
                     </div>
                     <div class="sc_c_des_date">
@@ -38,7 +38,15 @@
                 </div>
                 <div class="sc_c_more_action">
                     <div class="sc_c_more_icon">
-                        <i class="fa fa-ellipsis-h"></i>
+                        <div class="sc_icon_table" data-bind="class: is_like != 0 ? 'heart_active' : '', click: $parent.addHeart.bind($parent, id), clickBubble: false">
+                            <i class="fa fa-heart"></i>
+                        </div>
+                        <a class="sc_icon_table" data-bind="click: function(){ window.location.href = 'https://docs.google.com/uc?export=download&id=' + id_gg }, clickBubble: false">
+                            <i class="fa fa-download"></i>
+                        </a>
+                        <div class="sc_icon_table">
+                            <i class="fa fa-play"></i>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -56,7 +64,7 @@
         </div>
         <div class="sc_container_box_list_song" data-bind="foreach: itemSongPlaylist">
             
-            <div class="sc_box_list">
+            <div class="sc_box_list" data-bind="click: function() {window.location.href = '#playlist/' + id}">
                 <div class="sc_container_img_list">
                     <div class="c_img_list" data-bind="foreach: img">
 
@@ -65,7 +73,7 @@
                     </div>
                     <div class="c_container_img">
                         <div class="c_content_img">
-                            <div class="c_box_icon">
+                            <div class="c_box_icon" data-bind="class: is_like != 0 ? 'heart_active' : '', click: $parent.addPlaylist.bind($parent, id), clickBubble: false">
                                 <i class="fa fa-heart"></i>
                             </div>
                             <div class="c_icon_play">

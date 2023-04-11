@@ -12,7 +12,7 @@
                 <span class="text-title-1 color-797">Được tạo bởi </span>
                 <span class="text-title-1 color-fff" data-bind="text: NameCreateBy()"></span>
             </div>
-            <div class="btn-icon-play">
+            <div class="btn-icon-play" data-bind="click: randomPlay">
                 <i class="fa fa-play"></i><span> PHÁT NGẪU NHIÊN</span>
             </div>
         </div>
@@ -35,7 +35,7 @@
                     </tr>
                 </thead>
                 <tbody data-bind="foreach: itemSong">
-                    <tr>
+                    <tr data-bind="click: $parent.changeLink.bind($parent, id_gg, text_gr_singer, name, '../../assets/images'+image)">
                         <td>
                             <div class="c_td_box_image">
                                 <div class="sc_container_box_song">
@@ -50,7 +50,7 @@
                                             <h5 data-bind="text: name"></h5>
                                         </div>
                                         <div class="sc_c_des_singer mginbt5" data-bind="foreach: id_singer">
-                                            <a class="sc_text_link" data-bind="text: name, attr: { href: '#singer/' + id }"></a>
+                                            <a class="sc_text_link" data-bind="text: name, click: function() {window.location.href = '#singer/' + id}, clickBubble: false"></a>
                                             <span class="nohover_singer">x</span>
                                         </div>
                                     </div>
@@ -59,10 +59,10 @@
                         </td>
                         <td>
                             <div class="sc_option_table">
-                                <div class="sc_icon_table">
+                                <div class="sc_icon_table" data-bind="class: is_like != 0 ? 'heart_active' : '', click: $parent.addHeart.bind($parent, id), clickBubble: false">
                                     <i class="fa fa-heart"></i>
                                 </div>
-                                <div class="sc_icon_table">
+                                <div class="sc_icon_table" data-bind="click: function(){ window.location.href = 'https://docs.google.com/uc?export=download&id=' + id_gg }, clickBubble: false">
                                     <i class="fa fa-download"></i>
                                 </div>
                                 <div class="sc_icon_table">

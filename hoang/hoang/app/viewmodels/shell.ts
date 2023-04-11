@@ -88,13 +88,18 @@ export = class {
             this.singer(sessionStorage.getItem("name_singer"));
             this.nameSong(sessionStorage.getItem("name_song"));
             this.imgSong(sessionStorage.getItem("img_song"));
-
+            
             this.isPlay(false);
             this.isPause(false);
             this.isSpinner(true);
             this.checkPlay(false);
 
             this.aud.load();
+            
+            if (sessionStorage.getItem("checkPlayIsRandom") == '1') {
+                this.itemSongHistory(JSON.parse(sessionStorage.getItem("arrHistory")));
+                sessionStorage.removeItem("checkPlayIsRandom");
+            }
         }
     });
 

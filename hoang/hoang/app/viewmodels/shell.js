@@ -63,6 +63,10 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
                     _this.isSpinner(true);
                     _this.checkPlay(false);
                     _this.aud.load();
+                    if (sessionStorage.getItem("checkPlayIsRandom") == '1') {
+                        _this.itemSongHistory(JSON.parse(sessionStorage.getItem("arrHistory")));
+                        sessionStorage.removeItem("checkPlayIsRandom");
+                    }
                 }
             });
             this.checkPlayNew = this.aud.addEventListener("canplay", function () {
