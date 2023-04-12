@@ -5,7 +5,7 @@
                 <div class="b_search_icon">
                     <i class="fa fa-search"></i>
                 </div>
-                <input data-bind="hasFocus: setIsSelected" type="text" class="sc_search_input" placeholder="Tìm kiếm bài hát, nghệ sĩ..." />
+                <input data-bind="hasFocus: setIsSelected, textInput: valueSearch" type="text" class="sc_search_input" placeholder="Tìm kiếm bài hát, nghệ sĩ..." />
             </div>
             <div class="sc_result_search" data-bind="class: setIsSelected() ? 'active' : ''">
                 <div class="sc_content_result_search">
@@ -13,7 +13,7 @@
                         <div class="sc_title_result_key">
                             <span>Từ khóa liên quan</span>
                         </div>
-                        <div class="sc_box_result_key hidden">
+                        <div class="sc_box_result_key" data-bind="class: setIsSearch ? '' : 'hidden'">
                             <div class="sm_search_icon">
                                 <i class="fa fa-search"></i>
                             </div>
@@ -21,45 +21,24 @@
                                 <span>Chưa có dữ liệu!</span>
                             </div>
                         </div>
-
-                        <div class="sc_box_result_key">
-                            <div class="sm_search_icon">
-                                <i class="fa fa-search"></i>
-                            </div>
-                            <div class="sc_text_result_key">
-                                <span>this is name</span>
-                            </div>
-                        </div>
-                        <div class="sc_box_result_key">
-                            <div class="sm_search_icon">
-                                <i class="fa fa-search"></i>
-                            </div>
-                            <div class="sc_text_result_key">
-                                <span>this is name</span>
+                        <div data-bind="foreach: setArrSongSearch, class: setIsSearch ? 'hidden' : ''">
+                            <div class="sc_box_result_key">
+                                <div class="sm_search_icon">
+                                    <i class="fa fa-search"></i>
+                                </div>
+                                <div class="sc_text_result_key">
+                                    <span data-bind="text: name"></span>
+                                </div>
                             </div>
                         </div>
-                        <div class="sc_box_result_key">
-                            <div class="sm_search_icon">
-                                <i class="fa fa-search"></i>
-                            </div>
-                            <div class="sc_text_result_key">
-                                <span>this is name</span>
-                            </div>
-                        </div>
-                        <div class="sc_box_result_key">
-                            <div class="sm_search_icon">
-                                <i class="fa fa-search"></i>
-                            </div>
-                            <div class="sc_text_result_key">
-                                <span>this is name</span>
-                            </div>
-                        </div>
-                        <div class="sc_box_result_key">
-                            <div class="sm_search_icon">
-                                <i class="fa fa-search"></i>
-                            </div>
-                            <div class="sc_text_result_key">
-                                <span>this is name</span>
+                        <div data-bind="foreach: setArrSingerSearch, class: setIsSearch ? 'hidden' : ''">
+                            <div class="sc_box_result_key">
+                                <div class="sm_search_icon">
+                                    <i class="fa fa-search"></i>
+                                </div>
+                                <div class="sc_text_result_key">
+                                    <span data-bind="text: name"></span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -69,7 +48,7 @@
                             <span>Gợi ý kết quả</span>
                         </div>
                         <div class="sc_box_result_song">
-                            <div class="sc_box_result_key hidden">
+                            <div class="sc_box_result_key" data-bind="class: setIsSearch ? '' : 'hidden'">
                                 <div class="sm_search_icon">
                                     <i class="fa fa-search"></i>
                                 </div>
@@ -77,40 +56,24 @@
                                     <span>Chưa có dữ liệu!</span>
                                 </div>
                             </div>
-
-                            <div class="sc_container_box_song">
-                                <div class="sc_c_img">
-                                    <img src="../../assets/images/am-nhac.jpg" alt="" />
-                                    <div class="sc_c_img_bg hidden">
-                                        <img src="../../assets/images/play.png" class="play_icon" />
+                            <div data-bind="foreach: setArrSongMainSearch, class: setIsSearch ? 'hidden' : ''">
+                                <div class="sc_container_box_song">
+                                    <div class="sc_c_img">
+                                        <img data-bind="attr: { src: '../../assets/images' + image }" alt="" />
+                                        <div class="sc_c_img_bg hidden">
+                                            <img src="../../assets/images/play.png" class="play_icon" />
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="sc_c_des">
-                                    <div class="sc_c_des_name">
-                                        <h5>this is name</h5>
-                                    </div>
-                                    <div class="sc_c_des_singer">
-                                        <h5>this is singer</h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="sc_container_box_song">
-                                <div class="sc_c_img">
-                                    <img src="../../assets/images/am-nhac.jpg" alt="" />
-                                    <div class="sc_c_img_bg hidden">
-                                        <img src="../../assets/images/play.png" class="play_icon" />
-                                    </div>
-                                </div>
-                                <div class="sc_c_des">
-                                    <div class="sc_c_des_name">
-                                        <h5>this is name</h5>
-                                    </div>
-                                    <div class="sc_c_des_singer">
-                                        <h5>this is singer</h5>
+                                    <div class="sc_c_des">
+                                        <div class="sc_c_des_name">
+                                            <h5 data-bind="text: name"></h5>
+                                        </div>
+                                        <div class="sc_c_des_singer">
+                                            <h5 data-bind="text: text_gr_singer"></h5>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -179,36 +142,12 @@
                     </a>
                 </div>
                 <div class="sc_menu_sub_content">
-                    <a class="sc_box_menu" href="#cate" data-bind="click: getURL.bind($data, '#cate'), class: isURL() == '#cate' ? 'active' : ''">
-                        <div class="c_icon_menu">
-                            <i class="fa fa-star"></i>
-                        </div>
-                        <div class="c_title_menu">
-                            <span>Thể loại</span>
-                        </div>
-                    </a>
-                    <a class="sc_box_menu" href="#maxchart" data-bind="click: getURL.bind($data, '#maxchart'), class: isURL() == '#maxchart' ? 'active' : ''">
-                        <div class="c_icon_menu">
-                            <i class="fa fa-bar-chart-o"></i>
-                        </div>
-                        <div class="c_title_menu">
-                            <span>#maxchart</span>
-                        </div>
-                    </a>
                     <a class="sc_box_menu" href="#mv" data-bind="click: getURL.bind($data, '#mv'), class: isURL() == '#mv' ? 'active' : ''">
                         <div class="c_icon_menu">
                             <i class="fa fa-play-circle"></i>
                         </div>
                         <div class="c_title_menu">
                             <span>MV</span>
-                        </div>
-                    </a>
-                    <a class="sc_box_menu" href="#sub" data-bind="click: getURL.bind($data, '#sub'), class: isURL() == '#sub' ? 'active' : ''">
-                        <div class="c_icon_menu">
-                            <i class="fa fa-heart"></i>
-                        </div>
-                        <div class="c_title_menu">
-                            <span>Theo dõi</span>
                         </div>
                     </a>
                 </div>

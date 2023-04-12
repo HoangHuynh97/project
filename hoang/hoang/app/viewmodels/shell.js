@@ -64,7 +64,6 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
                     _this.isSpinner(true);
                     _this.checkPlay(false);
                     _this.aud.load();
-                    _this.isCheckPlaying.push(sessionStorage.getItem("id_gg"));
                     if (sessionStorage.getItem("checkPlayIsRandom") == '1') {
                         _this.itemSongHistory(JSON.parse(sessionStorage.getItem("arrHistory")));
                         sessionStorage.removeItem("checkPlayIsRandom");
@@ -134,6 +133,54 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
             this.valueNamePlaylist = ko.observable('');
             this.saved_value = ko.observable('');
             this.itemSongSearchInput = ko.observableArray();
+            this.valueSearch = ko.observable('');
+            this.setArrSongSearch = ko.observableArray();
+            this.setArrSingerSearch = ko.observableArray();
+            this.setArrSongMainSearch = ko.observableArray();
+            this.setIsSearch = ko.observable(false);
+            this.getDataSearch = this.valueSearch.subscribe(function (newValue) {
+                var _this = this;
+                if (newValue != '') {
+                    fetch('http://localhost:8080/music/search_song', {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json, text/plain, */*',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ key_search: newValue })
+                    }).then(function (response) {
+                        return response.json();
+                    }).then(function (data) {
+                        if (data.length == 0) {
+                            _this.setIsSearch(false);
+                            _this.setArrSongSearch([]);
+                            _this.setArrSongMainSearch([]);
+                        }
+                        else {
+                            var itemSongSearch = [];
+                            data.dataSongSearch.map(function (value) {
+                                itemSongSearch.push({ name: value.name, id_gg: value.id_gg, image: value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
+                            });
+                            _this.setArrSongSearch(itemSongSearch);
+                            var itemSingerSearch = [];
+                            data.dataSingerSearch.map(function (value) {
+                                itemSingerSearch.push({ name: value.name, id: value.id });
+                            });
+                            _this.setArrSingerSearch(itemSingerSearch);
+                            var itemSongMainSearch = [];
+                            data.dataSongMainSearch.map(function (value) {
+                                itemSongMainSearch.push({ name: value.name, id_gg: value.id_gg, image: value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
+                            });
+                            _this.setArrSongMainSearch(itemSongMainSearch);
+                        }
+                    });
+                }
+                else {
+                    this.setIsSearch(false);
+                    this.setArrSongSearch([]);
+                    this.setArrSongMainSearch([]);
+                }
+            });
             this.getData = fetch('http://localhost:8080/music/get_ramdom_song', {
                 method: 'POST',
                 headers: {
@@ -191,6 +238,7 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
             var _this = this;
             if (this.aud.src != '') {
                 this.aud.play();
+                this.isCheckPlaying.push(sessionStorage.getItem("id_gg"));
                 var checkExistsHistory = false;
                 if (sessionStorage.getItem("arrHistory")) {
                     JSON.parse(sessionStorage.getItem("arrHistory")).map(function (value) {
@@ -346,10 +394,22 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
             }
         };
         class_1.prototype.isForward = function () {
+            var arrPlaying = this.isCheckPlaying;
             this.itemSongHistory().map(function (value) {
-                console.log(this.isCheckPlaying(), value['id_gg']);
-                if (this.isCheckPlaying.indexOf(value['id_gg']) == -1) {
-                    this.changeLinkModal(value['id_gg'], value['text_gr_singer'], value['name'], '../../assets/images' + value['image']);
+                if (arrPlaying.indexOf(value['id_gg']) == -1) {
+                    if (sessionStorage.getItem("url_song") != '') {
+                        sessionStorage.removeItem("url_song");
+                        sessionStorage.removeItem("id_gg");
+                        sessionStorage.removeItem("name_singer");
+                        sessionStorage.removeItem("name_song");
+                        sessionStorage.removeItem("img_song");
+                    }
+                    sessionStorage.setItem("url_song", 'https://docs.google.com/uc?export=download&id=' + value['id_gg']);
+                    sessionStorage.setItem("id_gg", value['id_gg']);
+                    sessionStorage.setItem("name_singer", value['singer']);
+                    sessionStorage.setItem("name_song", value['nameSong']);
+                    sessionStorage.setItem("img_song", value['imgSong']);
+                    window.dispatchEvent(new Event("storage"));
                 }
             });
         };
