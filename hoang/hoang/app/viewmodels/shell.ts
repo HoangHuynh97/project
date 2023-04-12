@@ -48,17 +48,18 @@ export = class {
     changeVolume = ko.observable(100);
     checkShowModalBottom = ko.observable(false);
     itemSong = ko.observableArray();
+    isCheckPlaying = ko.observableArray(sessionStorage.getItem("id_gg") ? [sessionStorage.getItem("id_gg")] : []);
 
-    id_gg = ko.observable(sessionStorage.getItem("id_gg") ? sessionStorage.getItem("id_gg") : '17ZUjG5iqEB-vMWaLEnmxNE4SMzzusxeX');
-    singer = ko.observable(sessionStorage.getItem("name_singer") ? sessionStorage.getItem("name_singer") : 'Jack');
-    nameSong = ko.observable(sessionStorage.getItem("name_song") ? sessionStorage.getItem("name_song") : 'Là 1 Thằng Con Trai');
-    imgSong = ko.observable(sessionStorage.getItem("img_song") ? sessionStorage.getItem("img_song") : '../../assets/images/mqdefault_2.jpg');
+    id_gg = ko.observable(sessionStorage.getItem("id_gg") ? sessionStorage.getItem("id_gg") : '');
+    singer = ko.observable(sessionStorage.getItem("name_singer") ? sessionStorage.getItem("name_singer") : '');
+    nameSong = ko.observable(sessionStorage.getItem("name_song") ? sessionStorage.getItem("name_song") : '');
+    imgSong = ko.observable(sessionStorage.getItem("img_song") ? sessionStorage.getItem("img_song") : '');
 
     itemSongHistory = ko.observableArray(sessionStorage.getItem("arrHistory") ? JSON.parse(sessionStorage.getItem("arrHistory")) : []);
 
     isUser = ko.observable(sessionStorage.getItem("name_user") ? sessionStorage.getItem("name_user").charAt(0) : '');
 
-    url_song = ko.observable(sessionStorage.getItem("url_song") ? sessionStorage.getItem("url_song") : 'https://docs.google.com/uc?export=download&id=17ZUjG5iqEB-vMWaLEnmxNE4SMzzusxeX');
+    url_song = ko.observable(sessionStorage.getItem("url_song") ? sessionStorage.getItem("url_song") : '');
     aud = new Audio(this.url_song());
 
 
@@ -95,7 +96,8 @@ export = class {
             this.checkPlay(false);
 
             this.aud.load();
-            
+
+            this.isCheckPlaying.push(sessionStorage.getItem("id_gg"));
             if (sessionStorage.getItem("checkPlayIsRandom") == '1') {
                 this.itemSongHistory(JSON.parse(sessionStorage.getItem("arrHistory")));
                 sessionStorage.removeItem("checkPlayIsRandom");
@@ -349,6 +351,28 @@ export = class {
         }
     }
 
+    isForward() {
+        var checkExistsHistory = false;
+        if (sessionStorage.getItem("arrHistory")) {
+            JSON.parse(sessionStorage.getItem("arrHistory")).map(function (value) {
+                if (value.id_gg == sessionStorage.getItem("id_gg")) {
+                    checkExistsHistory = true;
+                }
+            });
+        }
+        this.itemSongHistory().map(function (value) {
+            console.log(this.isCheckPlaying, value['id_gg']);
+            if (this.isCheckPlaying.indexOf(value['id_gg']) == -1) {
+                this.changeLinkModal(
+                    value['id_gg'],
+                    value['text_gr_singer'],
+                    value['name'],
+                    '../../assets/images' + value['image']
+                );
+            }
+        });
+    }
+
     sttInputSearch = ko.observable(false);
     valueNamePlaylist = ko.observable('');
     saved_value = ko.observable('');
@@ -445,6 +469,10 @@ export = class {
             objItemNew.push({ id: value.id, is_like: value.is_like, name: value.name, id_gg: value.id_gg, image: value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
         });
         this.itemSong(objItemNew);
+
+        if (!sessionStorage.getItem("url_song")) {
+            this.changeLinkModal(this.itemSong()[0]['id_gg'], this.itemSong()[0]['text_gr_singer'], this.itemSong()[0]['name'], '../../assets/images' + this.itemSong()[0]['image']);
+        }
     });
 
     addHeartModal(data, id_song, event) {

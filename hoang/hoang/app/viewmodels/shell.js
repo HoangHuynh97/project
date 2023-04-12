@@ -43,13 +43,14 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
             this.changeVolume = ko.observable(100);
             this.checkShowModalBottom = ko.observable(false);
             this.itemSong = ko.observableArray();
-            this.id_gg = ko.observable(sessionStorage.getItem("id_gg") ? sessionStorage.getItem("id_gg") : '17ZUjG5iqEB-vMWaLEnmxNE4SMzzusxeX');
-            this.singer = ko.observable(sessionStorage.getItem("name_singer") ? sessionStorage.getItem("name_singer") : 'Jack');
-            this.nameSong = ko.observable(sessionStorage.getItem("name_song") ? sessionStorage.getItem("name_song") : 'Là 1 Thằng Con Trai');
-            this.imgSong = ko.observable(sessionStorage.getItem("img_song") ? sessionStorage.getItem("img_song") : '../../assets/images/mqdefault_2.jpg');
+            this.isCheckPlaying = sessionStorage.getItem("id_gg") ? [sessionStorage.getItem("id_gg")] : [];
+            this.id_gg = ko.observable(sessionStorage.getItem("id_gg") ? sessionStorage.getItem("id_gg") : '');
+            this.singer = ko.observable(sessionStorage.getItem("name_singer") ? sessionStorage.getItem("name_singer") : '');
+            this.nameSong = ko.observable(sessionStorage.getItem("name_song") ? sessionStorage.getItem("name_song") : '');
+            this.imgSong = ko.observable(sessionStorage.getItem("img_song") ? sessionStorage.getItem("img_song") : '');
             this.itemSongHistory = ko.observableArray(sessionStorage.getItem("arrHistory") ? JSON.parse(sessionStorage.getItem("arrHistory")) : []);
             this.isUser = ko.observable(sessionStorage.getItem("name_user") ? sessionStorage.getItem("name_user").charAt(0) : '');
-            this.url_song = ko.observable(sessionStorage.getItem("url_song") ? sessionStorage.getItem("url_song") : 'https://docs.google.com/uc?export=download&id=17ZUjG5iqEB-vMWaLEnmxNE4SMzzusxeX');
+            this.url_song = ko.observable(sessionStorage.getItem("url_song") ? sessionStorage.getItem("url_song") : '');
             this.aud = new Audio(this.url_song());
             this.playSession = window.addEventListener('storage', function () {
                 if (_this.url_song() != sessionStorage.getItem("url_song")) {
@@ -63,6 +64,7 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
                     _this.isSpinner(true);
                     _this.checkPlay(false);
                     _this.aud.load();
+                    _this.isCheckPlaying.push(sessionStorage.getItem("id_gg"));
                     if (sessionStorage.getItem("checkPlayIsRandom") == '1') {
                         _this.itemSongHistory(JSON.parse(sessionStorage.getItem("arrHistory")));
                         sessionStorage.removeItem("checkPlayIsRandom");
@@ -147,6 +149,9 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
                     objItemNew.push({ id: value.id, is_like: value.is_like, name: value.name, id_gg: value.id_gg, image: value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
                 });
                 _this.itemSong(objItemNew);
+                if (!sessionStorage.getItem("url_song")) {
+                    _this.changeLinkModal(_this.itemSong()[0]['id_gg'], _this.itemSong()[0]['text_gr_singer'], _this.itemSong()[0]['name'], '../../assets/images' + _this.itemSong()[0]['image']);
+                }
             });
         }
         class_1.prototype.changeLinkModal = function (id_gg, singer, nameSong, imgSong) {
@@ -339,6 +344,14 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
                     }
                 });
             }
+        };
+        class_1.prototype.isForward = function () {
+            this.itemSongHistory().map(function (value) {
+                console.log(this.isCheckPlaying(), value['id_gg']);
+                if (this.isCheckPlaying.indexOf(value['id_gg']) == -1) {
+                    this.changeLinkModal(value['id_gg'], value['text_gr_singer'], value['name'], '../../assets/images' + value['image']);
+                }
+            });
         };
         class_1.prototype.value_changed = function () {
             var _this = this;

@@ -3,6 +3,7 @@ define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert
     return /** @class */ (function () {
         function home() {
             var _this = this;
+            this.hiddenLoading = ko.observable(false);
             this.bannerSlide = ko.observableArray([
                 { src: "../../assets/images/banner-template.jpg", id: 1 },
                 { src: "../../assets/images/banner-template2.jpg", id: 2 },
@@ -16,10 +17,6 @@ define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert
                 _this.checkTime(_this.setTime);
                 _this.checkTimeSinger(_this.setTimeSinger);
             }, 1000);
-            this.hiddenLoading = ko.observable(false);
-            this.timeout = setTimeout(function () {
-                _this.hiddenLoading(true);
-            }, 1500);
             this.bannerSinger = ko.observableArray();
             this.itemSongNew = ko.observableArray();
             this.itemPlaylist = ko.observableArray();
@@ -54,6 +51,7 @@ define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert
                     objSongHot.push({ id: value.id, is_like: value.is_like, name: value.name, id_gg: value.id_gg, image: '../../assets/images' + value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
                 });
                 _this.itemSongHot(objSongHot);
+                _this.hiddenLoading(true);
             });
         }
         home.prototype.nextSlide = function () {

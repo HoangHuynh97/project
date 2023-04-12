@@ -3,6 +3,7 @@ import $ = require('jquery');
 import Swal = require('../../lib/sweetalert2/dist/sweetalert2.all.min');
 
 export = class home {
+    hiddenLoading = ko.observable(false);
     bannerSlide = ko.observableArray([
         { src: "../../assets/images/banner-template.jpg", id: 1 },
         { src: "../../assets/images/banner-template2.jpg", id: 2 },
@@ -27,11 +28,6 @@ export = class home {
         this.checkTime(this.setTime);
         this.checkTimeSinger(this.setTimeSinger);
     }, 1000);
-
-    hiddenLoading = ko.observable(false);
-    timeout: ReturnType<typeof setTimeout> = setTimeout(() => {
-        this.hiddenLoading(true);
-    }, 1500);
 
     checkTime(time) {
         if (time == 0) {
@@ -98,6 +94,8 @@ export = class home {
             objSongHot.push({ id: value.id, is_like: value.is_like, name: value.name, id_gg: value.id_gg, image: '../../assets/images' + value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
         });
         this.itemSongHot(objSongHot);
+
+        this.hiddenLoading(true);
     });
 
     addHeart(data, id_song, event) {
