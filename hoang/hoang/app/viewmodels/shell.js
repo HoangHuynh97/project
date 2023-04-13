@@ -158,6 +158,8 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
                     _this.changeLinkModal(_this.itemSong()[0]['id_gg'], _this.itemSong()[0]['text_gr_singer'], _this.itemSong()[0]['name'], '../../assets/images' + _this.itemSong()[0]['image']);
                 }
             });
+            this.menuMobile = ko.observable(false);
+            this.setIsMobile = ko.observable(false);
         }
         class_1.prototype.changeLinkModal = function (id_gg, singer, nameSong, imgSong) {
             if (sessionStorage.getItem("url_song") != '') {
@@ -269,6 +271,18 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
             this.isUser('');
         };
         class_1.prototype.getURL = function (url) {
+            if (url == '#profile') {
+                if (!sessionStorage.getItem('id_user')) {
+                    Swal.fire({
+                        title: '<strong>Vui lòng đăng nhập để thực hiện chức năng này!</strong>',
+                        icon: 'warning',
+                        showCloseButton: true,
+                        focusConfirm: false,
+                        confirmButtonText: 'Ok!'
+                    });
+                    return false;
+                }
+            }
             this.isURL(url);
             sessionStorage.setItem("isURL", url);
             window.location.href = this.isURL();
@@ -388,22 +402,35 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
             }
         };
         class_1.prototype.isBackward = function () {
-            this.isCheckPlaying.pop();
             if (this.isCheckPlaying.length > 1) {
-                if (sessionStorage.getItem("url_song") != '') {
-                    sessionStorage.removeItem("url_song");
-                    sessionStorage.removeItem("id_gg");
-                    sessionStorage.removeItem("name_singer");
-                    sessionStorage.removeItem("name_song");
-                    sessionStorage.removeItem("img_song");
-                }
-                console.log(this.isCheckPlaying[this.isCheckPlaying.length - 1]);
-                sessionStorage.setItem("url_song", 'https://docs.google.com/uc?export=download&id=' + this.isCheckPlaying[this.isCheckPlaying.length - 1]['id_gg']);
-                sessionStorage.setItem("id_gg", this.isCheckPlaying[this.isCheckPlaying.length - 1]['id_gg']);
-                sessionStorage.setItem("name_singer", this.isCheckPlaying[this.isCheckPlaying.length - 1]['text_gr_singer']);
-                sessionStorage.setItem("name_song", this.isCheckPlaying[this.isCheckPlaying.length - 1]['name']);
-                sessionStorage.setItem("img_song", '../../assets/images' + this.isCheckPlaying[this.isCheckPlaying.length - 1]['image']);
-                window.dispatchEvent(new Event("storage"));
+                this.isCheckPlaying.pop();
+                fetch('http://localhost:8080/music/get_song_by_url', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json, text/plain, */*',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        url: this.isCheckPlaying[this.isCheckPlaying.length - 1],
+                        id_user: sessionStorage.getItem('id_user') ? sessionStorage.getItem('id_user') : 0
+                    })
+                }).then(function (response) {
+                    return response.json();
+                }).then(function (dataRes) {
+                    if (sessionStorage.getItem("url_song") != '') {
+                        sessionStorage.removeItem("url_song");
+                        sessionStorage.removeItem("id_gg");
+                        sessionStorage.removeItem("name_singer");
+                        sessionStorage.removeItem("name_song");
+                        sessionStorage.removeItem("img_song");
+                    }
+                    sessionStorage.setItem("url_song", 'https://docs.google.com/uc?export=download&id=' + dataRes.dataSongNew[0]['id_gg']);
+                    sessionStorage.setItem("id_gg", dataRes.dataSongNew[0]['id_gg']);
+                    sessionStorage.setItem("name_singer", dataRes.dataSongNew[0]['text_gr_singer']);
+                    sessionStorage.setItem("name_song", dataRes.dataSongNew[0]['name']);
+                    sessionStorage.setItem("img_song", '../../assets/images' + dataRes.dataSongNew[0]['image']);
+                    window.dispatchEvent(new Event("storage"));
+                });
             }
         };
         class_1.prototype.value_changed = function () {
@@ -566,6 +593,18 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
                     }
                 });
             }
+        };
+        class_1.prototype.setMenuMobile = function () {
+            this.menuMobile(!this.menuMobile());
+        };
+        class_1.prototype.openBottom = function () {
+            var widthClient = document.documentElement.clientWidth;
+            if (widthClient < 480) {
+                this.setIsMobile(true);
+            }
+        };
+        class_1.prototype.closeBottom = function () {
+            this.setIsMobile(false);
         };
         return class_1;
     }());

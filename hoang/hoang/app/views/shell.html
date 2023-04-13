@@ -84,12 +84,6 @@
                 <i class="fa fa-upload"></i>
                 <span>Cập nhật ca khúc mới</span>
             </div>
-            <div class="sc_box_icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Chủ đề">
-                <i class="fa fa-magic"></i>
-            </div>
-            <div class="sc_box_icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Cài đặt">
-                <i class="fa fa-wrench"></i>
-            </div>
             <a href="#login"
                data-bind="class: isLogin() ? 'hidden' : ''"
                class="sc_box_icon b_light"
@@ -107,10 +101,10 @@
         </div>
     </section>
     <section class="menu">
-        <div class="mm_show_menu_mobile">
+        <div class="mm_show_menu_mobile" data-bind="click: setMenuMobile">
             <i class="fa fa-bars"></i>
         </div>
-        <div class="mm_container_menu active-none">
+        <div class="mm_container_menu" data-bind="class: menuMobile() ? 'active' : ''">
             <div class="sc_menu">
                 <a class="sc_menu_logo" href="#">
                     <img src="../../assets/images/logo.png" alt="" />
@@ -163,12 +157,12 @@
         </div>
     </section>
     <section class="container_bottom">
-        <div class="hidden_mobile active-none">
+        <div class="hidden_mobile"data-bind="click: closeBottom, class: setIsMobile() ? 'active' : '', clickBubble: false">
             <div class="icon_hidden_mobile">
-                <i class="fa fa-chevron-circle-left"></i>
+                <i class="fa fa-chevron-circle-down"></i>
             </div>
         </div>
-        <div class="mm_container_bot active_mobile-none">
+        <div class="mm_container_bot" data-bind="click: openBottom, class: setIsMobile() ? 'active_mobile' : '', clickBubble: false">
             <div class="sc_container_left">
                 <div class="c_img_song" data-bind="class: checkPlay() ? 'active' : ''">
                     <img id="img_song" data-bind="attr: { src: imgSong }" alt="" />
@@ -184,21 +178,21 @@
             </div>
             <div class="sc_container_center">
                 <div class="sc_action_music">
-                    <div class="c_i_action_m" data-bind="click: isRandom, class: sttRandom() ? 'active_ramdom' : ''">
+                    <div class="c_i_action_m" data-bind="click: isRandom, class: sttRandom() ? 'active_ramdom' : '', clickBubble: false">
                         <i class="fa fa-random"></i>
                     </div>
-                    <div class="c_i_action_m" data-bind="click: isBackward">
+                    <div class="c_i_action_m" data-bind="click: isBackward, clickBubble: false">
                         <i class="fa fa-backward"></i>
                     </div>
                     <div class="c_i_action_m play">
-                        <i class="fa fa-play" data-bind="visible: isPlay, click: playSong"></i>
-                        <i class="fa fa-pause" data-bind="visible: isPause, click: pauseSong"></i>
+                        <i class="fa fa-play" data-bind="visible: isPlay, click: playSong, clickBubble: false"></i>
+                        <i class="fa fa-pause" data-bind="visible: isPause, click: pauseSong, clickBubble: false"></i>
                         <i class="fa fa-spinner" data-bind="visible: isSpinner"></i>
                     </div>
-                    <div class="c_i_action_m" data-bind="click: isForward">
+                    <div class="c_i_action_m" data-bind="click: isForward, clickBubble: false">
                         <i class="fa fa-forward"></i>
                     </div>
-                    <div class="c_i_action_m" data-bind="click: isLoop, class: sttLoop() ? 'active_retweet' : ''">
+                    <div class="c_i_action_m" data-bind="click: isLoop, class: sttLoop() ? 'active_retweet' : '', clickBubble: false">
                         <i class="fa fa-retweet"></i>
                     </div>
                 </div>
@@ -216,9 +210,6 @@
             </div>
             <div class="you_like">Có thể bạn sẽ thích</div>
             <div class="sc_container_right">
-                <div class="c_icon_action heart_active-none">
-                    <i class="fa fa-heart"></i>
-                </div>
                 <div class="c_icon_action">
                     <span>mv</span>
                 </div>
@@ -230,7 +221,7 @@
                 </div>
                 <div class="line_sp"></div>
                 <div class="c_icon_action action_bar">
-                    <div class="bar_menu" data-bind="click: showModalBottom">
+                    <div class="bar_menu" data-bind="click: showModalBottom, clickBubble: false">
                         <i class="fa fa-bars"></i>
                     </div>
                     <div class="container_action_bar" data-bind="class: checkShowModalBottom() ? 'active' : ''">

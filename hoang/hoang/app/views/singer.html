@@ -1,4 +1,16 @@
 ﻿<div class="mm_container">
+    <div class="container-load" data-bind="class: hiddenLoading() ? 'hidden' : ''">
+        <div class="is-load"></div>
+        <div class="is-load"></div>
+        <div class="is-load"></div>
+        <div class="is-load"></div>
+        <div class="is-load"></div>
+        <div class="is-load"></div>
+        <div class="is-load"></div>
+        <div class="is-load"></div>
+        <div class="is-load"></div>
+        <div class="is-load"></div>
+    </div>
     <div class="mm_container_banner_singer">
         <div class="mm_img_banner_singer">
             <img data-bind="attr: { src: '../../assets/images' + dataImgSinger() }" alt="" />
@@ -16,7 +28,7 @@
             </div>
         </div>
         <div class="mm_container_box_song" data-bind="foreach: itemSong">
-            
+
             <div class="sc_container_box_song" data-bind="click: $parent.changeLink.bind($parent, id_gg, text_gr_singer, name, '../../assets/images'+image)">
                 <div class="sc_c_img">
                     <img data-bind="attr: { src: '../../assets/images' + image }" alt="" />
@@ -63,7 +75,7 @@
             </div>
         </div>
         <div class="sc_container_box_list_song" data-bind="foreach: itemSongPlaylist">
-            
+
             <div class="sc_box_list" data-bind="click: function() {window.location.href = '#playlist/' + id}">
                 <div class="sc_container_img_list">
                     <div class="c_img_list" data-bind="foreach: img">

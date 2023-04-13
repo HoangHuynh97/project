@@ -4,6 +4,7 @@ import $ = require('jquery');
 import Swal = require('../../lib/sweetalert2/dist/sweetalert2.all.min');
 
 export = class home {
+    hiddenLoading = ko.observable(false);
     itemSong = ko.observableArray();
     itemSongPlaylist = ko.observableArray();
     param = m_router.activeInstruction().params[0];
@@ -38,6 +39,10 @@ export = class home {
             objItemPlaylist.push({ id: value.id, is_like: value.is_like, name: value.name, img: value.img, create_by: value.create_by });
         });
         this.itemSongPlaylist(objItemPlaylist);
+
+        setTimeout(() => {
+            this.hiddenLoading(true);
+        }, 1500);
     });
 
     addHeart(data, id_song, event) {

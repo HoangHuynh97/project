@@ -95,7 +95,9 @@ export = class home {
         });
         this.itemSongHot(objSongHot);
 
-        this.hiddenLoading(true);
+        setTimeout(() => {
+            this.hiddenLoading(true);
+        }, 1500);
     });
 
     addHeart(data, id_song, event) {

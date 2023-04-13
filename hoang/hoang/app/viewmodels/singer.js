@@ -3,6 +3,7 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
     return /** @class */ (function () {
         function home() {
             var _this = this;
+            this.hiddenLoading = ko.observable(false);
             this.itemSong = ko.observableArray();
             this.itemSongPlaylist = ko.observableArray();
             this.param = m_router.activeInstruction().params[0];
@@ -33,6 +34,9 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
                     objItemPlaylist.push({ id: value.id, is_like: value.is_like, name: value.name, img: value.img, create_by: value.create_by });
                 });
                 _this.itemSongPlaylist(objItemPlaylist);
+                setTimeout(function () {
+                    _this.hiddenLoading(true);
+                }, 1500);
             });
         }
         home.prototype.addHeart = function (data, id_song, event) {

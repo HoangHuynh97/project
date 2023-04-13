@@ -131,13 +131,13 @@
                     <img data-bind="attr: { src: image }" class="c_img_list" alt="" />
                     <div class="c_container_img">
                         <div class="c_content_img">
-                            <div class="c_box_icon heart_active-none">
+                            <div class="c_box_icon" data-bind="class: is_like != 0 ? 'heart_active' : '', click: $parent.addHeart.bind($parent, id), clickBubble: false">
                                 <i class="fa fa-heart"></i>
                             </div>
                             <div class="c_icon_play">
                                 <i class="fa fa-play-circle"></i>
                             </div>
-                            <div class="c_box_icon">
+                            <div class="c_box_icon" data-bind="click: function(){ window.location.href = 'https://docs.google.com/uc?export=download&id=' + id_gg }, clickBubble: false">
                                 <i class="fa fa-download"></i>
                             </div>
                         </div>

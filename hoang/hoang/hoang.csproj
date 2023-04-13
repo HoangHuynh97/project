@@ -138,6 +138,7 @@
     <Content Include="Changes.txt" />
     <Content Include="css\all.css" />
     <Content Include="css\ie10mobile.css" />
+    <Content Include="css\reponsive.css" />
     <Content Include="css\starterkit.css" />
     <Content Include="gulpfile.js" />
     <Content Include="index.html" />
