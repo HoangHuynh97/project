@@ -5,7 +5,7 @@
                 <div class="b_search_icon">
                     <i class="fa fa-search"></i>
                 </div>
-                <input data-bind="hasFocus: setIsSelected, textInput: valueSearch" type="text" class="sc_search_input" placeholder="Tìm kiếm bài hát, nghệ sĩ..." />
+                <input data-bind="hasFocus: setIsSelected, value: valueSearch, event: { change: valueSearch_changed }, valueUpdate: 'keypress'" type="text" class="sc_search_input" placeholder="Tìm kiếm bài hát, nghệ sĩ..." />
             </div>
             <div class="sc_result_search" data-bind="class: setIsSelected() ? 'active' : ''">
                 <div class="sc_content_result_search">
@@ -13,7 +13,7 @@
                         <div class="sc_title_result_key">
                             <span>Từ khóa liên quan</span>
                         </div>
-                        <div class="sc_box_result_key" data-bind="class: setIsSearch ? '' : 'hidden'">
+                        <div class="sc_box_result_key" data-bind="class: setIsSearch() ? 'hidden' : ''">
                             <div class="sm_search_icon">
                                 <i class="fa fa-search"></i>
                             </div>
@@ -21,7 +21,7 @@
                                 <span>Chưa có dữ liệu!</span>
                             </div>
                         </div>
-                        <div data-bind="foreach: setArrSongSearch, class: setIsSearch ? 'hidden' : ''">
+                        <div data-bind="foreach: setArrSongSearch, class: setIsSearch() ? '' : 'hidden'">
                             <div class="sc_box_result_key">
                                 <div class="sm_search_icon">
                                     <i class="fa fa-search"></i>
@@ -31,7 +31,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div data-bind="foreach: setArrSingerSearch, class: setIsSearch ? 'hidden' : ''">
+                        <div data-bind="foreach: setArrSingerSearch, class: setIsSearch() ? '' : 'hidden'">
                             <div class="sc_box_result_key">
                                 <div class="sm_search_icon">
                                     <i class="fa fa-search"></i>
@@ -48,7 +48,7 @@
                             <span>Gợi ý kết quả</span>
                         </div>
                         <div class="sc_box_result_song">
-                            <div class="sc_box_result_key" data-bind="class: setIsSearch ? '' : 'hidden'">
+                            <div class="sc_box_result_key" data-bind="class: setIsSearch() ? 'hidden' : ''">
                                 <div class="sm_search_icon">
                                     <i class="fa fa-search"></i>
                                 </div>
@@ -56,7 +56,7 @@
                                     <span>Chưa có dữ liệu!</span>
                                 </div>
                             </div>
-                            <div data-bind="foreach: setArrSongMainSearch, class: setIsSearch ? 'hidden' : ''">
+                            <div data-bind="foreach: setArrSongMainSearch, class: setIsSearch() ? '' : 'hidden'">
                                 <div class="sc_container_box_song">
                                     <div class="sc_c_img">
                                         <img data-bind="attr: { src: '../../assets/images' + image }" alt="" />
@@ -187,7 +187,7 @@
                     <div class="c_i_action_m" data-bind="click: isRandom, class: sttRandom() ? 'active_ramdom' : ''">
                         <i class="fa fa-random"></i>
                     </div>
-                    <div class="c_i_action_m">
+                    <div class="c_i_action_m" data-bind="click: isBackward">
                         <i class="fa fa-backward"></i>
                     </div>
                     <div class="c_i_action_m play">

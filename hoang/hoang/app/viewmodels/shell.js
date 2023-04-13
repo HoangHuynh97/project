@@ -129,6 +129,7 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
             this.valueNameSong = ko.observable('');
             this.valueSinger = ko.observable('');
             this.valueIDGG = ko.observable('');
+            this.keySongRanDom = ko.observable(0);
             this.sttInputSearch = ko.observable(false);
             this.valueNamePlaylist = ko.observable('');
             this.saved_value = ko.observable('');
@@ -138,49 +139,6 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
             this.setArrSingerSearch = ko.observableArray();
             this.setArrSongMainSearch = ko.observableArray();
             this.setIsSearch = ko.observable(false);
-            this.getDataSearch = this.valueSearch.subscribe(function (newValue) {
-                var _this = this;
-                if (newValue != '') {
-                    fetch('http://localhost:8080/music/search_song', {
-                        method: 'POST',
-                        headers: {
-                            'Accept': 'application/json, text/plain, */*',
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ key_search: newValue })
-                    }).then(function (response) {
-                        return response.json();
-                    }).then(function (data) {
-                        if (data.length == 0) {
-                            _this.setIsSearch(false);
-                            _this.setArrSongSearch([]);
-                            _this.setArrSongMainSearch([]);
-                        }
-                        else {
-                            var itemSongSearch = [];
-                            data.dataSongSearch.map(function (value) {
-                                itemSongSearch.push({ name: value.name, id_gg: value.id_gg, image: value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
-                            });
-                            _this.setArrSongSearch(itemSongSearch);
-                            var itemSingerSearch = [];
-                            data.dataSingerSearch.map(function (value) {
-                                itemSingerSearch.push({ name: value.name, id: value.id });
-                            });
-                            _this.setArrSingerSearch(itemSingerSearch);
-                            var itemSongMainSearch = [];
-                            data.dataSongMainSearch.map(function (value) {
-                                itemSongMainSearch.push({ name: value.name, id_gg: value.id_gg, image: value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
-                            });
-                            _this.setArrSongMainSearch(itemSongMainSearch);
-                        }
-                    });
-                }
-                else {
-                    this.setIsSearch(false);
-                    this.setArrSongSearch([]);
-                    this.setArrSongMainSearch([]);
-                }
-            });
             this.getData = fetch('http://localhost:8080/music/get_ramdom_song', {
                 method: 'POST',
                 headers: {
@@ -412,6 +370,41 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
                     window.dispatchEvent(new Event("storage"));
                 }
             });
+            if (arrPlaying.length >= this.itemSongHistory().length) {
+                if (sessionStorage.getItem("url_song") != '') {
+                    sessionStorage.removeItem("url_song");
+                    sessionStorage.removeItem("id_gg");
+                    sessionStorage.removeItem("name_singer");
+                    sessionStorage.removeItem("name_song");
+                    sessionStorage.removeItem("img_song");
+                }
+                sessionStorage.setItem("url_song", 'https://docs.google.com/uc?export=download&id=' + this.itemSong()[this.keySongRanDom()]['id_gg']);
+                sessionStorage.setItem("id_gg", this.itemSong()[this.keySongRanDom()]['id_gg']);
+                sessionStorage.setItem("name_singer", this.itemSong()[this.keySongRanDom()]['text_gr_singer']);
+                sessionStorage.setItem("name_song", this.itemSong()[this.keySongRanDom()]['name']);
+                sessionStorage.setItem("img_song", '../../assets/images' + this.itemSong()[this.keySongRanDom()]['image']);
+                window.dispatchEvent(new Event("storage"));
+                this.keySongRanDom(this.keySongRanDom() + 1);
+            }
+        };
+        class_1.prototype.isBackward = function () {
+            this.isCheckPlaying.pop();
+            if (this.isCheckPlaying.length > 1) {
+                if (sessionStorage.getItem("url_song") != '') {
+                    sessionStorage.removeItem("url_song");
+                    sessionStorage.removeItem("id_gg");
+                    sessionStorage.removeItem("name_singer");
+                    sessionStorage.removeItem("name_song");
+                    sessionStorage.removeItem("img_song");
+                }
+                console.log(this.isCheckPlaying[this.isCheckPlaying.length - 1]);
+                sessionStorage.setItem("url_song", 'https://docs.google.com/uc?export=download&id=' + this.isCheckPlaying[this.isCheckPlaying.length - 1]['id_gg']);
+                sessionStorage.setItem("id_gg", this.isCheckPlaying[this.isCheckPlaying.length - 1]['id_gg']);
+                sessionStorage.setItem("name_singer", this.isCheckPlaying[this.isCheckPlaying.length - 1]['text_gr_singer']);
+                sessionStorage.setItem("name_song", this.isCheckPlaying[this.isCheckPlaying.length - 1]['name']);
+                sessionStorage.setItem("img_song", '../../assets/images' + this.isCheckPlaying[this.isCheckPlaying.length - 1]['image']);
+                window.dispatchEvent(new Event("storage"));
+            }
         };
         class_1.prototype.value_changed = function () {
             var _this = this;
@@ -493,6 +486,55 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
                         });
                     }
                 });
+            }
+        };
+        class_1.prototype.valueSearch_changed = function () {
+            var _this = this;
+            if (this.valueSearch() != '') {
+                fetch('http://localhost:8080/music/search_song', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json, text/plain, */*',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ key_search: this.valueSearch() })
+                }).then(function (response) {
+                    return response.json();
+                }).then(function (data) {
+                    if (data.length == 0) {
+                        _this.setIsSearch(false);
+                        _this.setArrSongSearch([]);
+                        _this.setArrSongMainSearch([]);
+                    }
+                    else {
+                        _this.setIsSearch(true);
+                        var itemSongSearch = [];
+                        data.dataSongSearch.map(function (value) {
+                            itemSongSearch.push({ name: value.name, id_gg: value.id_gg, image: value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
+                        });
+                        _this.setArrSongSearch(itemSongSearch);
+                        if (data.dataSingerSearch) {
+                            var itemSingerSearch = [];
+                            data.dataSingerSearch.map(function (value) {
+                                itemSingerSearch.push({ name: value.name, id: value.id });
+                            });
+                            _this.setArrSingerSearch(itemSingerSearch);
+                        }
+                        else {
+                            _this.setArrSingerSearch([]);
+                        }
+                        var itemSongMainSearch = [];
+                        data.dataSongMainSearch.map(function (value) {
+                            itemSongMainSearch.push({ name: value.name, id_gg: value.id_gg, image: value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
+                        });
+                        _this.setArrSongMainSearch(itemSongMainSearch);
+                    }
+                });
+            }
+            else {
+                this.setIsSearch(false);
+                this.setArrSongSearch([]);
+                this.setArrSongMainSearch([]);
             }
         };
         class_1.prototype.addHeartModal = function (data, id_song, event) {

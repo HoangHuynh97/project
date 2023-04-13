@@ -352,6 +352,7 @@ export = class {
         }
     }
 
+    keySongRanDom = ko.observable(0);
     isForward() {
         var arrPlaying = this.isCheckPlaying;
 
@@ -373,6 +374,47 @@ export = class {
                 window.dispatchEvent(new Event("storage"));
             }
         });
+
+        if (arrPlaying.length >= this.itemSongHistory().length) {
+            if (sessionStorage.getItem("url_song") != '') {
+                sessionStorage.removeItem("url_song");
+                sessionStorage.removeItem("id_gg");
+                sessionStorage.removeItem("name_singer");
+                sessionStorage.removeItem("name_song");
+                sessionStorage.removeItem("img_song");
+            }
+            
+            sessionStorage.setItem("url_song", 'https://docs.google.com/uc?export=download&id=' + this.itemSong()[this.keySongRanDom()]['id_gg']);
+            sessionStorage.setItem("id_gg", this.itemSong()[this.keySongRanDom()]['id_gg']);
+            sessionStorage.setItem("name_singer", this.itemSong()[this.keySongRanDom()]['text_gr_singer']);
+            sessionStorage.setItem("name_song", this.itemSong()[this.keySongRanDom()]['name']);
+            sessionStorage.setItem("img_song", '../../assets/images' + this.itemSong()[this.keySongRanDom()]['image']);
+
+            window.dispatchEvent(new Event("storage"));
+            this.keySongRanDom(this.keySongRanDom()+1);
+        }
+    }
+
+    isBackward() {
+        this.isCheckPlaying.pop();
+
+        if (this.isCheckPlaying.length > 1) {
+            if (sessionStorage.getItem("url_song") != '') {
+                sessionStorage.removeItem("url_song");
+                sessionStorage.removeItem("id_gg");
+                sessionStorage.removeItem("name_singer");
+                sessionStorage.removeItem("name_song");
+                sessionStorage.removeItem("img_song");
+            }
+
+            sessionStorage.setItem("url_song", 'https://docs.google.com/uc?export=download&id=' + this.isCheckPlaying[this.isCheckPlaying.length - 1]['id_gg']);
+            sessionStorage.setItem("id_gg", this.isCheckPlaying[this.isCheckPlaying.length - 1]['id_gg']);
+            sessionStorage.setItem("name_singer", this.isCheckPlaying[this.isCheckPlaying.length - 1]['text_gr_singer']);
+            sessionStorage.setItem("name_song", this.isCheckPlaying[this.isCheckPlaying.length - 1]['name']);
+            sessionStorage.setItem("img_song", '../../assets/images' + this.isCheckPlaying[this.isCheckPlaying.length - 1]['image']);
+
+            window.dispatchEvent(new Event("storage"));
+        }
     }
 
     sttInputSearch = ko.observable(false);
@@ -461,15 +503,16 @@ export = class {
     setArrSingerSearch = ko.observableArray();
     setArrSongMainSearch = ko.observableArray();
     setIsSearch = ko.observable(false);
-    getDataSearch = this.valueSearch.subscribe(function (newValue) {
-        if (newValue != '') {
+
+    valueSearch_changed() {
+        if (this.valueSearch() != '') {
             fetch('http://localhost:8080/music/search_song', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json, text/plain, */*',
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ key_search: newValue })
+                body: JSON.stringify({ key_search: this.valueSearch() })
             }).then((response) => {
                 return response.json();
             }).then((data) => {
@@ -478,17 +521,22 @@ export = class {
                     this.setArrSongSearch([]);
                     this.setArrSongMainSearch([]);
                 } else {
+                    this.setIsSearch(true);
                     var itemSongSearch = [];
                     data.dataSongSearch.map(function (value) {
                         itemSongSearch.push({ name: value.name, id_gg: value.id_gg, image: value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
                     });
                     this.setArrSongSearch(itemSongSearch);
 
-                    var itemSingerSearch = [];
-                    data.dataSingerSearch.map(function (value) {
-                        itemSingerSearch.push({ name: value.name, id: value.id });
-                    });
-                    this.setArrSingerSearch(itemSingerSearch);
+                    if (data.dataSingerSearch) {
+                        var itemSingerSearch = [];
+                        data.dataSingerSearch.map(function (value) {
+                            itemSingerSearch.push({ name: value.name, id: value.id });
+                        });
+                        this.setArrSingerSearch(itemSingerSearch);
+                    } else {
+                        this.setArrSingerSearch([]);
+                    }
 
                     var itemSongMainSearch = [];
                     data.dataSongMainSearch.map(function (value) {
@@ -502,7 +550,7 @@ export = class {
             this.setArrSongSearch([]);
             this.setArrSongMainSearch([]);
         }
-    });
+    }
 
     getData = fetch('http://localhost:8080/music/get_ramdom_song', {
         method: 'POST',
