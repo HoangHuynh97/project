@@ -34,7 +34,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert2.all.min"], function (require, exports, ko, Swal) {
+define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert2.all.min", "../../assets/js/global"], function (require, exports, ko, Swal, global) {
     "use strict";
     return /** @class */ (function () {
         function home() {
@@ -43,7 +43,7 @@ define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert
             this.isStart = ko.observable(0);
             this.itemSong = ko.observableArray();
             this.sttLoadmore = ko.observable(true);
-            this.getData = fetch('http://localhost:8080/music/get_DataNew', {
+            this.getData = fetch(global.api_url + 'get_DataNew', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json, text/plain, */*',
@@ -71,7 +71,7 @@ define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert
                     switch (_a.label) {
                         case 0:
                             this.hiddenLoading(false);
-                            return [4 /*yield*/, fetch('http://localhost:8080/music/get_DataNew', {
+                            return [4 /*yield*/, fetch(global.api_url + 'get_DataNew', {
                                     method: 'POST',
                                     headers: {
                                         'Accept': 'application/json, text/plain, */*',
@@ -113,7 +113,7 @@ define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert
                 });
             }
             else {
-                fetch('http://localhost:8080/music/add_like', {
+                fetch(global.api_url + 'add_like', {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json, text/plain, */*',

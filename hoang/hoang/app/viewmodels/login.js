@@ -1,4 +1,4 @@
-define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert2.all.min"], function (require, exports, ko, Swal) {
+define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert2.all.min", "../../assets/js/global"], function (require, exports, ko, Swal, global) {
     "use strict";
     $(document).ready(function () {
         if (sessionStorage.getItem("name_user")) {
@@ -41,7 +41,7 @@ define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert
                 });
             }
             else {
-                fetch('http://localhost:8080/music/api_login', {
+                fetch(global.api_url + 'api_login', {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json, text/plain, */*',
@@ -84,7 +84,7 @@ define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert
                     });
                 }
                 else {
-                    fetch('http://localhost:8080/music/api_signup', {
+                    fetch(global.api_url + 'api_signup', {
                         method: 'POST',
                         headers: {
                             'Accept': 'application/json, text/plain, */*',

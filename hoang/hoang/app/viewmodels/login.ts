@@ -1,5 +1,6 @@
 ﻿import ko = require('knockout');
 import Swal = require('../../lib/sweetalert2/dist/sweetalert2.all.min');
+import global = require('../../assets/js/global');
 
 export = class {
 
@@ -31,7 +32,7 @@ export = class {
                 text: 'Vui lòng nhập đầy đủ thông tin!'
             });
         } else {
-            fetch('http://localhost:8080/music/api_login', {
+            fetch(global.api_url + 'api_login', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json, text/plain, */*',
@@ -71,7 +72,7 @@ export = class {
                     text: 'Vui lòng kiểm tra lại mật khẩu!'
                 });
             } else {
-                fetch('http://localhost:8080/music/api_signup', {
+                fetch(global.api_url + 'api_signup', {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json, text/plain, */*',

@@ -1,4 +1,4 @@
-define(["require", "exports", "knockout", "jquery", "../../lib/sweetalert2/dist/sweetalert2.all.min"], function (require, exports, ko, $, Swal) {
+define(["require", "exports", "knockout", "jquery", "../../lib/sweetalert2/dist/sweetalert2.all.min", "../../assets/js/global"], function (require, exports, ko, $, Swal, global) {
     "use strict";
     $(document).ready(function () {
         if (!sessionStorage.getItem("id_user") || sessionStorage.getItem("id_user") == '') {
@@ -13,7 +13,7 @@ define(["require", "exports", "knockout", "jquery", "../../lib/sweetalert2/dist/
             this.itemSongLike = ko.observableArray();
             this.itemSongLikePlaylist = ko.observableArray();
             this.isTab = ko.observable(1);
-            this.getData = fetch('http://localhost:8080/music/get_DataProfile', {
+            this.getData = fetch(global.api_url + 'get_DataProfile', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json, text/plain, */*',
@@ -67,7 +67,7 @@ define(["require", "exports", "knockout", "jquery", "../../lib/sweetalert2/dist/
                 });
             }
             else {
-                fetch('http://localhost:8080/music/add_like_playlist', {
+                fetch(global.api_url + 'add_like_playlist', {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json, text/plain, */*',
@@ -97,7 +97,7 @@ define(["require", "exports", "knockout", "jquery", "../../lib/sweetalert2/dist/
                 });
             }
             else {
-                fetch('http://localhost:8080/music/add_like', {
+                fetch(global.api_url + 'add_like', {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json, text/plain, */*',

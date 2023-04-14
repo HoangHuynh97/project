@@ -1,4 +1,4 @@
-define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout", "../../lib/sweetalert2/dist/sweetalert2.all.min"], function (require, exports, m_router, ko, Swal) {
+define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout", "../../lib/sweetalert2/dist/sweetalert2.all.min", "../../assets/js/global"], function (require, exports, m_router, ko, Swal, global) {
     "use strict";
     return /** @class */ (function () {
         function class_1() {
@@ -139,7 +139,7 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
             this.setArrSingerSearch = ko.observableArray();
             this.setArrSongMainSearch = ko.observableArray();
             this.setIsSearch = ko.observable(false);
-            this.getData = fetch('http://localhost:8080/music/get_ramdom_song', {
+            this.getData = fetch(global.api_url + 'get_ramdom_song', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json, text/plain, */*',
@@ -209,7 +209,7 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
                 }
                 if (!checkExistsHistory) {
                     var arr = [];
-                    fetch('http://localhost:8080/music/check_like', {
+                    fetch(global.api_url + 'check_like', {
                         method: 'POST',
                         headers: {
                             'Accept': 'application/json, text/plain, */*',
@@ -337,7 +337,7 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
                 this.data.append('song', this.valueNameSong());
                 this.data.append('singer', this.valueSinger());
                 this.data.append('gg', this.valueIDGG());
-                fetch('http://localhost:8080/music/upload_song', {
+                fetch(global.api_url + 'upload_song', {
                     method: 'POST',
                     body: this.data
                 }).then(function (response) {
@@ -404,7 +404,7 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
         class_1.prototype.isBackward = function () {
             if (this.isCheckPlaying.length > 1) {
                 this.isCheckPlaying.pop();
-                fetch('http://localhost:8080/music/get_song_by_url', {
+                fetch(global.api_url + 'get_song_by_url', {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json, text/plain, */*',
@@ -436,7 +436,7 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
         class_1.prototype.value_changed = function () {
             var _this = this;
             if (this.saved_value() != '') {
-                fetch('http://localhost:8080/music/search_song_byName', {
+                fetch(global.api_url + 'search_song_byName', {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json, text/plain, */*',
@@ -465,11 +465,15 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
         };
         class_1.prototype.addValueInput = function (name, data, e) {
             if (this.saved_value().indexOf('|') == -1) {
-                this.saved_value(name + ' | ');
+                if (name != 'Không có dữ liệu!') {
+                    this.saved_value(name + ' | ');
+                }
             }
             else {
-                this.saved_value(this.saved_value().replace(this.saved_value().slice(this.saved_value().lastIndexOf(' | ')), ' | '));
-                this.saved_value(this.saved_value() + name + ' | ');
+                if (name != 'Không có dữ liệu!') {
+                    this.saved_value(this.saved_value().replace(this.saved_value().slice(this.saved_value().lastIndexOf(' | ')), ' | '));
+                    this.saved_value(this.saved_value() + name + ' | ');
+                }
             }
             this.sttInputSearch(false);
         };
@@ -484,7 +488,7 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
                 });
             }
             else {
-                fetch('http://localhost:8080/music/add_playlist', {
+                fetch(global.api_url + 'add_playlist', {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json, text/plain, */*',
@@ -518,7 +522,7 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
         class_1.prototype.valueSearch_changed = function () {
             var _this = this;
             if (this.valueSearch() != '') {
-                fetch('http://localhost:8080/music/search_song', {
+                fetch(global.api_url + 'search_song', {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json, text/plain, */*',
@@ -531,6 +535,7 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
                     if (data.length == 0) {
                         _this.setIsSearch(false);
                         _this.setArrSongSearch([]);
+                        _this.setArrSingerSearch([]);
                         _this.setArrSongMainSearch([]);
                     }
                     else {
@@ -561,6 +566,7 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
             else {
                 this.setIsSearch(false);
                 this.setArrSongSearch([]);
+                this.setArrSingerSearch([]);
                 this.setArrSongMainSearch([]);
             }
         };
@@ -575,7 +581,7 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
                 });
             }
             else {
-                fetch('http://localhost:8080/music/add_like_byURL', {
+                fetch(global.api_url + 'add_like_byURL', {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json, text/plain, */*',

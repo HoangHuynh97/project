@@ -1,4 +1,4 @@
-define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout", "../../lib/sweetalert2/dist/sweetalert2.all.min"], function (require, exports, m_router, ko, Swal) {
+define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout", "../../lib/sweetalert2/dist/sweetalert2.all.min", "../../assets/js/global"], function (require, exports, m_router, ko, Swal, global) {
     "use strict";
     return /** @class */ (function () {
         function home() {
@@ -9,7 +9,7 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
             this.NamePlaylist = ko.observable('');
             this.NameCreateBy = ko.observable('');
             this.ArrIMG = ko.observable('');
-            this.getData = fetch('http://localhost:8080/music/get_Playlist', {
+            this.getData = fetch(global.api_url + 'get_Playlist', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json, text/plain, */*',
@@ -46,7 +46,7 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
                 });
             }
             else {
-                fetch('http://localhost:8080/music/add_like', {
+                fetch(global.api_url + 'add_like', {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json, text/plain, */*',

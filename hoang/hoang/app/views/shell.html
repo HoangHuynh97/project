@@ -5,7 +5,7 @@
                 <div class="b_search_icon">
                     <i class="fa fa-search"></i>
                 </div>
-                <input data-bind="hasFocus: setIsSelected, value: valueSearch, event: { change: valueSearch_changed }, valueUpdate: 'keypress'" type="text" class="sc_search_input" placeholder="Tìm kiếm bài hát, nghệ sĩ..." />
+                <input data-bind="hasFocus: setIsSelected, value: valueSearch, event: { keyup: valueSearch_changed }, valueUpdate: 'keyup'" type="text" class="sc_search_input" placeholder="Tìm kiếm bài hát, nghệ sĩ..." />
             </div>
             <div class="sc_result_search" data-bind="class: setIsSelected() ? 'active' : ''">
                 <div class="sc_content_result_search">
@@ -22,7 +22,7 @@
                             </div>
                         </div>
                         <div data-bind="foreach: setArrSongSearch, class: setIsSearch() ? '' : 'hidden'">
-                            <div class="sc_box_result_key">
+                            <div class="sc_box_result_key" data-bind="click: $parent.changeLinkModal.bind($parent, id_gg, text_gr_singer, name, '../../assrts/images' + image)">
                                 <div class="sm_search_icon">
                                     <i class="fa fa-search"></i>
                                 </div>
@@ -57,7 +57,7 @@
                                 </div>
                             </div>
                             <div data-bind="foreach: setArrSongMainSearch, class: setIsSearch() ? '' : 'hidden'">
-                                <div class="sc_container_box_song">
+                                <div class="sc_container_box_song" data-bind="click: $parent.changeLinkModal.bind($parent, id_gg, text_gr_singer, name, '../../assrts/images' + image)">
                                     <div class="sc_c_img">
                                         <img data-bind="attr: { src: '../../assets/images' + image }" alt="" />
                                         <div class="sc_c_img_bg hidden">
@@ -181,7 +181,7 @@
                     <div class="c_i_action_m" data-bind="click: isRandom, class: sttRandom() ? 'active_ramdom' : '', clickBubble: false">
                         <i class="fa fa-random"></i>
                     </div>
-                    <div class="c_i_action_m" data-bind="click: isBackward, clickBubble: false">
+                    <div class="c_i_action_m back-song" data-bind="click: isBackward, clickBubble: false">
                         <i class="fa fa-backward"></i>
                     </div>
                     <div class="c_i_action_m play">
@@ -189,7 +189,7 @@
                         <i class="fa fa-pause" data-bind="visible: isPause, click: pauseSong, clickBubble: false"></i>
                         <i class="fa fa-spinner" data-bind="visible: isSpinner"></i>
                     </div>
-                    <div class="c_i_action_m" data-bind="click: isForward, clickBubble: false">
+                    <div class="c_i_action_m next-song" data-bind="click: isForward, clickBubble: false">
                         <i class="fa fa-forward"></i>
                     </div>
                     <div class="c_i_action_m" data-bind="click: isLoop, class: sttLoop() ? 'active_retweet' : '', clickBubble: false">
@@ -275,7 +275,7 @@
                                         </div>
                                     </div>
                                     <div class="sc_c_action_song">
-                                        <div class="icon_action_song heart_active-none">
+                                        <div class="icon_action_song" data-bind="class: is_like ? 'heart_active' : '', click: $parent.addHeartModal.bind($parent, id_gg), clickBubble: false">
                                             <i class="fa fa-heart"></i>
                                         </div>
                                         <div class="icon_action_song">
@@ -332,7 +332,7 @@
                 </div>
                 <div class="box-input" style="position: relative;">
                     <label>Danh sách bài hát</label>
-                    <input data-bind="value: saved_value, event: { change: value_changed }, valueUpdate: 'keyup'" />
+                    <input data-bind="value: saved_value, event: { keyup: value_changed }, valueUpdate: 'keyup'" />
                     <div class="select-input" data-bind="foreach: itemSongSearchInput, class: sttInputSearch() ? '' : 'hidden'">
                         <div class="option-input" data-bind="text: name, click: $parent.addValueInput.bind($parent, name), clickBubble: false"></div>
                     </div>

@@ -3,6 +3,7 @@ import m_system = require('../../lib/durandal/js/system');
 import ko = require('knockout');
 import $ = require('jquery');
 import Swal = require('../../lib/sweetalert2/dist/sweetalert2.all.min');
+import global = require('../../assets/js/global');
 
 export = class {
     router = m_router;
@@ -198,7 +199,7 @@ export = class {
             }
             if (!checkExistsHistory) {
                 var arr = [];
-                fetch('http://localhost:8080/music/check_like', {
+                fetch(global.api_url + 'check_like', {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json, text/plain, */*',
@@ -336,7 +337,7 @@ export = class {
             this.data.append('song', this.valueNameSong());
             this.data.append('singer', this.valueSinger());
             this.data.append('gg', this.valueIDGG());
-            fetch('http://localhost:8080/music/upload_song', {
+            fetch(global.api_url + 'upload_song', {
                 method: 'POST',
                 body: this.data
             }).then((response) => {
@@ -411,7 +412,7 @@ export = class {
         if (this.isCheckPlaying.length > 1) {
             this.isCheckPlaying.pop();
 
-            fetch('http://localhost:8080/music/get_song_by_url', {
+            fetch(global.api_url + 'get_song_by_url', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json, text/plain, */*',
@@ -449,7 +450,7 @@ export = class {
     itemSongSearchInput = ko.observableArray();
     value_changed() {
         if (this.saved_value() != '') {
-            fetch('http://localhost:8080/music/search_song_byName', {
+            fetch(global.api_url + 'search_song_byName', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json, text/plain, */*',
@@ -476,10 +477,14 @@ export = class {
     }
     addValueInput(name, data, e) {
         if (this.saved_value().indexOf('|') == -1) {
-            this.saved_value(name + ' | ');
+            if (name != 'Không có dữ liệu!') {
+                this.saved_value(name + ' | ');
+            }
         } else {
-            this.saved_value(this.saved_value().replace(this.saved_value().slice(this.saved_value().lastIndexOf(' | ')), ' | '));
-            this.saved_value(this.saved_value() + name + ' | ');
+            if (name != 'Không có dữ liệu!') {
+                this.saved_value(this.saved_value().replace(this.saved_value().slice(this.saved_value().lastIndexOf(' | ')), ' | '));
+                this.saved_value(this.saved_value() + name + ' | ');
+            }
         }
         this.sttInputSearch(false);
     }
@@ -493,7 +498,7 @@ export = class {
                 confirmButtonText: 'Ok!'
             });
         } else {
-            fetch('http://localhost:8080/music/add_playlist', {
+            fetch(global.api_url + 'add_playlist', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json, text/plain, */*',
@@ -532,7 +537,7 @@ export = class {
 
     valueSearch_changed() {
         if (this.valueSearch() != '') {
-            fetch('http://localhost:8080/music/search_song', {
+            fetch(global.api_url + 'search_song', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json, text/plain, */*',
@@ -545,6 +550,7 @@ export = class {
                 if (data.length == 0) {
                     this.setIsSearch(false);
                     this.setArrSongSearch([]);
+                    this.setArrSingerSearch([]);
                     this.setArrSongMainSearch([]);
                 } else {
                     this.setIsSearch(true);
@@ -574,11 +580,12 @@ export = class {
         } else {
             this.setIsSearch(false);
             this.setArrSongSearch([]);
+            this.setArrSingerSearch([]);
             this.setArrSongMainSearch([]);
         }
     }
 
-    getData = fetch('http://localhost:8080/music/get_ramdom_song', {
+    getData = fetch(global.api_url + 'get_ramdom_song', {
         method: 'POST',
         headers: {
             'Accept': 'application/json, text/plain, */*',
@@ -609,7 +616,7 @@ export = class {
                 confirmButtonText: 'Ok!'
             });
         } else {
-            fetch('http://localhost:8080/music/add_like_byURL', {
+            fetch(global.api_url + 'add_like_byURL', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json, text/plain, */*',

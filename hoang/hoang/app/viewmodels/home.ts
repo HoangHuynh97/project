@@ -1,6 +1,7 @@
 ﻿import ko = require('knockout');
 import $ = require('jquery');
 import Swal = require('../../lib/sweetalert2/dist/sweetalert2.all.min');
+import global = require('../../assets/js/global');
 
 export = class home {
     hiddenLoading = ko.observable(false);
@@ -61,7 +62,7 @@ export = class home {
     itemSongNew = ko.observableArray();
     itemPlaylist = ko.observableArray();
     itemSongHot = ko.observableArray();
-    getData = fetch('http://localhost:8080/music/get_DataSong', {
+    getData = fetch(global.api_url + 'get_DataSong', {
         method: 'POST',
         headers: {
             'Accept': 'application/json, text/plain, */*',
@@ -110,7 +111,7 @@ export = class home {
                 confirmButtonText: 'Ok!'
             });
         } else {
-            fetch('http://localhost:8080/music/add_like', {
+            fetch(global.api_url + 'add_like', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json, text/plain, */*',
@@ -139,7 +140,7 @@ export = class home {
                 confirmButtonText: 'Ok!'
             });
         } else {
-            fetch('http://localhost:8080/music/add_like_playlist', {
+            fetch(global.api_url + 'add_like_playlist', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json, text/plain, */*',

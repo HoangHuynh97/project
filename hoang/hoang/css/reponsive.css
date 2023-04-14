@@ -545,12 +545,16 @@
         display: none;
     }
 
-        .c_i_action_m.play {
-            display: block;
-        }
+    .back-song, .next-song {
+        display: block;
+        margin: 0;
+    }
+    .c_i_action_m.play {
+        display: block;
+    }
 
     .sc_container_left {
-        width: calc(100% - 80px);
+        width: calc(100% - 100px);
     }
 
     .mm_container_bot.active_mobile {
