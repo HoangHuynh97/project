@@ -21,7 +21,7 @@ define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert
             this.itemSongNew = ko.observableArray();
             this.itemPlaylist = ko.observableArray();
             this.itemSongHot = ko.observableArray();
-            this.getData = fetch(global.api_url + 'get_DataSong', {
+            this.getData = fetch("".concat(global.api_url, "get_DataSong"), {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json, text/plain, */*',

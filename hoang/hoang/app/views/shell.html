@@ -5,7 +5,7 @@
                 <div class="b_search_icon">
                     <i class="fa fa-search"></i>
                 </div>
-                <input data-bind="hasFocus: setIsSelected, value: valueSearch, event: { keyup: valueSearch_changed }, valueUpdate: 'keyup'" type="text" class="sc_search_input" placeholder="Tìm kiếm bài hát, nghệ sĩ..." />
+                <input data-bind="hasFocus: setIsSelected, textInput: valueSearch" type="text" class="sc_search_input" placeholder="Tìm kiếm bài hát, nghệ sĩ..." />
             </div>
             <div class="sc_result_search" data-bind="class: setIsSelected() ? 'active' : ''">
                 <div class="sc_content_result_search">
@@ -349,4 +349,5 @@
         </audio>
     </section>
     <div class="page-host" data-bind="router: { transition:'entrance' }"></div>
+
 </div>

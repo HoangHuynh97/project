@@ -7,7 +7,12 @@ import global = require('../../assets/js/global');
 
 export = class {
     router = m_router;
-    activate = function () {
+
+    activate() {
+        this.valueSearch.subscribe(v => {
+            this.valueSearch_changed();
+        })
+
         m_router.map([
             { route: '', title: 'Home', moduleId: 'viewmodels/home', nav: true },
             { route: 'login', moduleId: 'viewmodels/login', nav: true },

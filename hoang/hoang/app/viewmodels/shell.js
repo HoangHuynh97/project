@@ -4,17 +4,6 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
         function class_1() {
             var _this = this;
             this.router = m_router;
-            this.activate = function () {
-                m_router.map([
-                    { route: '', title: 'Home', moduleId: 'viewmodels/home', nav: true },
-                    { route: 'login', moduleId: 'viewmodels/login', nav: true },
-                    { route: 'profile', moduleId: 'viewmodels/profile', nav: true },
-                    { route: 'new', moduleId: 'viewmodels/new', nav: true },
-                    { route: 'singer/:id', moduleId: 'viewmodels/singer', nav: true },
-                    { route: 'playlist/:id', moduleId: 'viewmodels/playlist', nav: true }
-                ]).buildNavigationModel();
-                return m_router.activate();
-            };
             this.setIsSelected = ko.observable(false);
             this.isPlay = ko.observable(true);
             this.isPause = ko.observable(false);
@@ -161,6 +150,22 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
             this.menuMobile = ko.observable(false);
             this.setIsMobile = ko.observable(false);
         }
+        class_1.prototype.activate = function () {
+            var _this = this;
+            this.valueSearch.subscribe(function (v) {
+                _this.valueSearch_changed();
+            });
+            m_router.map([
+                { route: '', title: 'Home', moduleId: 'viewmodels/home', nav: true },
+                { route: 'login', moduleId: 'viewmodels/login', nav: true },
+                { route: 'profile', moduleId: 'viewmodels/profile', nav: true },
+                { route: 'new', moduleId: 'viewmodels/new', nav: true },
+                { route: 'singer/:id', moduleId: 'viewmodels/singer', nav: true },
+                { route: 'playlist/:id', moduleId: 'viewmodels/playlist', nav: true }
+            ]).buildNavigationModel();
+            return m_router.activate();
+        };
+        ;
         class_1.prototype.changeLinkModal = function (id_gg, singer, nameSong, imgSong) {
             if (sessionStorage.getItem("url_song") != '') {
                 sessionStorage.removeItem("url_song");
