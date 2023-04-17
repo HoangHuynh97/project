@@ -1,41 +1,28 @@
-define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout", "../../lib/sweetalert2/dist/sweetalert2.all.min", "../../assets/js/global"], function (require, exports, m_router, ko, Swal, global) {
+define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout", "../../lib/sweetalert2/dist/sweetalert2.all.min", "../models/model_home", "../models/model_playlist"], function (require, exports, m_router, ko, Swal, model_home, model_playlist) {
     "use strict";
     return /** @class */ (function () {
-        function home() {
+        function class_1() {
             var _this = this;
+            this.getModel_home = new model_home();
+            this.getModel_playlist = new model_playlist();
             this.hiddenLoading = ko.observable(false);
             this.itemSong = ko.observableArray();
             this.param = m_router.activeInstruction().params[0];
             this.NamePlaylist = ko.observable('');
             this.NameCreateBy = ko.observable('');
             this.ArrIMG = ko.observable('');
-            this.getData = fetch(global.api_url + 'get_Playlist', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ id_playlist: this.param, id_user: sessionStorage.getItem('id_user') ? sessionStorage.getItem('id_user') : 0 })
-            }).then(function (response) {
-                return response.json();
-            }).then(function (data) {
-                if (!data || data.length == 0) {
-                    window.location.href = '#';
-                }
-                _this.NamePlaylist(data.dataPlaylist.name);
-                _this.NameCreateBy(data.dataPlaylist.create_by);
-                _this.ArrIMG(data.dataPlaylist.img);
-                var objItemNew = [];
-                data.dataSongbyPlaylist.map(function (value) {
-                    objItemNew.push({ id: value.id, name: value.name, is_like: value.is_like, id_gg: value.id_gg, image: value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
-                });
-                _this.itemSong(objItemNew);
+            this.getData = this.getModel_playlist.getDataSong(this.param, sessionStorage.getItem('id_user') ? sessionStorage.getItem('id_user') : 0).then(function (response) {
+                response = JSON.parse(response);
+                _this.NamePlaylist(response['namePlaylist']);
+                _this.NameCreateBy(response['nameCreateBy']);
+                _this.ArrIMG(response['ArrIMG']);
+                _this.itemSong(response['valueObjItemNew']);
                 setTimeout(function () {
                     _this.hiddenLoading(true);
                 }, 1500);
             });
         }
-        home.prototype.addHeart = function (data, id_song, event) {
+        class_1.prototype.addHeart = function (data, id_song, event) {
             if (!sessionStorage.getItem('id_user')) {
                 Swal.fire({
                     title: '<strong>Vui lòng đăng nhập để thực hiện chức năng này!</strong>',
@@ -46,26 +33,17 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
                 });
             }
             else {
-                fetch(global.api_url + 'add_like', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json, text/plain, */*',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ id: data, id_user: sessionStorage.getItem('id_user') })
-                }).then(function (response) {
-                    return response.json();
-                }).then(function (dataRes) {
-                    if (dataRes.message == 'success') {
+                this.getModel_home.addLike(data, sessionStorage.getItem('id_user')).then(function (response) {
+                    if (response == 'success') {
                         event.currentTarget.className += " heart_active";
                     }
-                    else if (dataRes.message == 'delete') {
+                    else if (response == 'fail') {
                         event.currentTarget.className = "sc_icon_table";
                     }
                 });
             }
         };
-        home.prototype.changeLink = function (id_gg, singer, nameSong, imgSong) {
+        class_1.prototype.changeLink = function (id_gg, singer, nameSong, imgSong) {
             if (sessionStorage.getItem("url_song") != '') {
                 sessionStorage.removeItem("url_song");
                 sessionStorage.removeItem("id_gg");
@@ -80,7 +58,7 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
             sessionStorage.setItem("img_song", imgSong);
             window.dispatchEvent(new Event("storage"));
         };
-        home.prototype.randomPlay = function () {
+        class_1.prototype.randomPlay = function () {
             sessionStorage.removeItem("arrHistory");
             var arr = [];
             this.itemSong().map(function (value) {
@@ -108,7 +86,7 @@ define(["require", "exports", "../../lib/durandal/js/plugins/router", "knockout"
             sessionStorage.setItem("img_song", '../../assets/images' + this.itemSong()[0]['image']);
             window.dispatchEvent(new Event("storage"));
         };
-        return home;
+        return class_1;
     }());
 });
 //# sourceMappingURL=playlist.js.map

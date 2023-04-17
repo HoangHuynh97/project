@@ -1,0 +1,131 @@
+﻿<section class="mm_container_top">
+    <div class="sc_container_search">
+        <div class="sc_content_search" data-bind="class: setIsSelected() ? 'active' : ''">
+            <div class="b_search_icon">
+                <i class="fa fa-search"></i>
+            </div>
+            <input data-bind="hasFocus: setIsSelected, textInput: valueSearch" type="text" class="sc_search_input" placeholder="Tìm kiếm bài hát, nghệ sĩ..." />
+        </div>
+        <div class="sc_result_search" data-bind="class: setIsSelected() ? 'active' : ''">
+            <div class="sc_content_result_search">
+                <div class="sc_result_key">
+                    <div class="sc_title_result_key">
+                        <span>Từ khóa liên quan</span>
+                    </div>
+                    <div class="sc_box_result_key" data-bind="class: setIsSearch() ? 'hidden' : ''">
+                        <div class="sm_search_icon">
+                            <i class="fa fa-search"></i>
+                        </div>
+                        <div class="sc_text_result_key">
+                            <span>Chưa có dữ liệu!</span>
+                        </div>
+                    </div>
+                    <div data-bind="foreach: setArrSongSearch, class: setIsSearch() ? '' : 'hidden'">
+                        <div class="sc_box_result_key" data-bind="click: $parent.changeLinkModal.bind($parent, id_gg, text_gr_singer, name, '../../assrts/images' + image)">
+                            <div class="sm_search_icon">
+                                <i class="fa fa-search"></i>
+                            </div>
+                            <div class="sc_text_result_key">
+                                <span data-bind="text: name"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div data-bind="foreach: setArrSingerSearch, class: setIsSearch() ? '' : 'hidden'">
+                        <div class="sc_box_result_key">
+                            <div class="sm_search_icon">
+                                <i class="fa fa-search"></i>
+                            </div>
+                            <div class="sc_text_result_key">
+                                <span data-bind="text: name"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="line"></div>
+                <div class="sc_result_song">
+                    <div class="sc_title_result_key">
+                        <span>Gợi ý kết quả</span>
+                    </div>
+                    <div class="sc_box_result_song">
+                        <div class="sc_box_result_key" data-bind="class: setIsSearch() ? 'hidden' : ''">
+                            <div class="sm_search_icon">
+                                <i class="fa fa-search"></i>
+                            </div>
+                            <div class="sc_text_result_key">
+                                <span>Chưa có dữ liệu!</span>
+                            </div>
+                        </div>
+                        <div data-bind="foreach: setArrSongMainSearch, class: setIsSearch() ? '' : 'hidden'">
+                            <div class="sc_container_box_song" data-bind="click: $parent.changeLinkModal.bind($parent, id_gg, text_gr_singer, name, '../../assrts/images' + image)">
+                                <div class="sc_c_img">
+                                    <img data-bind="attr: { src: '../../assets/images' + image }" alt="" />
+                                    <div class="sc_c_img_bg hidden">
+                                        <img src="../../assets/images/play.png" class="play_icon" />
+                                    </div>
+                                </div>
+                                <div class="sc_c_des">
+                                    <div class="sc_c_des_name">
+                                        <h5 data-bind="text: name"></h5>
+                                    </div>
+                                    <div class="sc_c_des_singer">
+                                        <h5 data-bind="text: text_gr_singer"></h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="sc_container_action">
+        <div class="sc_box_upload" data-bind="click: showModalUpload">
+            <i class="fa fa-upload"></i>
+            <span>Cập nhật ca khúc mới</span>
+        </div>
+        <a href="#login"
+           data-bind="class: isLogin() ? 'hidden' : ''"
+           class="sc_box_icon b_light"
+           data-bs-toggle="tooltip"
+           data-bs-placement="bottom"
+           title="Người dùng">
+            <i class="fa fa-user"></i>
+        </a>
+        <a data-bind="text: isUser(), class: isLogin() ? '' : 'hidden', click: isLogout"
+           class="sc_box_icon b_light"
+           data-bs-toggle="tooltip"
+           data-bs-placement="bottom"
+           title="Người dùng">
+        </a>
+    </div>
+</section>
+<div class="is-modal" id="uploadModal" data-bind="class: checkShowModalUpload() ? '' : 'hidden'">
+    <div class="modal-header">
+        <span>CẬP NHẬT CA KHÚC MỚI</span>
+    </div>
+    <div class="modal-body">
+        <div class="box-input">
+            <label>Tên bài hát</label>
+            <input type="text" data-bind="textInput: valueNameSong" />
+        </div>
+        <div class="box-input">
+            <label>Ca sĩ thể hiện</label>
+            <input type="text" data-bind="textInput: valueSinger" />
+        </div>
+        <div class="box-input">
+            <label>ID Google Driver</label>
+            <input type="text" data-bind="textInput: valueIDGG" />
+        </div>
+        <div class="box-input">
+            <label>Hình ảnh</label>
+            <div class="custom-file">
+                <span>Choose Your File</span>
+                <input type="file" accept="image/*" data-bind="event: { change: function() {uploadImage($element.files[0])} }">
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="btn-submit" data-bind="click: saveUploadSong">Lưu lại</div>
+        <div class="btn-close" data-bind="click: hiddenModalUpload">Đóng</div>
+    </div>
+</div>

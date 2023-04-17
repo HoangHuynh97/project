@@ -1,0 +1,78 @@
+﻿<section class="menu">
+    <div class="mm_show_menu_mobile" data-bind="click: setMenuMobile">
+        <i class="fa fa-bars"></i>
+    </div>
+    <div class="mm_container_menu" data-bind="class: menuMobile() ? 'active' : ''">
+        <div class="sc_menu">
+            <a class="sc_menu_logo" href="#">
+                <img src="../../assets/images/logo.png" alt="" />
+            </a>
+            <div class="sc_menu_content">
+                <a class="sc_box_menu" href="#" data-bind="click: getURL.bind($data, '#'), class: isURL() == '#' ? 'active' : ''">
+                    <div class="c_icon_menu">
+                        <i class="fa fa-star"></i>
+                    </div>
+                    <div class="c_title_menu">
+                        <span>Khám phá</span>
+                    </div>
+                </a>
+                <a class="sc_box_menu" href="#profile" data-bind="click: getURL.bind($data, '#profile'), class: isURL() == '#profile' ? 'active' : ''">
+                    <div class="c_icon_menu">
+                        <i class="fa fa-headphones"></i>
+                    </div>
+                    <div class="c_title_menu">
+                        <span>Cá nhân</span>
+                    </div>
+                </a>
+                <a class="sc_box_menu" href="#new" data-bind="click: getURL.bind($data, '#new'), class: isURL() == '#new' ? 'active' : ''">
+                    <div class="c_icon_menu">
+                        <i class="fa fa-music"></i>
+                    </div>
+                    <div class="c_title_menu">
+                        <span>Nhạc mới</span>
+                    </div>
+                </a>
+            </div>
+            <div class="sc_menu_sub_content">
+                <a class="sc_box_menu" href="#mv" data-bind="click: getURL.bind($data, '#mv'), class: isURL() == '#mv' ? 'active' : ''">
+                    <div class="c_icon_menu">
+                        <i class="fa fa-play-circle"></i>
+                    </div>
+                    <div class="c_title_menu">
+                        <span>MV</span>
+                    </div>
+                </a>
+            </div>
+            <div class="sc_button_menu" data-bind="click: showModalAddPlaylist">
+                <div class="c_icon_menu">
+                    <i class="fa fa-plus"></i>
+                </div>
+                <div class="c_title_menu">
+                    <span>Tạo playlist mới</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="is-modal" id="uploadModal" data-bind="class: checkShowModalAddPlaylist() ? '' : 'hidden'">
+    <div class="modal-header">
+        <span>TẠO PLAYLIST MỚI</span>
+    </div>
+    <div class="modal-body">
+        <div class="box-input">
+            <label>Tên danh sách phát</label>
+            <input type="text" data-bind="textInput: valueNamePlaylist" />
+        </div>
+        <div class="box-input" style="position: relative;">
+            <label>Danh sách bài hát</label>
+            <input data-bind="value: saved_value, event: { keyup: value_changed }, valueUpdate: 'keyup'" />
+            <div class="select-input" data-bind="foreach: itemSongSearchInput, class: sttInputSearch() ? '' : 'hidden'">
+                <div class="option-input" data-bind="text: name, click: $parent.addValueInput.bind($parent, name), clickBubble: false"></div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="btn-submit" data-bind="click: saveAddPlaylist">Lưu lại</div>
+        <div class="btn-close" data-bind="click: hiddenModalAddPlaylist">Đóng</div>
+    </div>
+</div>

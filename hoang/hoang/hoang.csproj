@@ -119,21 +119,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\main.js" />
-    <Content Include="app\viewmodels\flickr.js" />
     <Content Include="app\viewmodels\shell.js" />
-    <Content Include="app\viewmodels\welcome.js" />
-    <Content Include="app\views\backup.html" />
-    <Content Include="app\views\detail.html" />
-    <Content Include="app\views\flickr.html" />
+    <Content Include="app\views\bottom.html" />
+    <Content Include="app\views\header.html" />
     <Content Include="app\views\home.html" />
+    <Content Include="app\views\loading.html" />
     <Content Include="app\views\login.html" />
+    <Content Include="app\views\menu.html" />
     <Content Include="app\views\new.html" />
     <Content Include="app\views\playlist.html" />
     <Content Include="app\views\profile.html" />
     <Content Include="app\views\shell.html" />
     <Content Include="app\views\singer.html" />
-    <Content Include="app\views\test.html" />
-    <Content Include="app\views\welcome.html" />
     <Content Include="Changes.txt" />
     <Content Include="css\all.css" />
     <Content Include="css\ie10mobile.css" />
@@ -208,14 +205,23 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="app\models\model_login.ts" />
+    <TypeScriptCompile Include="app\models\model_home.ts" />
+    <TypeScriptCompile Include="app\models\model_new.ts" />
+    <TypeScriptCompile Include="app\models\model_playlist.ts" />
+    <TypeScriptCompile Include="app\models\model_profile.ts" />
+    <TypeScriptCompile Include="app\models\model_shell.ts" />
+    <TypeScriptCompile Include="app\models\model_singer.ts" />
+    <TypeScriptCompile Include="app\viewmodels\bottom.ts" />
+    <TypeScriptCompile Include="app\viewmodels\header.ts" />
     <TypeScriptCompile Include="app\viewmodels\home.ts" />
     <TypeScriptCompile Include="app\viewmodels\login.ts" />
+    <TypeScriptCompile Include="app\viewmodels\menu.ts" />
     <TypeScriptCompile Include="app\viewmodels\new.ts" />
     <TypeScriptCompile Include="app\viewmodels\playlist.ts" />
     <TypeScriptCompile Include="app\viewmodels\profile.ts" />
     <TypeScriptCompile Include="app\viewmodels\shell.ts" />
     <TypeScriptCompile Include="app\viewmodels\singer.ts" />
-    <TypeScriptCompile Include="app\viewmodels\test.ts" />
     <TypeScriptCompile Include="assets\js\global.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\knockout\knockout.d.ts" />
@@ -225,9 +231,7 @@
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="app\models\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

@@ -1,0 +1,138 @@
+﻿<section class="container_bottom">
+    <div class="hidden_mobile" data-bind="click: closeBottom, class: setIsMobile() ? 'active' : '', clickBubble: false">
+        <div class="icon_hidden_mobile">
+            <i class="fa fa-chevron-circle-down"></i>
+        </div>
+    </div>
+    <div class="mm_container_bot" data-bind="click: openBottom, class: setIsMobile() ? 'active_mobile' : '', clickBubble: false">
+        <div class="sc_container_left">
+            <div class="c_img_song" data-bind="class: checkPlay() ? 'active' : ''">
+                <img id="img_song" data-bind="attr: { src: imgSong }" alt="" />
+            </div>
+            <div class="c_content_song">
+                <div class="c_title_song">
+                    <span id="name_song" data-bind="text: nameSong"></span>
+                </div>
+                <div class="c_title_singer">
+                    <span id="name_singer" data-bind="text: singer"></span>
+                </div>
+            </div>
+        </div>
+        <div class="sc_container_center">
+            <div class="sc_action_music">
+                <div class="c_i_action_m" data-bind="click: isRandom, class: sttRandom() ? 'active_ramdom' : '', clickBubble: false">
+                    <i class="fa fa-random"></i>
+                </div>
+                <div class="c_i_action_m back-song" data-bind="click: isBackward, clickBubble: false">
+                    <i class="fa fa-backward"></i>
+                </div>
+                <div class="c_i_action_m play">
+                    <i class="fa fa-play" data-bind="visible: isPlay, click: playSong, clickBubble: false"></i>
+                    <i class="fa fa-pause" data-bind="visible: isPause, click: pauseSong, clickBubble: false"></i>
+                    <i class="fa fa-spinner" data-bind="visible: isSpinner"></i>
+                </div>
+                <div class="c_i_action_m next-song" data-bind="click: isForward, clickBubble: false">
+                    <i class="fa fa-forward"></i>
+                </div>
+                <div class="c_i_action_m" data-bind="click: isLoop, class: sttLoop() ? 'active_retweet' : '', clickBubble: false">
+                    <i class="fa fa-retweet"></i>
+                </div>
+            </div>
+            <div class="sc_time_m">
+                <div class="sc_curent_time" id="set_time">
+                    <span data-bind="text: strLine()"></span>
+                </div>
+                <input disabled="disabled" id="point_timeline" data-bind="attr: { max: duration, value: currentTime }" class="sc_time_line" type="range" min="0" />
+                <div class="sc_end_time">
+                    <span data-bind="text: hours() == 0 ? '' : hours() < 10 ? '0'+hours()+':' : hours()+':' "></span>
+                    <span data-bind="text: minutes() == 0 ? '00:' : minutes() < 10 ? '0'+minutes()+':' : minutes()+':' "></span>
+                    <span data-bind="text: seconds() == 0 ? '00' : seconds() < 10 ? '0'+seconds() : seconds() "></span>
+                </div>
+            </div>
+        </div>
+        <div class="you_like">Có thể bạn sẽ thích</div>
+        <div class="sc_container_right">
+            <div class="c_icon_action">
+                <span>mv</span>
+            </div>
+            <div class="c_icon_action">
+                <i class="fa fa-volume-up"></i>
+            </div>
+            <div class="c_volume_setting" id="volume">
+                <input data-bind="textInput: changeVolume" class="sc_point_volume" type="range" min="0" max="100" />
+            </div>
+            <div class="line_sp"></div>
+            <div class="c_icon_action action_bar">
+                <div class="bar_menu" data-bind="click: showModalBottom, clickBubble: false">
+                    <i class="fa fa-bars"></i>
+                </div>
+                <div class="container_action_bar" data-bind="class: checkShowModalBottom() ? 'active' : ''">
+                    <div class="text_line">Danh sách hiện tại</div>
+                    <div data-bind="foreach: itemSongHistory">
+                        <div class="content_action_bar">
+                            <div class="sc_container_box_song box_song_bottom" data-bind="click: $parent.changeLinkModal.bind($parent, id_gg, singer, nameSong, imgSong)">
+                                <div class="sc_c_img">
+                                    <img data-bind="attr: { src: imgSong }" alt="" />
+                                    <div class="sc_c_img_bg hidden">
+                                        <img src="../../assets/images/play.png" class="play_icon" />
+                                    </div>
+                                </div>
+                                <div class="sc_c_des">
+                                    <div class="sc_c_des_name">
+                                        <h5 data-bind="text: nameSong"></h5>
+                                    </div>
+                                    <div class="sc_c_des_singer mginbt5">
+                                        <a class="sc_text_link" data-bind="text: singer"></a>
+                                        <span class="nohover_singer">x</span>
+                                    </div>
+                                </div>
+                                <div class="sc_c_action_song">
+                                    <div class="icon_action_song" data-bind="class: is_like ? 'heart_active' : '', click: $parent.addHeartModal.bind($parent, id_gg), clickBubble: false">
+                                        <i class="fa fa-heart"></i>
+                                    </div>
+                                    <div class="icon_action_song">
+                                        <i class="fa fa-play"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text_line">Có thể bạn sẽ thích</div>
+                    <div data-bind="foreach: itemSong">
+                        <div class="content_action_bar">
+                            <div class="sc_container_box_song box_song_bottom" data-bind="click: $parent.changeLinkModal.bind($parent, id_gg, text_gr_singer, name, '../../assets/images' + image)">
+                                <div class="sc_c_img">
+                                    <img data-bind="attr: { src: '../../assets/images' + image }" alt="" />
+                                    <div class="sc_c_img_bg hidden">
+                                        <img src="../../assets/images/play.png" class="play_icon" />
+                                    </div>
+                                </div>
+                                <div class="sc_c_des">
+                                    <div class="sc_c_des_name">
+                                        <h5 data-bind="text: name"></h5>
+                                    </div>
+                                    <div class="sc_c_des_singer mginbt5" data-bind="foreach: id_singer">
+                                        <a class="sc_text_link" data-bind="text: name"></a>
+                                        <span class="nohover_singer">x</span>
+                                    </div>
+                                </div>
+                                <div class="sc_c_action_song">
+                                    <div class="icon_action_song" data-bind="class: is_like ? 'heart_active' : '', click: $parent.addHeartModal.bind($parent, id_gg), clickBubble: false">
+                                        <i class="fa fa-heart"></i>
+                                    </div>
+                                    <div class="icon_action_song">
+                                        <i class="fa fa-play"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="audioElement">
+        <source data-bind="attr: { src: url_song }, event: { play: playSong }" />
+    </audio>
+</section>

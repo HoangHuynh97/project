@@ -1,16 +1,5 @@
 ﻿<div class="mm_container">
-    <div class="container-load" data-bind="class: hiddenLoading() ? 'hidden' : ''">
-        <div class="is-load"></div>
-        <div class="is-load"></div>
-        <div class="is-load"></div>
-        <div class="is-load"></div>
-        <div class="is-load"></div>
-        <div class="is-load"></div>
-        <div class="is-load"></div>
-        <div class="is-load"></div>
-        <div class="is-load"></div>
-        <div class="is-load"></div>
-    </div>
+    <div data-bind="compose:'loading.html'"></div>
     <div class="mm_container_banner_singer">
         <div class="mm_img_banner_singer">
             <img data-bind="attr: { src: '../../assets/images' + dataImgSinger() }" alt="" />

@@ -1,16 +1,11 @@
-define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert2.all.min", "../../assets/js/global"], function (require, exports, ko, Swal, global) {
+define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert2.all.min", "../models/model_home"], function (require, exports, ko, Swal, model_home) {
     "use strict";
     return /** @class */ (function () {
         function home() {
             var _this = this;
+            this.getModel_home = new model_home();
             this.hiddenLoading = ko.observable(false);
-            this.bannerSlide = ko.observableArray([
-                { src: "../../assets/images/banner-template.jpg", id: 1 },
-                { src: "../../assets/images/banner-template2.jpg", id: 2 },
-                { src: "../../assets/images/banner-template3.jpg", id: 3 },
-                { src: "../../assets/images/banner-template4.jpg", id: 4 },
-                { src: "../../assets/images/banner-template5.jpg", id: 5 }
-            ]);
+            this.bannerSlide = ko.observableArray(this.getModel_home.bannerSlide());
             this.setTime = 5;
             this.setTimeSinger = 5;
             this.timer = setInterval(function () {
@@ -21,36 +16,12 @@ define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert
             this.itemSongNew = ko.observableArray();
             this.itemPlaylist = ko.observableArray();
             this.itemSongHot = ko.observableArray();
-            this.getData = fetch("".concat(global.api_url, "get_DataSong"), {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ id_user: sessionStorage.getItem('id_user') ? sessionStorage.getItem('id_user') : 0 })
-            }).then(function (response) {
-                return response.json();
-            }).then(function (data) {
-                var objItemNew = [];
-                data.dataSongNew.map(function (value) {
-                    objItemNew.push({ id: value.id, is_like: value.is_like, name: value.name, id_gg: value.id_gg, image: '../../assets/images' + value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
-                });
-                _this.itemSongNew(objItemNew);
-                var objPlaylist = [];
-                data.dataPlaylist.map(function (value) {
-                    objPlaylist.push({ id: value.id, is_like: value.is_like, name: value.name, img: value.img, create_by: 'Được tạo bởi ' + value.create_by });
-                });
-                _this.itemPlaylist(objPlaylist);
-                var objPlaySinger = [];
-                data.dataSinger_hot.map(function (value) {
-                    objPlaySinger.push({ name: value.name, img: '../../assets/images' + value.img, id: value.id });
-                });
-                _this.bannerSinger(objPlaySinger);
-                var objSongHot = [];
-                data.dataSongHot.map(function (value) {
-                    objSongHot.push({ id: value.id, is_like: value.is_like, name: value.name, id_gg: value.id_gg, image: '../../assets/images' + value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
-                });
-                _this.itemSongHot(objSongHot);
+            this.getData = this.getModel_home.getDataSong(sessionStorage.getItem('id_user') ? sessionStorage.getItem('id_user') : 0).then(function (response) {
+                response = JSON.parse(response);
+                _this.itemSongNew(response['valueObjItemNew']);
+                _this.itemPlaylist(response['valueObjPlaylist']);
+                _this.bannerSinger(response['valueObjPlaySinger']);
+                _this.itemSongHot(response['valueObjSongHot']);
                 setTimeout(function () {
                     _this.hiddenLoading(true);
                 }, 1500);
@@ -105,20 +76,11 @@ define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert
                 });
             }
             else {
-                fetch(global.api_url + 'add_like', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json, text/plain, */*',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ id: data, id_user: sessionStorage.getItem('id_user') })
-                }).then(function (response) {
-                    return response.json();
-                }).then(function (dataRes) {
-                    if (dataRes.message == 'success') {
+                this.getModel_home.addLike(data, sessionStorage.getItem('id_user')).then(function (response) {
+                    if (response == 'success') {
                         event.currentTarget.className += " heart_active";
                     }
-                    else if (dataRes.message == 'delete') {
+                    else if (response == 'fail') {
                         event.currentTarget.className = "sc_icon_table";
                     }
                 });
@@ -135,20 +97,11 @@ define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert
                 });
             }
             else {
-                fetch(global.api_url + 'add_like_playlist', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json, text/plain, */*',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ id: data, id_user: sessionStorage.getItem('id_user') })
-                }).then(function (response) {
-                    return response.json();
-                }).then(function (dataRes) {
-                    if (dataRes.message == 'success') {
+                this.getModel_home.addPlaylist(data, sessionStorage.getItem('id_user')).then(function (response) {
+                    if (response == 'success') {
                         event.currentTarget.className += " heart_active";
                     }
-                    else if (dataRes.message == 'delete') {
+                    else if (response == 'fail') {
                         event.currentTarget.className = "c_box_icon";
                     }
                 });

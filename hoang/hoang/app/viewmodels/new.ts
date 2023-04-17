@@ -2,63 +2,39 @@
 import $ = require('jquery');
 import Swal = require('../../lib/sweetalert2/dist/sweetalert2.all.min');
 import global = require('../../assets/js/global');
+import model_new = require('../models/model_new');
 
-export = class home {
+export = class {
+    getModel_new = new model_new();
     hiddenLoading = ko.observable(false);
     isStart = ko.observable(0);
     itemSong = ko.observableArray();
     sttLoadmore = ko.observable(true);
 
-    getData = fetch(global.api_url + 'get_DataNew', {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json, text/plain, */*',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ id_user: sessionStorage.getItem('id_user') ? sessionStorage.getItem('id_user') : 0, isStart: this.isStart(), loadMore: 20 })
-    }).then((response) => {
-        return response.json();
-    }).then((data) => {
-        var objItemNew = [];
-        data.dataSongNew.map(function (value) {
-            objItemNew.push({ id: value.id, is_like: value.is_like, name: value.name, id_gg: value.id_gg, image: '../../assets/images' + value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
-        });
-        this.itemSong(objItemNew);
+    getData = this.getModel_new.getDataSong(sessionStorage.getItem('id_user') ? sessionStorage.getItem('id_user') : 0, this.isStart(), 20).then((response) => {
+        response = JSON.parse(response);
+        this.itemSong(response['valueObjItemNew']);
         this.isStart(this.isStart() + 20);
-
         setTimeout(() => {
             this.hiddenLoading(true);
         }, 1500);
     });
 
-    async loadMore() {
+    loadMore() {
         this.hiddenLoading(false);
-        await fetch(global.api_url + 'get_DataNew', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json, text/plain, */*',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ id_user: sessionStorage.getItem('id_user') ? sessionStorage.getItem('id_user') : 0, isStart: this.isStart(), loadMore: 20 })
-        }).then((response) => {
-            return response.json();
-        }).then((data) => {
-            var objItemNew = [];
-            data.dataSongNew.map(function (value) {
-                objItemNew.push({ id: value.id, is_like: value.is_like, name: value.name, id_gg: value.id_gg, image: '../../assets/images' + value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
-            });
-
-            this.itemSong(this.itemSong().concat(objItemNew));
+        this.getModel_new.getDataSong(sessionStorage.getItem('id_user') ? sessionStorage.getItem('id_user') : 0, this.isStart(), 20).then((response) => {
+            response = JSON.parse(response);
+            this.itemSong(this.itemSong().concat(response['valueObjItemNew']));
             this.isStart(this.isStart() + 20);
             if (this.isStart() == 100) {
                 this.sttLoadmore(false);
             }
-
             setTimeout(() => {
                 this.hiddenLoading(true);
             }, 1500);
         });
     };
+
 
     addHeart(data, id_song, event) {
         if (!sessionStorage.getItem('id_user')) {
@@ -70,19 +46,10 @@ export = class home {
                 confirmButtonText: 'Ok!'
             });
         } else {
-            fetch(global.api_url + 'add_like', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ id: data, id_user: sessionStorage.getItem('id_user') })
-            }).then((response) => {
-                return response.json();
-            }).then((dataRes) => {
-                if (dataRes.message == 'success') {
+            this.getModel_new.addHeart(data, sessionStorage.getItem('id_user')).then((response) => {
+                if (response == 'success') {
                     event.currentTarget.className += " heart_active";
-                } else if (dataRes.message == 'delete') {
+                } else if (response == 'fail') {
                     event.currentTarget.className = "sc_icon_table";
                 }
             });

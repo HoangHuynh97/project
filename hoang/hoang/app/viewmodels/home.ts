@@ -1,17 +1,12 @@
 ﻿import ko = require('knockout');
 import $ = require('jquery');
 import Swal = require('../../lib/sweetalert2/dist/sweetalert2.all.min');
-import global = require('../../assets/js/global');
+import model_home = require('../models/model_home');
 
-export =  class home {
+export = class home {
+    getModel_home = new model_home();
     hiddenLoading = ko.observable(false);
-    bannerSlide = ko.observableArray([
-        { src: "../../assets/images/banner-template.jpg", id: 1 },
-        { src: "../../assets/images/banner-template2.jpg", id: 2 },
-        { src: "../../assets/images/banner-template3.jpg", id: 3 },
-        { src: "../../assets/images/banner-template4.jpg", id: 4 },
-        { src: "../../assets/images/banner-template5.jpg", id: 5 }
-    ]);
+    bannerSlide = ko.observableArray(this.getModel_home.bannerSlide());
 
     setTime = 5;
     setTimeSinger = 5;
@@ -62,40 +57,12 @@ export =  class home {
     itemSongNew = ko.observableArray();
     itemPlaylist = ko.observableArray();
     itemSongHot = ko.observableArray();
-    getData = fetch(`${global.api_url}get_DataSong`, {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json, text/plain, */*',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ id_user: sessionStorage.getItem('id_user') ? sessionStorage.getItem('id_user') : 0 })
-    }).then((response) => {
-        return response.json();
-    }).then((data) => {
-        var objItemNew = [];
-        data.dataSongNew.map(function (value) {
-            objItemNew.push({ id: value.id, is_like: value.is_like, name: value.name, id_gg: value.id_gg, image: '../../assets/images'+value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
-        });
-        this.itemSongNew(objItemNew);
-
-        var objPlaylist = [];
-        data.dataPlaylist.map(function (value) {
-            objPlaylist.push({ id: value.id, is_like: value.is_like, name: value.name, img: value.img, create_by: 'Được tạo bởi '+value.create_by });
-        });
-        this.itemPlaylist(objPlaylist);
-
-        var objPlaySinger = [];
-        data.dataSinger_hot.map(function (value) {
-            objPlaySinger.push({ name: value.name, img: '../../assets/images' + value.img, id: value.id });
-        });
-        this.bannerSinger(objPlaySinger);
-
-        var objSongHot = [];
-        data.dataSongHot.map(function (value) {
-            objSongHot.push({ id: value.id, is_like: value.is_like, name: value.name, id_gg: value.id_gg, image: '../../assets/images' + value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
-        });
-        this.itemSongHot(objSongHot);
-
+    getData = this.getModel_home.getDataSong(sessionStorage.getItem('id_user') ? sessionStorage.getItem('id_user') : 0).then((response) => {
+        response = JSON.parse(response);
+        this.itemSongNew(response['valueObjItemNew']);
+        this.itemPlaylist(response['valueObjPlaylist']);
+        this.bannerSinger(response['valueObjPlaySinger']);
+        this.itemSongHot(response['valueObjSongHot']);
         setTimeout(() => {
             this.hiddenLoading(true);
         }, 1500);
@@ -111,19 +78,10 @@ export =  class home {
                 confirmButtonText: 'Ok!'
             });
         } else {
-            fetch(global.api_url + 'add_like', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ id: data, id_user: sessionStorage.getItem('id_user') })
-            }).then((response) => {
-                return response.json();
-            }).then((dataRes) => {
-                if (dataRes.message == 'success') {
+            this.getModel_home.addLike(data, sessionStorage.getItem('id_user')).then((response) => {
+                if (response == 'success') {
                     event.currentTarget.className += " heart_active";
-                } else if (dataRes.message == 'delete') {
+                } else if (response == 'fail') {
                     event.currentTarget.className = "sc_icon_table";
                 }
             });
@@ -140,19 +98,10 @@ export =  class home {
                 confirmButtonText: 'Ok!'
             });
         } else {
-            fetch(global.api_url + 'add_like_playlist', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ id: data, id_user: sessionStorage.getItem('id_user') })
-            }).then((response) => {
-                return response.json();
-            }).then((dataRes) => {
-                if (dataRes.message == 'success') {
+            this.getModel_home.addPlaylist(data, sessionStorage.getItem('id_user')).then((response) => {
+                if (response == 'success') {
                     event.currentTarget.className += " heart_active";
-                } else if (dataRes.message == 'delete') {
+                } else if (response == 'fail') {
                     event.currentTarget.className = "c_box_icon";
                 }
             });

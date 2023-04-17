@@ -1,4 +1,4 @@
-define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert2.all.min", "../../assets/js/global"], function (require, exports, ko, Swal, global) {
+define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert2.all.min", "../models/model_login"], function (require, exports, ko, Swal, model_login) {
     "use strict";
     $(document).ready(function () {
         if (sessionStorage.getItem("name_user")) {
@@ -7,6 +7,7 @@ define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert
     });
     return /** @class */ (function () {
         function class_1() {
+            this.getModel_login = new model_login();
             this.valueUser = ko.observable('');
             this.valuePass = ko.observable('');
             this.valueUserSignUP = ko.observable('');
@@ -15,14 +16,6 @@ define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert
             this.valueUserFullname = ko.observable('');
             this.isShowSignUP = ko.observable(false);
             this.isShowLogin = ko.observable(true);
-            /*
-                keypress = window.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter' && this.isShowLogin) {
-                        this.checkLogin();
-                    } else if (e.key === 'Enter' && this.isShowSignUP) {
-                        this.getSignUP();
-                    }
-                });*/
         }
         class_1.prototype.signUP = function () {
             this.isShowSignUP(true);
@@ -41,17 +34,8 @@ define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert
                 });
             }
             else {
-                fetch(global.api_url + 'api_login', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json, text/plain, */*',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ inputUser: this.valueUser(), inputPw: this.valuePass() })
-                }).then(function (response) {
-                    return response.json();
-                }).then(function (data) {
-                    if (data.message == 'fail') {
+                this.getModel_login.checkLogin(this.valueUser(), this.valuePass()).then(function (response) {
+                    if (response == 'fail') {
                         Swal.fire({
                             icon: 'error',
                             title: 'Sai tài khoản hoặc mật khẩu',
@@ -59,8 +43,9 @@ define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert
                         });
                     }
                     else {
-                        sessionStorage.setItem("id_user", data.id_user);
-                        sessionStorage.setItem("name_user", data.name_user);
+                        response = JSON.parse(response);
+                        sessionStorage.setItem("id_user", response['valueID_user']);
+                        sessionStorage.setItem("name_user", response['valueName_user']);
                         window.location.reload();
                     }
                 });
@@ -84,24 +69,15 @@ define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert
                     });
                 }
                 else {
-                    fetch(global.api_url + 'api_signup', {
-                        method: 'POST',
-                        headers: {
-                            'Accept': 'application/json, text/plain, */*',
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ inputUser: this.valueUserSignUP(), inputPw: this.valuePassSignUP(), inputName: this.valueUserFullname() })
-                    }).then(function (response) {
-                        return response.json();
-                    }).then(function (data) {
-                        if (data.message == 'exists') {
+                    this.getModel_login.getSignUP(this.valueUserSignUP(), this.valuePassSignUP(), this.valueUserFullname()).then(function (response) {
+                        if (response == 'exists') {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Tài khoản đã tồn tại!',
                                 text: 'Vui lòng thử lại sau!'
                             });
                         }
-                        else if (data.message == 'fail') {
+                        else if (response == 'fail') {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Hệ thống xảy ra lỗi',

@@ -3,8 +3,12 @@ import ko = require('knockout');
 import $ = require('jquery');
 import Swal = require('../../lib/sweetalert2/dist/sweetalert2.all.min');
 import global = require('../../assets/js/global');
+import model_singer = require('../models/model_singer');
+import model_home = require('../models/model_home');
 
-export = class home {
+export = class {
+    getModel_home = new model_home();
+    getModel_singer = new model_singer();
     hiddenLoading = ko.observable(false);
     itemSong = ko.observableArray();
     itemSongPlaylist = ko.observableArray();
@@ -12,35 +16,13 @@ export = class home {
     dataNameSinger = ko.observable('');
     dataImgSinger = ko.observable('');
 
-    getData = fetch(global.api_url + 'get_Singer', {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json, text/plain, */*',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ id_singer: this.param, id_user: sessionStorage.getItem('id_user') ? sessionStorage.getItem('id_user') : 0 })
-    }).then((response) => {
-        return response.json();
-    }).then((data) => {
-        if (!data.dataNameSinger) {
-            window.location.href = '#';
-        }
+    getData = this.getModel_singer.getDataSong(this.param, sessionStorage.getItem('id_user') ? sessionStorage.getItem('id_user') : 0).then((response) => {
+        response = JSON.parse(response);
+        this.dataNameSinger(response['dataNameSinger']);
+        this.dataImgSinger(response['dataImgSinger']);
 
-        this.dataNameSinger(data.dataNameSinger);
-        this.dataImgSinger(data.dataImgSinger);
-
-        var objItemNew = [];
-        data.dataSongbySinger.map(function (value) {
-            objItemNew.push({ id: value.id, name: value.name, is_like: value.is_like, id_gg: value.id_gg, image: value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
-        });
-        this.itemSong(objItemNew);
-
-        var objItemPlaylist = [];
-        data.dataPlaylist.map(function (value) {
-            objItemPlaylist.push({ id: value.id, is_like: value.is_like, name: value.name, img: value.img, create_by: value.create_by });
-        });
-        this.itemSongPlaylist(objItemPlaylist);
-
+        this.itemSong(response['valueSongbySinger']);
+        this.itemSongPlaylist(response['valuePlaylist']);
         setTimeout(() => {
             this.hiddenLoading(true);
         }, 1500);
@@ -56,19 +38,10 @@ export = class home {
                 confirmButtonText: 'Ok!'
             });
         } else {
-            fetch(global.api_url + 'add_like', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ id: data, id_user: sessionStorage.getItem('id_user') })
-            }).then((response) => {
-                return response.json();
-            }).then((dataRes) => {
-                if (dataRes.message == 'success') {
+            this.getModel_home.addLike(data, sessionStorage.getItem('id_user')).then((response) => {
+                if (response == 'success') {
                     event.currentTarget.className += " heart_active";
-                } else if (dataRes.message == 'delete') {
+                } else if (response == 'fail') {
                     event.currentTarget.className = "sc_icon_table";
                 }
             });
@@ -85,19 +58,10 @@ export = class home {
                 confirmButtonText: 'Ok!'
             });
         } else {
-            fetch(global.api_url + 'add_like_playlist', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ id: data, id_user: sessionStorage.getItem('id_user') })
-            }).then((response) => {
-                return response.json();
-            }).then((dataRes) => {
-                if (dataRes.message == 'success') {
+            this.getModel_home.addPlaylist(data, sessionStorage.getItem('id_user')).then((response) => {
+                if (response == 'success') {
                     event.currentTarget.className += " heart_active";
-                } else if (dataRes.message == 'delete') {
+                } else if (response == 'fail') {
                     event.currentTarget.className = "c_box_icon";
                 }
             });

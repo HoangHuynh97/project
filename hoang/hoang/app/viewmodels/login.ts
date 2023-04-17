@@ -1,17 +1,16 @@
 ﻿import ko = require('knockout');
 import Swal = require('../../lib/sweetalert2/dist/sweetalert2.all.min');
 import global = require('../../assets/js/global');
+import model_login = require('../models/model_login');
 
 export = class {
-
+    getModel_login = new model_login();
     valueUser = ko.observable('');
     valuePass = ko.observable('');
-
     valueUserSignUP = ko.observable('');
     valuePassSignUP = ko.observable('');
     valuePassSignUPCheck = ko.observable('');
     valueUserFullname = ko.observable('');
-
     isShowSignUP = ko.observable(false);
     isShowLogin = ko.observable(true);
 
@@ -19,6 +18,7 @@ export = class {
         this.isShowSignUP(true);
         this.isShowLogin(false);
     }
+
     logIN() {
         this.isShowSignUP(false);
         this.isShowLogin(true);
@@ -32,25 +32,17 @@ export = class {
                 text: 'Vui lòng nhập đầy đủ thông tin!'
             });
         } else {
-            fetch(global.api_url + 'api_login', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ inputUser: this.valueUser(), inputPw: this.valuePass() })
-            }).then((response) => {
-                return response.json();
-            }).then((data) => {
-                if (data.message == 'fail') {
+            this.getModel_login.checkLogin(this.valueUser(), this.valuePass()).then((response) => {
+                if (response == 'fail') {
                     Swal.fire({
                         icon: 'error',
                         title: 'Sai tài khoản hoặc mật khẩu',
                         text: 'Vui lòng kiểm tra lại Username/Password!'
                     });
                 } else {
-                    sessionStorage.setItem("id_user", data.id_user);
-                    sessionStorage.setItem("name_user", data.name_user);
+                    response = JSON.parse(response);
+                    sessionStorage.setItem("id_user", response['valueID_user']);
+                    sessionStorage.setItem("name_user", response['valueName_user']);
                     window.location.reload();
                 }
             });
@@ -72,23 +64,14 @@ export = class {
                     text: 'Vui lòng kiểm tra lại mật khẩu!'
                 });
             } else {
-                fetch(global.api_url + 'api_signup', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json, text/plain, */*',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ inputUser: this.valueUserSignUP(), inputPw: this.valuePassSignUP(), inputName: this.valueUserFullname() })
-                }).then((response) => {
-                    return response.json();
-                }).then((data) => {
-                    if (data.message == 'exists') {
+                this.getModel_login.getSignUP(this.valueUserSignUP(), this.valuePassSignUP(), this.valueUserFullname()).then((response) => {
+                    if (response == 'exists') {
                         Swal.fire({
                             icon: 'error',
                             title: 'Tài khoản đã tồn tại!',
                             text: 'Vui lòng thử lại sau!'
                         });
-                    } else if (data.message == 'fail') {
+                    } else if (response == 'fail') {
                         Swal.fire({
                             icon: 'error',
                             title: 'Hệ thống xảy ra lỗi',
@@ -106,14 +89,6 @@ export = class {
             }
         }
     }
-/*
-    keypress = window.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter' && this.isShowLogin) {
-            this.checkLogin();
-        } else if (e.key === 'Enter' && this.isShowSignUP) {
-            this.getSignUP();
-        }
-    });*/
 }
 
 $(document).ready(function () {

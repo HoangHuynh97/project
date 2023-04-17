@@ -2,8 +2,12 @@
 import $ = require('jquery');
 import Swal = require('../../lib/sweetalert2/dist/sweetalert2.all.min');
 import global = require('../../assets/js/global');
+import model_profile = require('../models/model_profile');
+import model_home = require('../models/model_home');
 
-export = class home {
+export = class {
+    getModel_profile = new model_profile();
+    getModel_home = new model_home();
     hiddenLoading = ko.observable(false);
     itemSong = ko.observableArray();
     itemSongLike = ko.observableArray();
@@ -20,69 +24,15 @@ export = class home {
         }
     }
 
-    getData = fetch(global.api_url + 'get_DataProfile', {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json, text/plain, */*',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ id_user: sessionStorage.getItem("id_user") })
-    }).then((response) => {
-        return response.json();
-    }).then((data) => {
-        var objItemNew = [];
-        data.dataPlaylist.map(function (value) {
-            objItemNew.push({ name: value.name, is_like: value.is_like, id: value.id, img: value.img, create_by: value.create_by });
-        });
-        this.itemSong(objItemNew);
-
-        var objItemLike = [];
-        data.dataSongLike.map(function (value) {
-            objItemLike.push({ id: value.id, is_like: value.is_like, name: value.name, id_gg: value.id_gg, image: '../../assets/images' + value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
-        });
-        this.itemSongLike(objItemLike);
-
-        var objItemLikePlaylist = [];
-        if (data.dataPlaylistLike) {
-            data.dataPlaylistLike.map(function (value) {
-                objItemLikePlaylist.push({ name: value.name, is_like: value.is_like, id: value.id, img: value.img, create_by: value.create_by });
-            });
-        }
-        this.itemSongLikePlaylist(objItemLikePlaylist);
-
+    getData = this.getModel_profile.getDataSong(sessionStorage.getItem('id_user') ? sessionStorage.getItem('id_user') : 0).then((response) => {
+        response = JSON.parse(response);
+        this.itemSong(response['valueObjItemNew']);
+        this.itemSongLike(response['valueObjItemLike']);
+        this.itemSongLikePlaylist(response['valueObjItemLikePlaylist']);
         setTimeout(() => {
             this.hiddenLoading(true);
         }, 1500);
     });
-
-    addPlaylist(data, id_playlist, event) {
-        if (!sessionStorage.getItem('id_user')) {
-            Swal.fire({
-                title: '<strong>Vui lòng đăng nhập để thực hiện chức năng này!</strong>',
-                icon: 'warning',
-                showCloseButton: true,
-                focusConfirm: false,
-                confirmButtonText: 'Ok!'
-            });
-        } else {
-            fetch(global.api_url + 'add_like_playlist', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ id: data, id_user: sessionStorage.getItem('id_user') })
-            }).then((response) => {
-                return response.json();
-            }).then((dataRes) => {
-                if (dataRes.message == 'success') {
-                    event.currentTarget.className += " heart_active";
-                } else if (dataRes.message == 'delete') {
-                    event.currentTarget.className = "c_box_icon";
-                }
-            });
-        }
-    }
 
     addHeart(data, id_song, event) {
         if (!sessionStorage.getItem('id_user')) {
@@ -94,20 +44,31 @@ export = class home {
                 confirmButtonText: 'Ok!'
             });
         } else {
-            fetch(global.api_url + 'add_like', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ id: data, id_user: sessionStorage.getItem('id_user') })
-            }).then((response) => {
-                return response.json();
-            }).then((dataRes) => {
-                if (dataRes.message == 'success') {
+            this.getModel_home.addLike(data, sessionStorage.getItem('id_user')).then((response) => {
+                if (response == 'success') {
                     event.currentTarget.className += " heart_active";
-                } else if (dataRes.message == 'delete') {
+                } else if (response == 'fail') {
                     event.currentTarget.className = "sc_icon_table";
+                }
+            });
+        }
+    }
+
+    addPlaylist(data, id_playlist, event) {
+        if (!sessionStorage.getItem('id_user')) {
+            Swal.fire({
+                title: '<strong>Vui lòng đăng nhập để thực hiện chức năng này!</strong>',
+                icon: 'warning',
+                showCloseButton: true,
+                focusConfirm: false,
+                confirmButtonText: 'Ok!'
+            });
+        } else {
+            this.getModel_home.addPlaylist(data, sessionStorage.getItem('id_user')).then((response) => {
+                if (response == 'success') {
+                    event.currentTarget.className += " heart_active";
+                } else if (response == 'fail') {
+                    event.currentTarget.className = "c_box_icon";
                 }
             });
         }

@@ -1,4 +1,4 @@
-define(["require", "exports", "knockout", "jquery", "../../lib/sweetalert2/dist/sweetalert2.all.min", "../../assets/js/global"], function (require, exports, ko, $, Swal, global) {
+define(["require", "exports", "knockout", "jquery", "../../lib/sweetalert2/dist/sweetalert2.all.min", "../models/model_profile", "../models/model_home"], function (require, exports, ko, $, Swal, model_profile, model_home) {
     "use strict";
     $(document).ready(function () {
         if (!sessionStorage.getItem("id_user") || sessionStorage.getItem("id_user") == '') {
@@ -6,46 +6,26 @@ define(["require", "exports", "knockout", "jquery", "../../lib/sweetalert2/dist/
         }
     });
     return /** @class */ (function () {
-        function home() {
+        function class_1() {
             var _this = this;
+            this.getModel_profile = new model_profile();
+            this.getModel_home = new model_home();
             this.hiddenLoading = ko.observable(false);
             this.itemSong = ko.observableArray();
             this.itemSongLike = ko.observableArray();
             this.itemSongLikePlaylist = ko.observableArray();
             this.isTab = ko.observable(1);
-            this.getData = fetch(global.api_url + 'get_DataProfile', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ id_user: sessionStorage.getItem("id_user") })
-            }).then(function (response) {
-                return response.json();
-            }).then(function (data) {
-                var objItemNew = [];
-                data.dataPlaylist.map(function (value) {
-                    objItemNew.push({ name: value.name, is_like: value.is_like, id: value.id, img: value.img, create_by: value.create_by });
-                });
-                _this.itemSong(objItemNew);
-                var objItemLike = [];
-                data.dataSongLike.map(function (value) {
-                    objItemLike.push({ id: value.id, is_like: value.is_like, name: value.name, id_gg: value.id_gg, image: '../../assets/images' + value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
-                });
-                _this.itemSongLike(objItemLike);
-                var objItemLikePlaylist = [];
-                if (data.dataPlaylistLike) {
-                    data.dataPlaylistLike.map(function (value) {
-                        objItemLikePlaylist.push({ name: value.name, is_like: value.is_like, id: value.id, img: value.img, create_by: value.create_by });
-                    });
-                }
-                _this.itemSongLikePlaylist(objItemLikePlaylist);
+            this.getData = this.getModel_profile.getDataSong(sessionStorage.getItem('id_user') ? sessionStorage.getItem('id_user') : 0).then(function (response) {
+                response = JSON.parse(response);
+                _this.itemSong(response['valueObjItemNew']);
+                _this.itemSongLike(response['valueObjItemLike']);
+                _this.itemSongLikePlaylist(response['valueObjItemLikePlaylist']);
                 setTimeout(function () {
                     _this.hiddenLoading(true);
                 }, 1500);
             });
         }
-        home.prototype.changeViewTab = function (data, key) {
+        class_1.prototype.changeViewTab = function (data, key) {
             if (data == 1) {
                 this.isTab(1);
             }
@@ -56,7 +36,7 @@ define(["require", "exports", "knockout", "jquery", "../../lib/sweetalert2/dist/
                 this.isTab(3);
             }
         };
-        home.prototype.addPlaylist = function (data, id_playlist, event) {
+        class_1.prototype.addHeart = function (data, id_song, event) {
             if (!sessionStorage.getItem('id_user')) {
                 Swal.fire({
                     title: '<strong>Vui lòng đăng nhập để thực hiện chức năng này!</strong>',
@@ -67,56 +47,38 @@ define(["require", "exports", "knockout", "jquery", "../../lib/sweetalert2/dist/
                 });
             }
             else {
-                fetch(global.api_url + 'add_like_playlist', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json, text/plain, */*',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ id: data, id_user: sessionStorage.getItem('id_user') })
-                }).then(function (response) {
-                    return response.json();
-                }).then(function (dataRes) {
-                    if (dataRes.message == 'success') {
+                this.getModel_home.addLike(data, sessionStorage.getItem('id_user')).then(function (response) {
+                    if (response == 'success') {
                         event.currentTarget.className += " heart_active";
                     }
-                    else if (dataRes.message == 'delete') {
-                        event.currentTarget.className = "c_box_icon";
-                    }
-                });
-            }
-        };
-        home.prototype.addHeart = function (data, id_song, event) {
-            if (!sessionStorage.getItem('id_user')) {
-                Swal.fire({
-                    title: '<strong>Vui lòng đăng nhập để thực hiện chức năng này!</strong>',
-                    icon: 'warning',
-                    showCloseButton: true,
-                    focusConfirm: false,
-                    confirmButtonText: 'Ok!'
-                });
-            }
-            else {
-                fetch(global.api_url + 'add_like', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json, text/plain, */*',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ id: data, id_user: sessionStorage.getItem('id_user') })
-                }).then(function (response) {
-                    return response.json();
-                }).then(function (dataRes) {
-                    if (dataRes.message == 'success') {
-                        event.currentTarget.className += " heart_active";
-                    }
-                    else if (dataRes.message == 'delete') {
+                    else if (response == 'fail') {
                         event.currentTarget.className = "sc_icon_table";
                     }
                 });
             }
         };
-        home.prototype.changeLink = function (id_gg, singer, nameSong, imgSong) {
+        class_1.prototype.addPlaylist = function (data, id_playlist, event) {
+            if (!sessionStorage.getItem('id_user')) {
+                Swal.fire({
+                    title: '<strong>Vui lòng đăng nhập để thực hiện chức năng này!</strong>',
+                    icon: 'warning',
+                    showCloseButton: true,
+                    focusConfirm: false,
+                    confirmButtonText: 'Ok!'
+                });
+            }
+            else {
+                this.getModel_home.addPlaylist(data, sessionStorage.getItem('id_user')).then(function (response) {
+                    if (response == 'success') {
+                        event.currentTarget.className += " heart_active";
+                    }
+                    else if (response == 'fail') {
+                        event.currentTarget.className = "c_box_icon";
+                    }
+                });
+            }
+        };
+        class_1.prototype.changeLink = function (id_gg, singer, nameSong, imgSong) {
             if (sessionStorage.getItem("url_song") != '') {
                 sessionStorage.removeItem("url_song");
                 sessionStorage.removeItem("id_gg");
@@ -131,7 +93,7 @@ define(["require", "exports", "knockout", "jquery", "../../lib/sweetalert2/dist/
             sessionStorage.setItem("img_song", imgSong);
             window.dispatchEvent(new Event("storage"));
         };
-        return home;
+        return class_1;
     }());
 });
 //# sourceMappingURL=profile.js.map

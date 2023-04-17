@@ -516,6 +516,15 @@
     margin: 0 5px;
     border-radius: 50%;
 }
+.sc_box_list .sc_icon_table {
+    cursor: pointer;
+    margin: 5px;
+    padding: 10px 15px;
+    border-radius: 50%;
+    font-size: 20px;
+    color: #fff;
+}
+
 .sc_box_icon:hover {
     opacity: 0.8;
 }

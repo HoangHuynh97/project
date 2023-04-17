@@ -1,16 +1,5 @@
 ﻿<div class="mm_container">
-    <div class="container-load" data-bind="class: hiddenLoading() ? 'hidden' : ''">
-        <div class="is-load"></div>
-        <div class="is-load"></div>
-        <div class="is-load"></div>
-        <div class="is-load"></div>
-        <div class="is-load"></div>
-        <div class="is-load"></div>
-        <div class="is-load"></div>
-        <div class="is-load"></div>
-        <div class="is-load"></div>
-        <div class="is-load"></div>
-    </div>
+    <div data-bind="compose:'loading.html'"></div>
     <div class="mm_title_menu">
         <span>Thư viện</span>
         <div class="mm_icon_title_menu">
@@ -24,6 +13,12 @@
             </div>
             <div class="mm_see_all">
                 <h4>TẤT CẢ</h4><i class="fa fa-chevron-right"></i>
+            </div>
+        </div>
+        <div class="empty-playlist" data-bind="class: itemSong().length > 0 ? 'hidden' : ''">
+            <img src="../../assets/images/empty.png" alt="" />
+            <div class="c_text_empty">
+                Bạn chưa tạo playlist!
             </div>
         </div>
         <div class="sc_container_box_list_song" data-bind="foreach: itemSong">
@@ -137,7 +132,7 @@
                     </div>
                 </div>
                 <div class="sc_container_box_list_song" data-bind="foreach: itemSongLikePlaylist">
-                    <div class="sc_box_list">
+                    <div class="sc_box_list" data-bind="click: function() {window.location.href = '#playlist/' + id}">
                         <div class="sc_container_img_list">
                             <div class="c_img_list" data-bind="foreach: img">
 
@@ -146,7 +141,7 @@
                             </div>
                             <div class="c_container_img">
                                 <div class="c_content_img">
-                                    <div class="c_box_icon" data-bind="class: is_like != 0 ? 'heart_active' : ''">
+                                    <div class="c_box_icon" data-bind="class: is_like != 0 ? 'heart_active' : '', click: $parent.addPlaylist.bind($parent, id), clickBubble: false">
                                         <i class="fa fa-heart"></i>
                                     </div>
                                     <div class="c_icon_play">
