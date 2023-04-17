@@ -2,8 +2,10 @@
 import $ = require('jquery');
 import Swal = require('../../lib/sweetalert2/dist/sweetalert2.all.min');
 import global = require('../../assets/js/global');
+import model_bottom = require('../models/model_bottom');
 
 export = class {
+    getModel_bottom = new model_bottom();
     isPlay = ko.observable(true);
     isPause = ko.observable(false);
     isSpinner = ko.observable(false);
@@ -49,18 +51,14 @@ export = class {
         if (this.url_song() != sessionStorage.getItem("url_song")) {
             this.url_song(sessionStorage.getItem("url_song"));
             this.aud.src = this.url_song();
-
             this.singer(sessionStorage.getItem("name_singer"));
             this.nameSong(sessionStorage.getItem("name_song"));
             this.imgSong(sessionStorage.getItem("img_song"));
-
             this.isPlay(false);
             this.isPause(false);
             this.isSpinner(true);
             this.checkPlay(false);
-
             this.aud.load();
-
             if (sessionStorage.getItem("checkPlayIsRandom") == '1') {
                 this.itemSongHistory(JSON.parse(sessionStorage.getItem("arrHistory")));
                 sessionStorage.removeItem("checkPlayIsRandom");
@@ -73,14 +71,11 @@ export = class {
         let time = this.aud.duration - this.hours() * 3600;
         this.minutes(Math.floor(time / 60));
         this.seconds(Math.round(time - this.minutes() * 60));
-
         this.duration(Math.round(this.aud.duration));
-
         this.isPlay(true);
         this.isPause(false);
         this.isSpinner(false);
         this.checkPlay(false);
-
         this.playSong();
     });
 
@@ -93,7 +88,6 @@ export = class {
         let currentTimeLine = currentTime - currentTimeHours * 3600;
         let currentTimeMinutes = Math.floor(currentTimeLine / 60);
         let currentTimeSeconds = Math.round(currentTimeLine - currentTimeMinutes * 60);
-
         let strH = '';
         let strM = '00:';
         let strS = '00';
@@ -104,7 +98,6 @@ export = class {
                 strH = currentTimeHours + ":";
             }
         }
-
         if (currentTimeMinutes != 0) {
             if (currentTimeMinutes < 10) {
                 strM = "0" + currentTimeMinutes + ":";
@@ -114,7 +107,6 @@ export = class {
         } else {
             strM = '00:';
         }
-
         if (currentTimeSeconds != 0) {
             if (currentTimeSeconds < 10) {
                 strS = "0" + currentTimeSeconds;
@@ -124,9 +116,7 @@ export = class {
         } else {
             strS = '00';
         }
-
         this.strLine(strH + strM + strS);
-
         this.aud.volume = this.changeVolume() / 100;
     });
 
@@ -154,7 +144,6 @@ export = class {
         if (this.aud.src != '') {
             this.aud.play();
             this.isCheckPlaying.push(sessionStorage.getItem("id_gg"));
-
             var checkExistsHistory = false;
             if (sessionStorage.getItem("arrHistory")) {
                 JSON.parse(sessionStorage.getItem("arrHistory")).map(function (value) {
@@ -165,20 +154,8 @@ export = class {
             }
             if (!checkExistsHistory) {
                 var arr = [];
-                fetch(global.api_url + 'check_like', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json, text/plain, */*',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        url: sessionStorage.getItem('id_gg') ? sessionStorage.getItem('id_gg') : '17ZUjG5iqEB-vMWaLEnmxNE4SMzzusxeX',
-                        id_user: sessionStorage.getItem('id_user') ? sessionStorage.getItem('id_user') : 0
-                    })
-                }).then((response) => {
-                    return response.json();
-                }).then((dataRes) => {
-                    if (dataRes.message == 'success') {
+                this.getModel_bottom.checkLike(sessionStorage.getItem('id_gg') ? sessionStorage.getItem('id_gg') : '17ZUjG5iqEB-vMWaLEnmxNE4SMzzusxeX', sessionStorage.getItem('id_user') ? sessionStorage.getItem('id_user') : 0).then((response) => {
+                    if (response == 'success') {
                         arr.push({
                             id_gg: sessionStorage.getItem("id_gg") ? sessionStorage.getItem("id_gg") : '17ZUjG5iqEB-vMWaLEnmxNE4SMzzusxeX',
                             is_like: true,
@@ -197,11 +174,9 @@ export = class {
                     }
                     this.itemSongHistory(this.itemSongHistory().concat(arr));
                     sessionStorage.setItem("arrHistory", JSON.stringify(this.itemSongHistory()));
-
                     this.itemSongHistory(JSON.parse(sessionStorage.getItem("arrHistory")));
                 });
             }
-
             if (!this.aud.paused || this.aud.currentTime > 0) {
                 this.isPlay(false);
                 this.isPause(true);
@@ -223,7 +198,6 @@ export = class {
         }
     }
 
-
     showModalBottom() {
         if (this.checkShowModalBottom()) {
             this.checkShowModalBottom(false);
@@ -232,12 +206,9 @@ export = class {
         }
     }
 
-
-
     keySongRanDom = ko.observable(0);
     isForward() {
         var arrPlaying = this.isCheckPlaying;
-
         this.itemSongHistory().map(function (value) {
             if (arrPlaying.indexOf(value['id_gg']) == -1) {
                 if (sessionStorage.getItem("url_song") != '') {
@@ -280,20 +251,8 @@ export = class {
     isBackward() {
         if (this.isCheckPlaying.length > 1) {
             this.isCheckPlaying.pop();
-
-            fetch(global.api_url + 'get_song_by_url', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    url: this.isCheckPlaying[this.isCheckPlaying.length - 1],
-                    id_user: sessionStorage.getItem('id_user') ? sessionStorage.getItem('id_user') : 0
-                })
-            }).then((response) => {
-                return response.json();
-            }).then((dataRes) => {
+            this.getModel_bottom.getSongByUrl(this.isCheckPlaying[this.isCheckPlaying.length - 1], sessionStorage.getItem('id_user') ? sessionStorage.getItem('id_user') : 0).then((response) => {
+                response = JSON.parse(response);
                 if (sessionStorage.getItem("url_song") != '') {
                     sessionStorage.removeItem("url_song");
                     sessionStorage.removeItem("id_gg");
@@ -301,33 +260,19 @@ export = class {
                     sessionStorage.removeItem("name_song");
                     sessionStorage.removeItem("img_song");
                 }
-
-                sessionStorage.setItem("url_song", 'https://docs.google.com/uc?export=download&id=' + dataRes.dataSongNew[0]['id_gg']);
-                sessionStorage.setItem("id_gg", dataRes.dataSongNew[0]['id_gg']);
-                sessionStorage.setItem("name_singer", dataRes.dataSongNew[0]['text_gr_singer']);
-                sessionStorage.setItem("name_song", dataRes.dataSongNew[0]['name']);
-                sessionStorage.setItem("img_song", '../../assets/images' + dataRes.dataSongNew[0]['image']);
-
+                sessionStorage.setItem("url_song", 'https://docs.google.com/uc?export=download&id=' + response['id_gg']);
+                sessionStorage.setItem("id_gg", response['id_gg']);
+                sessionStorage.setItem("name_singer", response['text_gr_singer']);
+                sessionStorage.setItem("name_song", response['name']);
+                sessionStorage.setItem("img_song", response['image']);
                 window.dispatchEvent(new Event("storage"));
             });
         }
     }
 
-    getData = fetch(global.api_url + 'get_ramdom_song', {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json, text/plain, */*',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ id_user: sessionStorage.getItem("id_user") ? sessionStorage.getItem("id_user") : 0 })
-    }).then((response) => {
-        return response.json();
-    }).then((data) => {
-        var objItemNew = [];
-        data.dataSongNew.map(function (value) {
-            objItemNew.push({ id: value.id, is_like: value.is_like, name: value.name, id_gg: value.id_gg, image: value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
-        });
-        this.itemSong(objItemNew);
+    getData = this.getModel_bottom.getDataSong(sessionStorage.getItem('id_user') ? sessionStorage.getItem('id_user') : 0).then((response) => {
+        response = JSON.parse(response);
+        this.itemSong(response['valueObjItemNew']);
 
         if (!sessionStorage.getItem("url_song")) {
             this.changeLinkModal(this.itemSong()[0]['id_gg'], this.itemSong()[0]['text_gr_singer'], this.itemSong()[0]['name'], '../../assets/images' + this.itemSong()[0]['image']);
@@ -344,19 +289,10 @@ export = class {
                 confirmButtonText: 'Ok!'
             });
         } else {
-            fetch(global.api_url + 'add_like_byURL', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ url: data, id_user: sessionStorage.getItem('id_user') })
-            }).then((response) => {
-                return response.json();
-            }).then((dataRes) => {
-                if (dataRes.message == 'success') {
+            this.getModel_bottom.addHeartModal(data, sessionStorage.getItem('id_user')).then((response) => {
+                if (response == 'success') {
                     event.currentTarget.className += " heart_active";
-                } else if (dataRes.message == 'delete') {
+                } else {
                     event.currentTarget.className = "icon_action_song";
                 }
             });
