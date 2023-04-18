@@ -2,8 +2,10 @@
 import $ = require('jquery');
 import Swal = require('../../lib/sweetalert2/dist/sweetalert2.all.min');
 import global = require('../../assets/js/global');
+import model_header = require('../models/model_header');
 
 export = class {
+    getModel_header = new model_header();
     activate() {
         this.valueSearch.subscribe(v => {
             this.valueSearch_changed();
@@ -51,13 +53,8 @@ export = class {
             this.data.append('song', this.valueNameSong());
             this.data.append('singer', this.valueSinger());
             this.data.append('gg', this.valueIDGG());
-            fetch(global.api_url + 'upload_song', {
-                method: 'POST',
-                body: this.data
-            }).then((response) => {
-                return response.json();
-            }).then((dataRes) => {
-                if (dataRes.message == 'fail') {
+            this.getModel_header.uploadSong(this.data).then((response) => {
+                if (response == 'fail') {
                     Swal.fire({
                         title: '<strong>Hệ thống xảy ra lỗi, vui lòng thử lại sau!</strong>',
                         icon: 'error',
@@ -86,44 +83,18 @@ export = class {
     setIsSearch = ko.observable(false);
     valueSearch_changed() {
         if (this.valueSearch() != '') {
-            fetch(global.api_url + 'search_song', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ key_search: this.valueSearch() })
-            }).then((response) => {
-                return response.json();
-            }).then((data) => {
-                if (data.length == 0) {
+            this.getModel_header.searchSong(this.valueSearch()).then((response) => {
+                response = JSON.parse(response);
+                if (response.length == 0) {
                     this.setIsSearch(false);
                     this.setArrSongSearch([]);
                     this.setArrSingerSearch([]);
                     this.setArrSongMainSearch([]);
                 } else {
                     this.setIsSearch(true);
-                    var itemSongSearch = [];
-                    data.dataSongSearch.map(function (value) {
-                        itemSongSearch.push({ name: value.name, id_gg: value.id_gg, image: value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
-                    });
-                    this.setArrSongSearch(itemSongSearch);
-
-                    if (data.dataSingerSearch) {
-                        var itemSingerSearch = [];
-                        data.dataSingerSearch.map(function (value) {
-                            itemSingerSearch.push({ name: value.name, id: value.id });
-                        });
-                        this.setArrSingerSearch(itemSingerSearch);
-                    } else {
-                        this.setArrSingerSearch([]);
-                    }
-
-                    var itemSongMainSearch = [];
-                    data.dataSongMainSearch.map(function (value) {
-                        itemSongMainSearch.push({ name: value.name, id_gg: value.id_gg, image: value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
-                    });
-                    this.setArrSongMainSearch(itemSongMainSearch);
+                    this.setArrSongSearch(response['valueObjSongSearch']);
+                    this.setArrSingerSearch(response['valueObjSingerSearch']);
+                    this.setArrSongMainSearch(response['valueObjSongMainSearch']);
                 }
             });
         } else {

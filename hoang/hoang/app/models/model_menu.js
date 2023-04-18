@@ -37,45 +37,44 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 define(["require", "exports", "../../assets/js/global"], function (require, exports, global) {
     "use strict";
     return /** @class */ (function () {
-        function model_bottom() {
+        function model_menu() {
         }
-        model_bottom.prototype.getDataSong = function (id_user) {
+        model_menu.prototype.searchSongByName = function (key_search) {
             return __awaiter(this, void 0, void 0, function () {
                 return __generator(this, function (_a) {
-                    return [2 /*return*/, fetch("".concat(global.api_url, "get_ramdom_song"), {
+                    return [2 /*return*/, fetch("".concat(global.api_url, "search_song_byName"), {
                             method: 'POST',
                             headers: {
                                 'Accept': 'application/json, text/plain, */*',
                                 'Content-Type': 'application/json'
                             },
-                            body: JSON.stringify({ id_user: id_user })
+                            body: JSON.stringify({ key_search: key_search })
                         }).then(function (response) {
                             return response.json();
                         }).then(function (data) {
-                            var objItemNew = [];
-                            data.dataSongNew.map(function (value) {
-                                objItemNew.push({ id: value.id, is_like: value.is_like, name: value.name, id_gg: value.id_gg, image: value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
-                            });
+                            var objItemSearchInput = [];
+                            if (data.dataSongSearch) {
+                                data.dataSongSearch.map(function (value) {
+                                    objItemSearchInput.push({ id: value.id, name: value.name });
+                                });
+                            }
                             return JSON.stringify({
-                                valueObjItemNew: objItemNew
+                                valueObjItemSearchInput: objItemSearchInput
                             });
                         })];
                 });
             });
         };
-        model_bottom.prototype.checkLike = function (url, id_user) {
+        model_menu.prototype.addPlaylist = function (name, id_user_create, value_song) {
             return __awaiter(this, void 0, void 0, function () {
                 return __generator(this, function (_a) {
-                    return [2 /*return*/, fetch("".concat(global.api_url, "check_like"), {
+                    return [2 /*return*/, fetch("".concat(global.api_url, "add_playlist"), {
                             method: 'POST',
                             headers: {
                                 'Accept': 'application/json, text/plain, */*',
                                 'Content-Type': 'application/json'
                             },
-                            body: JSON.stringify({
-                                url: url,
-                                id_user: id_user
-                            })
+                            body: JSON.stringify({ name: name, id_user_create: id_user_create, value_song: value_song })
                         }).then(function (response) {
                             return response.json();
                         }).then(function (data) {
@@ -89,59 +88,7 @@ define(["require", "exports", "../../assets/js/global"], function (require, expo
                 });
             });
         };
-        model_bottom.prototype.getSongByUrl = function (url, id_user) {
-            return __awaiter(this, void 0, void 0, function () {
-                return __generator(this, function (_a) {
-                    return [2 /*return*/, fetch("".concat(global.api_url, "get_song_by_url"), {
-                            method: 'POST',
-                            headers: {
-                                'Accept': 'application/json, text/plain, */*',
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                url: url,
-                                id_user: id_user
-                            })
-                        }).then(function (response) {
-                            return response.json();
-                        }).then(function (data) {
-                            return JSON.stringify({
-                                id_gg: data.dataSongNew[0]['id_gg'],
-                                text_gr_singer: data.dataSongNew[0]['text_gr_singer'],
-                                name: data.dataSongNew[0]['name'],
-                                image: '../../assets/images' + data.dataSongNew[0]['image']
-                            });
-                        })];
-                });
-            });
-        };
-        model_bottom.prototype.addHeartModal = function (url, id_user) {
-            return __awaiter(this, void 0, void 0, function () {
-                return __generator(this, function (_a) {
-                    return [2 /*return*/, fetch("".concat(global.api_url, "add_like_byURL"), {
-                            method: 'POST',
-                            headers: {
-                                'Accept': 'application/json, text/plain, */*',
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                url: url,
-                                id_user: id_user
-                            })
-                        }).then(function (response) {
-                            return response.json();
-                        }).then(function (data) {
-                            if (data.message == 'success') {
-                                return "success";
-                            }
-                            else {
-                                return "fail";
-                            }
-                        })];
-                });
-            });
-        };
-        return model_bottom;
+        return model_menu;
     }());
 });
-//# sourceMappingURL=model_bottom.js.map
+//# sourceMappingURL=model_menu.js.map

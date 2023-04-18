@@ -2,8 +2,10 @@
 import $ = require('jquery');
 import Swal = require('../../lib/sweetalert2/dist/sweetalert2.all.min');
 import global = require('../../assets/js/global');
+import model_menu = require('../models/model_menu');
 
 export = class {
+    getModel_menu = new model_menu();
     checkShowModalAddPlaylist = ko.observable(false);
     isURL = ko.observable(sessionStorage.getItem("isURL") ? sessionStorage.getItem("isURL") : '#');
     getURL(url) {
@@ -23,7 +25,6 @@ export = class {
         sessionStorage.setItem("isURL", url);
         window.location.href = this.isURL();
     }
-
     showModalAddPlaylist() {
         if (!sessionStorage.getItem('id_user')) {
             Swal.fire({
@@ -40,29 +41,16 @@ export = class {
     hiddenModalAddPlaylist() {
         this.checkShowModalAddPlaylist(false);
     }
-
     sttInputSearch = ko.observable(false);
     valueNamePlaylist = ko.observable('');
     saved_value = ko.observable('');
     itemSongSearchInput = ko.observableArray();
     value_changed() {
         if (this.saved_value() != '') {
-            fetch(global.api_url + 'search_song_byName', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ key_search: this.saved_value() })
-            }).then((response) => {
-                return response.json();
-            }).then((data) => {
-                if (data.dataSongSearch) {
-                    var objItemSearchInput = [];
-                    data.dataSongSearch.map(function (value) {
-                        objItemSearchInput.push({ id: value.id, name: value.name });
-                    });
-                    this.itemSongSearchInput(objItemSearchInput);
+            this.getModel_menu.searchSongByName(this.saved_value()).then((response) => {
+                response = JSON.parse(response);
+                if (response['valueObjItemSearchInput'].length != 0) {
+                    this.itemSongSearchInput(response['valueObjItemSearchInput']);
                 } else {
                     this.itemSongSearchInput([{ id: 0, name: 'Không có dữ liệu!' }]);
                 }
@@ -95,17 +83,8 @@ export = class {
                 confirmButtonText: 'Ok!'
             });
         } else {
-            fetch(global.api_url + 'add_playlist', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ name: this.valueNamePlaylist(), id_user_create: sessionStorage.getItem('id_user'), value_song: this.saved_value() })
-            }).then((response) => {
-                return response.json();
-            }).then((data) => {
-                if (data.message == 'success') {
+            this.getModel_menu.addPlaylist(this.valueNamePlaylist(), sessionStorage.getItem('id_user'), this.saved_value()).then((response) => {
+                if (response == 'success') {
                     Swal.fire({
                         title: '<strong>Thêm danh sách phát thành công!</strong>',
                         icon: 'success',
@@ -122,10 +101,9 @@ export = class {
                         confirmButtonText: 'Ok!'
                     });
                 }
-            });
+            })
         }
     }
-
     menuMobile = ko.observable(false);
     setMenuMobile() {
         this.menuMobile(!this.menuMobile());

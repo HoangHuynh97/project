@@ -1,6 +1,6 @@
 ﻿import global = require('../../assets/js/global');
 
-export = class model_home {
+export = class model_bottom {
     async getDataSong(id_user) {
         return fetch(`${global.api_url}get_ramdom_song`, {
             method: 'POST',
@@ -13,7 +13,7 @@ export = class model_home {
             return response.json();
         }).then((data) => {
             let objItemNew = [];
-            data.dataSongNew.map(function (value) {
+            data.dataSongNew.map((value) => {
                 objItemNew.push({ id: value.id, is_like: value.is_like, name: value.name, id_gg: value.id_gg, image: value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
             });
             return JSON.stringify({

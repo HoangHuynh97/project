@@ -5,11 +5,9 @@
             <i class="fa fa-chevron-circle-left"></i>
         </div>
         <div class="c_box_slide" id="slide_banner" data-bind="foreach: bannerSlide">
-
             <div class="sc_banner_slide" data-bind="click: function() {window.location.href = '#playlist/' + id}">
                 <img data-bind="attr: { src: src }" alt="" />
             </div>
-
         </div>
         <div class="mm_move_right" data-bind="click: nextSlide">
             <i class="fa fa-chevron-circle-right"></i>
@@ -25,7 +23,6 @@
             </div>
         </div>
         <div class="mm_container_box_song" data-bind="foreach: itemSongNew">
-
             <div class="sc_container_box_song" data-bind="click: $parent.changeLink.bind($parent, id_gg, text_gr_singer, name, image)">
                 <div class="sc_c_img">
                     <img data-bind="attr: { src: image }" alt="" />
@@ -59,7 +56,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
     <div class="mm_list_random">
@@ -72,13 +68,10 @@
             </div>
         </div>
         <div class="sc_container_box_list_song" data-bind="foreach: itemPlaylist">
-
             <div class="sc_box_list" data-bind="click: function() {window.location.href = '#playlist/' + id}">
                 <div class="sc_container_img_list">
                     <div class="c_img_list" data-bind="foreach: img">
-
                         <img data-bind="attr: { src: '../../assets/images' + img }" class="c_img_list_list" alt="" />
-
                     </div>
                     <div class="c_container_img">
                         <div class="c_content_img">
@@ -101,7 +94,6 @@
                     <h5 data-bind="text: create_by"></h5>
                 </div>
             </div>
-
         </div>
     </div>
     <div class="mm_trend">
@@ -114,7 +106,6 @@
             </div>
         </div>
         <div class="sc_container_box_list_song" data-bind="foreach: itemSongHot">
-
             <div class="sc_box_list" data-bind="click: $parent.changeLink.bind($parent, id_gg, text_gr_singer, name, image)">
                 <div class="sc_container_img_list">
                     <img data-bind="attr: { src: image }" class="c_img_list" alt="" />
@@ -140,7 +131,6 @@
                     <span class="nohover_singer">x</span>
                 </div>
             </div>
-
         </div>
     </div>
     <div class="mm_singer">

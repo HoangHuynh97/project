@@ -1,7 +1,8 @@
-define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert2.all.min", "../../assets/js/global"], function (require, exports, ko, Swal, global) {
+define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert2.all.min", "../models/model_menu"], function (require, exports, ko, Swal, model_menu) {
     "use strict";
     return /** @class */ (function () {
         function class_1() {
+            this.getModel_menu = new model_menu();
             this.checkShowModalAddPlaylist = ko.observable(false);
             this.isURL = ko.observable(sessionStorage.getItem("isURL") ? sessionStorage.getItem("isURL") : '#');
             this.sttInputSearch = ko.observable(false);
@@ -47,22 +48,10 @@ define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert
         class_1.prototype.value_changed = function () {
             var _this = this;
             if (this.saved_value() != '') {
-                fetch(global.api_url + 'search_song_byName', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json, text/plain, */*',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ key_search: this.saved_value() })
-                }).then(function (response) {
-                    return response.json();
-                }).then(function (data) {
-                    if (data.dataSongSearch) {
-                        var objItemSearchInput = [];
-                        data.dataSongSearch.map(function (value) {
-                            objItemSearchInput.push({ id: value.id, name: value.name });
-                        });
-                        _this.itemSongSearchInput(objItemSearchInput);
+                this.getModel_menu.searchSongByName(this.saved_value()).then(function (response) {
+                    response = JSON.parse(response);
+                    if (response['valueObjItemSearchInput'].length != 0) {
+                        _this.itemSongSearchInput(response['valueObjItemSearchInput']);
                     }
                     else {
                         _this.itemSongSearchInput([{ id: 0, name: 'Không có dữ liệu!' }]);
@@ -99,17 +88,8 @@ define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert
                 });
             }
             else {
-                fetch(global.api_url + 'add_playlist', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json, text/plain, */*',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ name: this.valueNamePlaylist(), id_user_create: sessionStorage.getItem('id_user'), value_song: this.saved_value() })
-                }).then(function (response) {
-                    return response.json();
-                }).then(function (data) {
-                    if (data.message == 'success') {
+                this.getModel_menu.addPlaylist(this.valueNamePlaylist(), sessionStorage.getItem('id_user'), this.saved_value()).then(function (response) {
+                    if (response == 'success') {
                         Swal.fire({
                             title: '<strong>Thêm danh sách phát thành công!</strong>',
                             icon: 'success',

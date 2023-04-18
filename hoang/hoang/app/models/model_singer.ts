@@ -16,11 +16,11 @@ export = class model_singer {
                 window.location.href = '#';
             }
             let objItemNew = [];
-            data.dataSongbySinger.map(function (value) {
+            data.dataSongbySinger.map((value) => {
                 objItemNew.push({ id: value.id, name: value.name, is_like: value.is_like, id_gg: value.id_gg, image: value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
             });
             let objItemPlaylist = [];
-            data.dataPlaylist.map(function (value) {
+            data.dataPlaylist.map((value) => {
                 objItemPlaylist.push({ id: value.id, is_like: value.is_like, name: value.name, img: value.img, create_by: value.create_by });
             });
 

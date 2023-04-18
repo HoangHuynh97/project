@@ -1,7 +1,8 @@
-define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert2.all.min", "../../assets/js/global"], function (require, exports, ko, Swal, global) {
+define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert2.all.min", "../models/model_header"], function (require, exports, ko, Swal, model_header) {
     "use strict";
     return /** @class */ (function () {
         function class_1() {
+            this.getModel_header = new model_header();
             this.setIsSelected = ko.observable(false);
             this.checkShowModalUpload = ko.observable(false);
             this.isLogin = ko.observable(sessionStorage.getItem("name_user") ? true : false);
@@ -55,13 +56,8 @@ define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert
                 this.data.append('song', this.valueNameSong());
                 this.data.append('singer', this.valueSinger());
                 this.data.append('gg', this.valueIDGG());
-                fetch(global.api_url + 'upload_song', {
-                    method: 'POST',
-                    body: this.data
-                }).then(function (response) {
-                    return response.json();
-                }).then(function (dataRes) {
-                    if (dataRes.message == 'fail') {
+                this.getModel_header.uploadSong(this.data).then(function (response) {
+                    if (response == 'fail') {
                         Swal.fire({
                             title: '<strong>Hệ thống xảy ra lỗi, vui lòng thử lại sau!</strong>',
                             icon: 'error',
@@ -86,17 +82,9 @@ define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert
         class_1.prototype.valueSearch_changed = function () {
             var _this = this;
             if (this.valueSearch() != '') {
-                fetch(global.api_url + 'search_song', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json, text/plain, */*',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ key_search: this.valueSearch() })
-                }).then(function (response) {
-                    return response.json();
-                }).then(function (data) {
-                    if (data.length == 0) {
+                this.getModel_header.searchSong(this.valueSearch()).then(function (response) {
+                    response = JSON.parse(response);
+                    if (response.length == 0) {
                         _this.setIsSearch(false);
                         _this.setArrSongSearch([]);
                         _this.setArrSingerSearch([]);
@@ -104,26 +92,9 @@ define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert
                     }
                     else {
                         _this.setIsSearch(true);
-                        var itemSongSearch = [];
-                        data.dataSongSearch.map(function (value) {
-                            itemSongSearch.push({ name: value.name, id_gg: value.id_gg, image: value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
-                        });
-                        _this.setArrSongSearch(itemSongSearch);
-                        if (data.dataSingerSearch) {
-                            var itemSingerSearch = [];
-                            data.dataSingerSearch.map(function (value) {
-                                itemSingerSearch.push({ name: value.name, id: value.id });
-                            });
-                            _this.setArrSingerSearch(itemSingerSearch);
-                        }
-                        else {
-                            _this.setArrSingerSearch([]);
-                        }
-                        var itemSongMainSearch = [];
-                        data.dataSongMainSearch.map(function (value) {
-                            itemSongMainSearch.push({ name: value.name, id_gg: value.id_gg, image: value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
-                        });
-                        _this.setArrSongMainSearch(itemSongMainSearch);
+                        _this.setArrSongSearch(response['valueObjSongSearch']);
+                        _this.setArrSingerSearch(response['valueObjSingerSearch']);
+                        _this.setArrSongMainSearch(response['valueObjSongMainSearch']);
                     }
                 });
             }

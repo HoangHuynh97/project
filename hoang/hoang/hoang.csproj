@@ -206,12 +206,13 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app\models\model_bottom.ts" />
+    <TypeScriptCompile Include="app\models\model_header.ts" />
     <TypeScriptCompile Include="app\models\model_login.ts" />
     <TypeScriptCompile Include="app\models\model_home.ts" />
+    <TypeScriptCompile Include="app\models\model_menu.ts" />
     <TypeScriptCompile Include="app\models\model_new.ts" />
     <TypeScriptCompile Include="app\models\model_playlist.ts" />
     <TypeScriptCompile Include="app\models\model_profile.ts" />
-    <TypeScriptCompile Include="app\models\model_shell.ts" />
     <TypeScriptCompile Include="app\models\model_singer.ts" />
     <TypeScriptCompile Include="app\viewmodels\bottom.ts" />
     <TypeScriptCompile Include="app\viewmodels\header.ts" />
