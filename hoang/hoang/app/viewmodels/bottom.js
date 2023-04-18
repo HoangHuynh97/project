@@ -1,8 +1,9 @@
-define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert2.all.min", "../../assets/js/global"], function (require, exports, ko, Swal, global) {
+define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert2.all.min", "../models/model_bottom"], function (require, exports, ko, Swal, model_bottom) {
     "use strict";
     return /** @class */ (function () {
         function class_1() {
             var _this = this;
+            this.getModel_bottom = new model_bottom();
             this.isPlay = ko.observable(true);
             this.isPause = ko.observable(false);
             this.isSpinner = ko.observable(false);
@@ -102,21 +103,9 @@ define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert
                 _this.aud.volume = _this.changeVolume() / 100;
             });
             this.keySongRanDom = ko.observable(0);
-            this.getData = fetch(global.api_url + 'get_ramdom_song', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ id_user: sessionStorage.getItem("id_user") ? sessionStorage.getItem("id_user") : 0 })
-            }).then(function (response) {
-                return response.json();
-            }).then(function (data) {
-                var objItemNew = [];
-                data.dataSongNew.map(function (value) {
-                    objItemNew.push({ id: value.id, is_like: value.is_like, name: value.name, id_gg: value.id_gg, image: value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
-                });
-                _this.itemSong(objItemNew);
+            this.getData = this.getModel_bottom.getDataSong(sessionStorage.getItem('id_user') ? sessionStorage.getItem('id_user') : 0).then(function (response) {
+                response = JSON.parse(response);
+                _this.itemSong(response['valueObjItemNew']);
                 if (!sessionStorage.getItem("url_song")) {
                     _this.changeLinkModal(_this.itemSong()[0]['id_gg'], _this.itemSong()[0]['text_gr_singer'], _this.itemSong()[0]['name'], '../../assets/images' + _this.itemSong()[0]['image']);
                 }
@@ -171,20 +160,8 @@ define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert
                 }
                 if (!checkExistsHistory) {
                     var arr = [];
-                    fetch(global.api_url + 'check_like', {
-                        method: 'POST',
-                        headers: {
-                            'Accept': 'application/json, text/plain, */*',
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            url: sessionStorage.getItem('id_gg') ? sessionStorage.getItem('id_gg') : '17ZUjG5iqEB-vMWaLEnmxNE4SMzzusxeX',
-                            id_user: sessionStorage.getItem('id_user') ? sessionStorage.getItem('id_user') : 0
-                        })
-                    }).then(function (response) {
-                        return response.json();
-                    }).then(function (dataRes) {
-                        if (dataRes.message == 'success') {
+                    this.getModel_bottom.checkLike(sessionStorage.getItem('id_gg') ? sessionStorage.getItem('id_gg') : '17ZUjG5iqEB-vMWaLEnmxNE4SMzzusxeX', sessionStorage.getItem('id_user') ? sessionStorage.getItem('id_user') : 0).then(function (response) {
+                        if (response == 'success') {
                             arr.push({
                                 id_gg: sessionStorage.getItem("id_gg") ? sessionStorage.getItem("id_gg") : '17ZUjG5iqEB-vMWaLEnmxNE4SMzzusxeX',
                                 is_like: true,
@@ -273,19 +250,8 @@ define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert
         class_1.prototype.isBackward = function () {
             if (this.isCheckPlaying.length > 1) {
                 this.isCheckPlaying.pop();
-                fetch(global.api_url + 'get_song_by_url', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json, text/plain, */*',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        url: this.isCheckPlaying[this.isCheckPlaying.length - 1],
-                        id_user: sessionStorage.getItem('id_user') ? sessionStorage.getItem('id_user') : 0
-                    })
-                }).then(function (response) {
-                    return response.json();
-                }).then(function (dataRes) {
+                this.getModel_bottom.getSongByUrl(this.isCheckPlaying[this.isCheckPlaying.length - 1], sessionStorage.getItem('id_user') ? sessionStorage.getItem('id_user') : 0).then(function (response) {
+                    response = JSON.parse(response);
                     if (sessionStorage.getItem("url_song") != '') {
                         sessionStorage.removeItem("url_song");
                         sessionStorage.removeItem("id_gg");
@@ -293,11 +259,11 @@ define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert
                         sessionStorage.removeItem("name_song");
                         sessionStorage.removeItem("img_song");
                     }
-                    sessionStorage.setItem("url_song", 'https://docs.google.com/uc?export=download&id=' + dataRes.dataSongNew[0]['id_gg']);
-                    sessionStorage.setItem("id_gg", dataRes.dataSongNew[0]['id_gg']);
-                    sessionStorage.setItem("name_singer", dataRes.dataSongNew[0]['text_gr_singer']);
-                    sessionStorage.setItem("name_song", dataRes.dataSongNew[0]['name']);
-                    sessionStorage.setItem("img_song", '../../assets/images' + dataRes.dataSongNew[0]['image']);
+                    sessionStorage.setItem("url_song", 'https://docs.google.com/uc?export=download&id=' + response['id_gg']);
+                    sessionStorage.setItem("id_gg", response['id_gg']);
+                    sessionStorage.setItem("name_singer", response['text_gr_singer']);
+                    sessionStorage.setItem("name_song", response['name']);
+                    sessionStorage.setItem("img_song", response['image']);
                     window.dispatchEvent(new Event("storage"));
                 });
             }
@@ -313,20 +279,11 @@ define(["require", "exports", "knockout", "../../lib/sweetalert2/dist/sweetalert
                 });
             }
             else {
-                fetch(global.api_url + 'add_like_byURL', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json, text/plain, */*',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ url: data, id_user: sessionStorage.getItem('id_user') })
-                }).then(function (response) {
-                    return response.json();
-                }).then(function (dataRes) {
-                    if (dataRes.message == 'success') {
+                this.getModel_bottom.addHeartModal(data, sessionStorage.getItem('id_user')).then(function (response) {
+                    if (response == 'success') {
                         event.currentTarget.className += " heart_active";
                     }
-                    else if (dataRes.message == 'delete') {
+                    else {
                         event.currentTarget.className = "icon_action_song";
                     }
                 });
