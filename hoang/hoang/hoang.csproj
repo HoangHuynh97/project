@@ -123,6 +123,10 @@
     <Content Include="app\views\bottom.html" />
     <Content Include="app\views\header.html" />
     <Content Include="app\views\home.html" />
+    <Content Include="app\views\home\home_HotSinger.html" />
+    <Content Include="app\views\home\home_HotSong.html" />
+    <Content Include="app\views\home\home_New.html" />
+    <Content Include="app\views\home\home_Playlist.html" />
     <Content Include="app\views\loading.html" />
     <Content Include="app\views\login.html" />
     <Content Include="app\views\menu.html" />

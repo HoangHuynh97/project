@@ -12,19 +12,19 @@ export = class model_profile {
         }).then((response) => {
             return response.json();
         }).then((data) => {
-            let objItemNew = [];
+            let objItemNew: global.infoPlaylists = [];
             if (data.dataPlaylist) {
                 data.dataPlaylist.map((value) => {
                     objItemNew.push({ name: value.name, is_like: value.is_like, id: value.id, img: value.img, create_by: value.create_by });
                 });
             }
-            let objItemLike = [];
+            let objItemLike: global.infoSongs = [];
             if (data.dataSongLike) {
                 data.dataSongLike.map((value) => {
                     objItemLike.push({ id: value.id, is_like: value.is_like, name: value.name, id_gg: value.id_gg, image: '../../assets/images' + value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
                 });
             }
-            let objItemLikePlaylist = [];
+            let objItemLikePlaylist: global.infoPlaylists = [];
             if (data.dataPlaylistLike) {
                 data.dataPlaylistLike.map((value) => {
                     objItemLikePlaylist.push({ name: value.name, is_like: value.is_like, id: value.id, img: value.img, create_by: value.create_by });

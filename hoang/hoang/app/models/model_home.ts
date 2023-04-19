@@ -21,12 +21,12 @@ export = class model_home {
         }).then((response) => {
             return response.json();
         }).then((data) => {
-            let objItemNew = [];
+            let objItemNew: global.infoSongs = [];
             data.dataSongNew.map((value) => {
                 objItemNew.push({ id: value.id, is_like: value.is_like, name: value.name, id_gg: value.id_gg, image: '../../assets/images' + value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
             });
 
-            let objPlaylist = [];
+            let objPlaylist: global.infoPlaylists = [];
             data.dataPlaylist.map((value) => {
                 objPlaylist.push({ id: value.id, is_like: value.is_like, name: value.name, img: value.img, create_by: 'Được tạo bởi ' + value.create_by });
             });
@@ -36,7 +36,7 @@ export = class model_home {
                 objPlaySinger.push({ name: value.name, img: '../../assets/images' + value.img, id: value.id });
             });
 
-            let objSongHot = [];
+            let objSongHot: global.infoSongs = [];
             data.dataSongHot.map((value) => {
                 objSongHot.push({ id: value.id, is_like: value.is_like, name: value.name, id_gg: value.id_gg, image: '../../assets/images' + value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
             });

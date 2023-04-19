@@ -1,0 +1,45 @@
+﻿<div class="mm_new_song block">
+    <div class="sc_container_box_list inblock w100 mbot10">
+        <div class="mm_title_list left">
+            <h4>Mới Phát Hành</h4>
+        </div>
+        <div class="mm_see_all" data-bind="click: function() {window.location.href = '#new'}">
+            <h4>TẤT CẢ</h4><i class="fa fa-chevron-right"></i>
+        </div>
+    </div>
+    <div class="mm_container_box_song" data-bind="foreach: itemSongNew">
+        <div class="sc_container_box_song" data-bind="click: $parent.changeLink.bind($parent, id_gg, text_gr_singer, name, image)">
+            <div class="sc_c_img">
+                <img data-bind="attr: { src: image }" alt="" />
+                <div class="sc_c_img_bg hidden">
+                    <img src="../../assets/images/play.png" class="play_icon" />
+                </div>
+            </div>
+            <div class="sc_c_des">
+                <div class="sc_c_des_name">
+                    <h5 data-bind="text: name"></h5>
+                </div>
+                <div class="sc_c_des_singer mginbt5" data-bind="foreach: id_singer">
+                    <a class="sc_text_link" data-bind="text: name, click: function() {window.location.href = '#singer/' + id}, clickBubble: false"></a>
+                    <span class="nohover_singer">x</span>
+                </div>
+                <div class="sc_c_des_date">
+                    <h5 data-bind="text: date_create"></h5>
+                </div>
+            </div>
+            <div class="sc_c_more_action">
+                <div class="sc_c_more_icon">
+                    <div class="sc_icon_table" data-bind="class: is_like != 0 ? 'heart_active' : '', click: $parent.addHeart.bind($parent, id), clickBubble: false">
+                        <i class="fa fa-heart"></i>
+                    </div>
+                    <a class="sc_icon_table" data-bind="click: function(){ window.location.href = 'https://docs.google.com/uc?export=download&id=' + id_gg }, clickBubble: false">
+                        <i class="fa fa-download"></i>
+                    </a>
+                    <div class="sc_icon_table">
+                        <i class="fa fa-play"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

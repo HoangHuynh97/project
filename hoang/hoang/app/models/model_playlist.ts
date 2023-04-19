@@ -16,7 +16,7 @@ export = class model_playlist {
                 window.location.href = '#';
             }
 
-            let objItemNew = [];
+            let objItemNew: global.infoSongs = [];
             data.dataSongbyPlaylist.map((value) => {
                 objItemNew.push({ id: value.id, name: value.name, is_like: value.is_like, id_gg: value.id_gg, image: value.image, date_create: value.date_create, id_singer: value.id_singer, text_gr_singer: value.text_gr_singer });
             });
