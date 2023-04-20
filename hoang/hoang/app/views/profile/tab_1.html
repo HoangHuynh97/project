@@ -1,0 +1,59 @@
+﻿<div class="c_content_tab" data-bind="class: isTab() == 1 ? '' : 'hidden'">
+    <div class="btn_hight">
+        YÊU THÍCH
+    </div>
+
+    <div class="c_content_tab_mv" data-bind="class: itemSongLike().length > 0 ? 'hidden' : ''">
+        <img src="../../assets/images/empty.png" alt="" />
+        <div class="c_text_empty">
+            Chưa có bài hát yêu thích nào trong thư viện
+        </div>
+    </div>
+
+    <table class="mm_table">
+        <thead>
+            <tr>
+                <th>BÀI HÁT</th>
+                <th style="text-align: right !important;">THUỘC TÍNH</th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: itemSongLike">
+            <tr data-bind="click: $parent.changeLink.bind($parent, id_gg, text_gr_singer, name, image)">
+                <td>
+                    <div class="c_td_box_image">
+                        <div class="sc_container_box_song">
+                            <div class="sc_c_img">
+                                <img data-bind="attr: { src: image }" alt="" />
+                                <div class="sc_c_img_bg hidden">
+                                    <img src="../../assets/images/play.png" class="play_icon" />
+                                </div>
+                            </div>
+                            <div class="sc_c_des">
+                                <div class="sc_c_des_name">
+                                    <h5 data-bind="text: name"></h5>
+                                </div>
+                                <div class="sc_c_des_singer mginbt5" data-bind="foreach: id_singer">
+                                    <a class="sc_text_link" data-bind="text: name, click: function() {window.location.href = '#singer/' + id}, clickBubble: false"></a>
+                                    <span class="nohover_singer">x</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="sc_option_table">
+                        <div class="sc_icon_table" data-bind="class: is_like != 0 ? 'heart_active' : '', click: $parent.addHeart.bind($parent, id), clickBubble: false">
+                            <i class="fa fa-heart"></i>
+                        </div>
+                        <div class="sc_icon_table" data-bind="click: function(){ window.location.href = 'https://docs.google.com/uc?export=download&id=' + id_gg }, clickBubble: false">
+                            <i class="fa fa-download"></i>
+                        </div>
+                        <div class="sc_icon_table">
+                            <i class="fa fa-play"></i>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

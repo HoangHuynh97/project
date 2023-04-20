@@ -65,109 +65,18 @@
             </div>
         </div>
         <div class="mm_container_tab">
-            <div class="c_content_tab" data-bind="class: isTab() == 1 ? '' : 'hidden'">
-                <div class="btn_hight">
-                    YÊU THÍCH
-                </div>
-
-                <div class="c_content_tab_mv" data-bind="class: itemSongLike().length > 0 ? 'hidden' : ''">
-                    <img src="../../assets/images/empty.png" alt="" />
-                    <div class="c_text_empty">
-                        Chưa có bài hát yêu thích nào trong thư viện
-                    </div>
-                </div>
-
-                <table class="mm_table">
-                    <thead>
-                        <tr>
-                            <th>BÀI HÁT</th>
-                            <th style="text-align: right !important;">THUỘC TÍNH</th>
-                        </tr>
-                    </thead>
-                    <tbody data-bind="foreach: itemSongLike">
-                        <tr data-bind="click: $parent.changeLink.bind($parent, id_gg, text_gr_singer, name, image)">
-                            <td>
-                                <div class="c_td_box_image">
-                                    <div class="sc_container_box_song">
-                                        <div class="sc_c_img">
-                                            <img data-bind="attr: { src: image }" alt="" />
-                                            <div class="sc_c_img_bg hidden">
-                                                <img src="../../assets/images/play.png" class="play_icon" />
-                                            </div>
-                                        </div>
-                                        <div class="sc_c_des">
-                                            <div class="sc_c_des_name">
-                                                <h5 data-bind="text: name"></h5>
-                                            </div>
-                                            <div class="sc_c_des_singer mginbt5" data-bind="foreach: id_singer">
-                                                <a class="sc_text_link" data-bind="text: name, click: function() {window.location.href = '#singer/' + id}, clickBubble: false"></a>
-                                                <span class="nohover_singer">x</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="sc_option_table">
-                                    <div class="sc_icon_table" data-bind="class: is_like != 0 ? 'heart_active' : '', click: $parent.addHeart.bind($parent, id), clickBubble: false">
-                                        <i class="fa fa-heart"></i>
-                                    </div>
-                                    <div class="sc_icon_table" data-bind="click: function(){ window.location.href = 'https://docs.google.com/uc?export=download&id=' + id_gg }, clickBubble: false">
-                                        <i class="fa fa-download"></i>
-                                    </div>
-                                    <div class="sc_icon_table">
-                                        <i class="fa fa-play"></i>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="c_content_tab_playlist" data-bind="class: isTab() == 2 ? '' : 'hidden'">
-                <div class="empty-playlist" data-bind="class: itemSongLikePlaylist().length > 0 ? 'hidden' : ''">
-                    <img src="../../assets/images/empty.png" alt="" />
-                    <div class="c_text_empty">
-                        Chưa có playlist nào trong thư viện
-                    </div>
-                </div>
-                <div class="sc_container_box_list_song" data-bind="foreach: itemSongLikePlaylist">
-                    <div class="sc_box_list" data-bind="click: function() {window.location.href = '#playlist/' + id}">
-                        <div class="sc_container_img_list">
-                            <div class="c_img_list" data-bind="foreach: img">
-
-                                <img data-bind="attr: { src: '../../assets/images' + img }" class="c_img_list_list" alt="" />
-
-                            </div>
-                            <div class="c_container_img">
-                                <div class="c_content_img">
-                                    <div class="c_box_icon" data-bind="class: is_like != 0 ? 'heart_active' : '', click: $parent.addPlaylist.bind($parent, id), clickBubble: false">
-                                        <i class="fa fa-heart"></i>
-                                    </div>
-                                    <div class="c_icon_play">
-                                        <i class="fa fa-play-circle"></i>
-                                    </div>
-                                    <div class="c_box_icon">
-                                        <i class="fa fa-download"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="sc_c_des_name">
-                            <h5 data-bind="text: name"></h5>
-                        </div>
-                        <div class="sc_c_des_singer">
-                            <h5 data-bind="text: 'Tạo bởi '+ create_by"></h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="c_content_tab_mv" data-bind="class: isTab() == 3 ? '' : 'hidden'">
-                <img src="../../assets/images/empty.png" alt="" />
-                <div class="c_text_empty">
-                    Chưa có MV nào trong thư viện
-                </div>
-            </div>
+            <div data-bind="template: { name: 'tab_1', if: isTab() == 1 }"></div>
+            <script type="text/html" id="tab_1">
+                <div data-bind="compose:'profile/tab_1.html'"></div>
+            </script>
+            <div data-bind="template: { name: 'tab_2', if: isTab() == 2 }"></div>
+            <script type="text/html" id="tab_2">
+                <div data-bind="compose:'profile/tab_2.html'"></div>
+            </script>
+            <div data-bind="template: { name: 'tab_3', if: isTab() == 3 }"></div>
+            <script type="text/html" id="tab_3">
+                <div data-bind="compose:'profile/tab_3.html'"></div>
+            </script>
         </div>
     </div>
 </div>

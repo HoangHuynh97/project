@@ -133,6 +133,9 @@
     <Content Include="app\views\new.html" />
     <Content Include="app\views\playlist.html" />
     <Content Include="app\views\profile.html" />
+    <Content Include="app\views\profile\tab_1.html" />
+    <Content Include="app\views\profile\tab_2.html" />
+    <Content Include="app\views\profile\tab_3.html" />
     <Content Include="app\views\shell.html" />
     <Content Include="app\views\singer.html" />
     <Content Include="Changes.txt" />
